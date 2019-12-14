@@ -4,11 +4,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
+import com.ltm.runningtracker.android.activity.MainActivity;
 
 public class TrackerLocationListener implements LocationListener {
 
   @Override
   public void onLocationChanged(Location location) {
+    MainActivity.lat = location.getLatitude();
+    MainActivity.lon = location.getLongitude();
     Log.d("g53mdp", location.getLatitude() + " " + location.getLongitude());
   }
 

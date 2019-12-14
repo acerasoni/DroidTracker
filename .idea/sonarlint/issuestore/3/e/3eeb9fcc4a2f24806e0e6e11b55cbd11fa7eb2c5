@@ -1,0 +1,15 @@
+
+šsquid:UselessImportCheck"oRemove this unused import 'com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOWeatherProvider'.(ªŒ˜È8·òªğ-
+…squid:UselessImportCheck"URemove this unused import 'com.survivingwithandroid.weather.lib.util.WeatherUtility'.(ı”îßøÿÿÿÿ8¬¬‘ªğ-
+¤squid:S1186A"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(øâÇ’ıÿÿÿÿ8©ü‘ªğ-
+Ÿsquid:S1186F"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ì­§İ8©ü‘ªğ-
+Isquid:S1168$"+Return an empty collection instead of null.(¥¹ï8©ü‘ªğ-
+Ê%squid:RedundantThrowsDeclarationCheck-"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(¡ı¼á8©ü‘ªğ-
+Ê%squid:RedundantThrowsDeclarationCheck7"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(«şÚÄ8©ü‘ªğ-
+Ï%squid:RedundantThrowsDeclarationCheck<"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(Ú÷Ÿşøÿÿÿÿ8©ü‘ªğ-
+Ê%squid:RedundantThrowsDeclarationCheckK"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(§£¯ó8©ü‘ªğ-
+Ï%squid:RedundantThrowsDeclarationCheckP"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(Öôõàıÿÿÿÿ8©ü‘ªğ-
+Ï%squid:RedundantThrowsDeclarationCheckU"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(ˆ¢¶«ùÿÿÿÿ8©ü‘ªğ-
+Ï%squid:RedundantThrowsDeclarationCheckZ"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(­×†Ãùÿÿÿÿ8©ü‘ªğ-
+É%squid:RedundantThrowsDeclarationCheck`"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(æ8©ü‘ªğ-
+É%squid:RedundantThrowsDeclarationCheckf"‘Remove the declaration of thrown exception 'com.survivingwithandroid.weather.lib.exception.ApiKeyRequiredException' which is a runtime exception.(æ8©ü‘ªğ-
