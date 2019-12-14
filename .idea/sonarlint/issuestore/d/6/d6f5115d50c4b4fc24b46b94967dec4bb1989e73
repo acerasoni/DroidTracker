@@ -1,0 +1,7 @@
+
+psquid:UselessImportCheck"@Remove this unused import 'androidx.core.content.ContextCompat'.(üäÂùÿÿÿÿ8ü±¥›ğ-
+]squid:UselessImportCheck"-Remove this unused import 'android.Manifest'.(¦øïúÿÿÿÿ8 Ì¢›ğ-
+esquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±
+isquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(¸Ø’ï8¥×ª›ğ-
+nsquid:UselessImportCheck">Remove this unused import 'android.content.pm.PackageManager'.(€®¥õÿÿÿÿÿ8ü±¥›ğ-
+isquid:CommentedOutCodeLine,"<This block of commented-out lines of code should be removed.(Ÿ›Í8ÛŠ­›ğ-

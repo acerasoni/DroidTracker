@@ -1,18 +1,15 @@
-package com.ltm.runningtracker.activity;
+package com.ltm.runningtracker.android.activity;
 
-import android.Manifest;
-import android.Manifest.permission;
-import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
 import android.location.LocationManager;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.util.TrackerLocationListener;
+import com.survivingwithandroid.weather.lib.WeatherClient;
+import com.survivingwithandroid.weather.lib.WeatherConfig;
+import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,10 +22,18 @@ public class MainActivity extends AppCompatActivity {
 
     locationManager =
         (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//
-//    ActivityCompat.requestPermissions(this,
-//        new String[]{permission.ACCESS_FINE_LOCATION},
-//        0);
+
+  try{
+    WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();  WeatherConfig config = new WeatherConfig();
+    WeatherClient client = builder.attach(this)
+        .provider(new ForecastIOProviderType())
+        .httpClient(com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient.class)
+        .config(config)
+        .build();
+  } catch(Exception e) {
+
+  }
+
 
   }
 

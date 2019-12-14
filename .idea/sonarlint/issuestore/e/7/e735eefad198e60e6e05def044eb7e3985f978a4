@@ -1,0 +1,7 @@
+
+]squid:S1854":Remove this useless assignment to local variable "client".(ωνάϊÿÿÿÿ8¥ψΆπ-
+Nsquid:S1481"+Remove this unused "client" local variable.(ωνάϊÿÿÿÿ8¥ψΆπ-
+esquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ϊ±
+Asquid:S1659"$Declare "config" on a separate line.(Β”Ϋ8¥ψΆπ-
+bsquid:CommentedOutCodeLine1"<This block of commented-out lines of code should be removed.(›Ν
+Hsquid:S00108!")Either remove or fill this block of code.(”ύΎ8¦ΆΆπ-
