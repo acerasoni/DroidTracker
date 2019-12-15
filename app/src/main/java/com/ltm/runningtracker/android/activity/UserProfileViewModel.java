@@ -20,4 +20,8 @@ public class UserProfileViewModel extends ViewModel {
     userRepository = getUserRepository();
     user = userRepository.getUser();
   }
+
+  public LiveData<User> getUser() {
+    return user;
+  }
 }

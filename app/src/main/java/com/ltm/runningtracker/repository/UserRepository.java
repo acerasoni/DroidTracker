@@ -15,15 +15,12 @@ public class UserRepository {
   private LiveData<User> user;
 
   public UserRepository() {
+    user = new MutableLiveData<>(new User());
     locationRepository = getLocationRepository();
     weatherRepository = getWeatherRepository();
   }
 
   public LiveData<User> getUser() {
-    if(user == null) {
-      user = new MutableLiveData<>(new User(locationRepository.getLocation(), weatherRepository.getWeather()));
       return user;
-    } else return user;
-
   }
 }

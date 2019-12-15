@@ -1,7 +1,11 @@
 package com.ltm.runningtracker.repository;
 
 import static com.ltm.runningtracker.RunningTracker.getPropertyManager;
+import static com.ltm.runningtracker.RunningTracker.getUserRepository;
 
+import android.content.Context;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.RunningTracker;
 import com.ltm.runningtracker.listener.CustomWeatherListener;
 import com.ltm.runningtracker.manager.WeatherManager;
@@ -10,20 +14,26 @@ import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 
 public class WeatherRepository {
 
-  private Weather weather;
+  public MutableLiveData<Weather> weatherMutableLiveData;
   public WeatherManager weatherManager;
 
   public WeatherRepository() {
-    weatherManager = new WeatherManager(getPropertyManager().getMinTime(), new CustomWeatherListener(this));
-    weatherManager.requestWeatherUpdates();
+    weatherMutableLiveData = new MutableLiveData<>();
+    weatherManager = new WeatherManager();
   }
 
   public Weather getWeather() {
-    return weather;
+    return weatherMutableLiveData.getValue();
   }
 
+  public LiveData<Weather> getLiveDataWeather() { return weatherMutableLiveData;}
+
   public void setWeather(Weather weather) {
-    this.weather = weather;
+    weatherMutableLiveData.setValue(weather);
+  }
+
+  public void requestWeatherUpdates(Context context) {
+    weatherManager.requestWeatherUpdates(context);
   }
 
 }

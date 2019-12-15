@@ -1,20 +1,12 @@
 
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
-t
-Dapp/src/main/java/com/ltm/runningtracker/weather/WeatherHandler.java,3\2\32f4eadfa6e06b2ce5b78e1f98655a299d5602fe
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 {
 Kapp/src/main/java/com/ltm/runningtracker/android/activity/MainActivity.java,e\7\e735eefad198e60e6e05def044eb7e3985f978a4
-Ä
-Papp/src/main/java/com/ltm/runningtracker/weather/CustomWeatherEventListener.java,1\d\1d02cca9f32c0a2d7707ed3ff4c8df2e8ee67b94
 b
 2app/src/main/java/com/ltm/runningtracker/User.java,e\a\ea4ba59fa62d371cfe2ca0e9d2aa20120bcc0bf7
-~
-Napp/src/main/java/com/ltm/runningtracker/location/TrackerLocationListener.java,8\a\8a4bf454d66fc3dd38ca7fb826651957427069e8
-v
-Fapp/src/main/java/com/ltm/runningtracker/location/LocationHandler.java,a\c\ac32c9d384498e8d94256af238dc7084e609c098
 ç
 ]app/src/main/java/com/ltm/runningtracker/android/contentprovider/ContentProviderContract.java,9\d\9d680f7c5d775d17df894dff7b64083b2e6b2eba
 <

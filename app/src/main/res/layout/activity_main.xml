@@ -17,4 +17,17 @@
     android:layout_height="wrap_content"
     android:onClick="onClick"
     android:text="Button" />
+  <Button
+    android:id="@+id/button2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="stopService"
+    android:text="Button" />
+  <EditText
+    android:id="@+id/temperatureField"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="textPersonName"
+    android:text="Name" />
 </LinearLayout>

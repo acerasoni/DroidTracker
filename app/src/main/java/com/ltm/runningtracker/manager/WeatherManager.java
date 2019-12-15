@@ -2,62 +2,94 @@ package com.ltm.runningtracker.manager;
 
 import static com.ltm.runningtracker.RunningTracker.getAppContext;
 import static com.ltm.runningtracker.RunningTracker.getLocationRepository;
-import static com.ltm.runningtracker.RunningTracker.getPropertyManager;
+import static com.ltm.runningtracker.RunningTracker.getWeatherRepository;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.RunningTracker;
-import com.ltm.runningtracker.User;
-import com.ltm.runningtracker.listener.CustomWeatherListener;
-import com.ltm.runningtracker.repository.LocationRepository;
-import com.ltm.runningtracker.repository.UserRepository;
+import com.ltm.runningtracker.android.activity.MainActivity;
+import com.ltm.runningtracker.android.service.WeatherCallback;
+import com.ltm.runningtracker.android.service.WeatherUpdateService;
+import com.ltm.runningtracker.repository.WeatherRepository;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherProviderInstantiationException;
+import com.survivingwithandroid.weather.lib.model.Weather;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class WeatherManager {
 
-  private WeatherConfig weatherConfig;
-  private WeatherClient weatherClient;
-  private CustomWeatherListener customWeatherListener;
-  private LocationRepository locationRepository;
-  private long minUpdateTime;
+  Context context;
+  private WeatherUpdateService.WeatherServiceBinder myService = null;
 
-  public WeatherManager(long minUpdateTime, CustomWeatherListener customWeatherListener) {
-    this.minUpdateTime = minUpdateTime;
-    this.customWeatherListener = customWeatherListener;
-    weatherConfig = new WeatherConfig();
+  public void requestWeatherUpdates(Context context) {
+    this.context = context;
+    getAppContext().startService(new Intent(context, WeatherUpdateService.class));
+    getAppContext().bindService(new Intent(context, WeatherUpdateService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+  }
+
+  public void removeUpdates() {
+
+  }
+
+  private ServiceConnection serviceConnection = new ServiceConnection() {
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+      // TODO Auto-generated method stub
+      Log.d("g53mdp", "MainActivity onServiceConnected");
+      myService = (WeatherUpdateService.WeatherServiceBinder) service;
+      myService.registerCallback(callback);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+      // TODO Auto-generated method stub
+      Log.d("g53mdp", "MainActivity onServiceDisconnected");
+      myService.unregisterCallback(callback);
+      myService = null;
+    }
+  };
+
+  WeatherCallback callback = new WeatherCallback() {
+    @Override
+    public void weatherUpdateEvent(final Weather weather) {
+      getWeatherRepository().setWeather(weather);
+    }
+  };
+
+  // Weather objects builder methods
+  public static WeatherRequest buildWeatherRequest() {
+    return new WeatherRequest(
+        getLocationRepository().getLocation().getLongitude(),
+        getLocationRepository().getLocation().getLatitude());
+  }
+
+  public static WeatherClient buildWeatherClient() {
+    WeatherConfig weatherConfig = new WeatherConfig();
     weatherConfig.ApiKey = getAppContext().getString(R.string.openweather_api_key);
-    locationRepository = getLocationRepository();
-
+    WeatherClient weatherClient;
     try {
       weatherClient = (new WeatherClient.ClientBuilder()).attach(getAppContext())
           .provider(new OpenweathermapProviderType())
           .httpClient(WeatherDefaultClient.class)
           .config(weatherConfig)
           .build();
+      return weatherClient;
     } catch (WeatherProviderInstantiationException e) {
       Log.d("Exception:", e.getMessage());
     }
-  }
-
-  public void requestWeatherUpdates() {
-    Runnable requestWeatherTask = () -> {
-      if(locationRepository.getLocation() != null) {
-        WeatherRequest weatherRequest = new WeatherRequest(locationRepository.getLocation().getLongitude(), locationRepository.getLocation().getLatitude());
-        weatherClient.getCurrentCondition(weatherRequest, customWeatherListener);
-      }
-    };
-
-    ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    scheduledExecutorService.scheduleAtFixedRate(requestWeatherTask, 0, getPropertyManager().getMinTime(),
-        TimeUnit.SECONDS);
+    return null;
   }
 
 }
