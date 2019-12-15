@@ -1,0 +1,6 @@
+
+hsquid:UselessImportCheck"8Remove this unused import 'androidx.lifecycle.LiveData'.(ß„ÝÞþÿÿÿÿ8³üŒÑð-
+zsquid:UselessImportCheck"ORemove this unused import 'com.survivingwithandroid.weather.lib.model.Weather'.(„®³š8³üŒÑð-
+fsquid:UselessImportCheck"6Remove this unused import 'android.location.Location'.(›¡ì®øÿÿÿÿ8³üŒÑð-
+osquid:UselessImportCheck"?Remove this unused import 'androidx.lifecycle.MutableLiveData'.(Íèæâýÿÿÿÿ8³üŒÑð-
+esquid:S2094"BRemove this empty class, write its code or make it an "interface".(òê¼—úÿÿÿÿ8³üŒÑð-
