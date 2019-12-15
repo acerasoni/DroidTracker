@@ -1,23 +1,16 @@
 package com.ltm.runningtracker;
 
+import android.location.Location;
+import com.survivingwithandroid.weather.lib.model.Weather;
+
 public class User {
 
-  private double latitude;
-  private double longitude;
+  private Location location;
+  private Weather weather;
 
-  public double getLatitude() {
-    return latitude;
+  public User(Location location, Weather weather) {
+    this.location = location;
+    this.weather = weather;
   }
 
-  public void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(double longitude) {
-    this.longitude = longitude;
-  }
 }

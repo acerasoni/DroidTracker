@@ -1,14 +1,23 @@
-package com.ltm.runningtracker.weather;
+package com.ltm.runningtracker.listener;
 
 import android.util.Log;
+import com.ltm.runningtracker.repository.WeatherRepository;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.model.Weather;
 
 public class CustomWeatherEventListener implements WeatherClient.WeatherEventListener {
 
+  private WeatherRepository weatherRepository;
+
+  public CustomWeatherEventListener(WeatherRepository weatherRepository) {
+    this.weatherRepository = weatherRepository;
+  }
+
   @Override
   public void onWeatherRetrieved(CurrentWeather currentWeather) {
+    weatherRepository.setWeather(currentWeather.weather);
     float currentTemp = currentWeather.weather.temperature.getTemp();
     Log.d("WL", "City [" + currentWeather.weather.location.getCity() + "] Current temp ["
         + currentTemp + "]");

@@ -1,23 +1,23 @@
-package com.ltm.runningtracker.location;
+package com.ltm.runningtracker.listener;
 
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 import com.ltm.runningtracker.User;
+import com.ltm.runningtracker.repository.LocationRepository;
 
 public class TrackerLocationListener implements LocationListener {
 
-  User user;
+  LocationRepository locationRepository;
 
-  public TrackerLocationListener(User user){
-    this.user = user;
+  public TrackerLocationListener(LocationRepository locationRepository) {
+    this.locationRepository = locationRepository;
   }
 
   @Override
   public void onLocationChanged(Location location) {
-    user.setLatitude(location.getLatitude());
-    user.setLongitude(location.getLongitude());
+    locationRepository.setLocation(location);
     Log.d("g53mdp", location.getLatitude() + " " + location.getLongitude());
   }
 
