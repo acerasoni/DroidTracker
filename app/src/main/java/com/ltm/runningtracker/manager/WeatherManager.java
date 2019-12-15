@@ -1,25 +1,19 @@
 package com.ltm.runningtracker.manager;
 
-import static com.ltm.runningtracker.RunningTracker.getAppContext;
-import static com.ltm.runningtracker.RunningTracker.getLocationRepository;
-import static com.ltm.runningtracker.RunningTracker.getWeatherRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
+import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.activity.MainActivity;
 import com.ltm.runningtracker.android.service.WeatherCallback;
 import com.ltm.runningtracker.android.service.WeatherUpdateService;
-import com.ltm.runningtracker.repository.WeatherRepository;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
@@ -30,17 +24,16 @@ import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 
 public class WeatherManager {
 
-  Activity context;
   private WeatherUpdateService.WeatherServiceBinder myService = null;
 
-  public void requestWeatherUpdates(Activity context) {
-    this.context = context;
+  public void requestWeatherUpdates(Context context) {
     context.startService(new Intent(context, WeatherUpdateService.class));
     context.bindService(new Intent(context, WeatherUpdateService.class), serviceConnection, Context.BIND_AUTO_CREATE);
   }
 
-  public void removeUpdates() {
-
+  public void removeUpdates(Context context) {
+    context.stopService(new Intent(context, WeatherUpdateService.class));
+    context.unbindService(serviceConnection);
   }
 
   private ServiceConnection serviceConnection = new ServiceConnection() {

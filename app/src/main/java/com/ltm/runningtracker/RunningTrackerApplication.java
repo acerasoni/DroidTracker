@@ -6,12 +6,11 @@ import com.ltm.runningtracker.manager.PropertyManager;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;
-import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 
 /**
  * https://stackoverflow.com/questions/2002288/static-way-to-get-context-in-android
  */
-public class RunningTracker extends Application {
+public class RunningTrackerApplication extends Application {
 
   private static Context context;
   private static PropertyManager propertyManager;
@@ -26,11 +25,11 @@ public class RunningTracker extends Application {
   }
 
   public static Context getAppContext() {
-    return RunningTracker.context;
+    return RunningTrackerApplication.context;
   }
 
   public static PropertyManager getPropertyManager() {
-    return RunningTracker.propertyManager;
+    return RunningTrackerApplication.propertyManager;
   }
 
   public static LocationRepository getLocationRepository() {

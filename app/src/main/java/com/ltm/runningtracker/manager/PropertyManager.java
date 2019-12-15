@@ -1,11 +1,9 @@
 package com.ltm.runningtracker.manager;
 
-import static com.ltm.runningtracker.RunningTracker.getAppContext;
+import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 
-import android.content.Context;
 import android.content.res.AssetManager;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.RunningTracker;
 import java.io.InputStream;
 import java.util.Properties;
 

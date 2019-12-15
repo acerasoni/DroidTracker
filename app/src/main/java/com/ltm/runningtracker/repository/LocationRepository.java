@@ -1,16 +1,13 @@
 package com.ltm.runningtracker.repository;
 
-import static com.ltm.runningtracker.RunningTracker.getAppContext;
-import static com.ltm.runningtracker.RunningTracker.getPropertyManager;
+import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
+import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 
 import android.content.Context;
 import android.location.LocationManager;
 import android.util.Log;
-import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.RunningTracker;
 import com.ltm.runningtracker.listener.TrackerLocationListener;
 import android.location.Location;
-import java.io.IOException;
 
 public class LocationRepository {
 

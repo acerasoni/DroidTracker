@@ -1,12 +1,11 @@
 package com.ltm.runningtracker.repository;
 
-import static com.ltm.runningtracker.RunningTracker.getLocationRepository;
-import static com.ltm.runningtracker.RunningTracker.getWeatherRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.ltm.runningtracker.RunningTracker;
-import com.ltm.runningtracker.User;
+import com.ltm.runningtracker.parcelable.User;
 
 public class UserRepository {
 

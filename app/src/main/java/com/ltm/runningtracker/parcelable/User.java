@@ -1,4 +1,4 @@
-package com.ltm.runningtracker;
+package com.ltm.runningtracker.parcelable;
 
 import android.location.Location;
 import androidx.lifecycle.LiveData;

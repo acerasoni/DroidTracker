@@ -1,14 +1,11 @@
 package com.ltm.runningtracker.android.service;
 
-import static com.ltm.runningtracker.RunningTracker.getAppContext;
-import static com.ltm.runningtracker.RunningTracker.getLocationRepository;
-import static com.ltm.runningtracker.RunningTracker.getPropertyManager;
-import static com.ltm.runningtracker.RunningTracker.getWeatherRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.manager.WeatherManager.buildWeatherClient;
 import static com.ltm.runningtracker.manager.WeatherManager.buildWeatherRequest;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -16,14 +13,7 @@ import android.os.IInterface;
 import android.os.RemoteCallbackList;
 import android.util.Log;
 import androidx.annotation.Nullable;
-import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.listener.CustomWeatherListener;
-import com.survivingwithandroid.weather.lib.WeatherClient;
-import com.survivingwithandroid.weather.lib.WeatherConfig;
-import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
-import com.survivingwithandroid.weather.lib.exception.WeatherProviderInstantiationException;
-import com.survivingwithandroid.weather.lib.model.Weather;
-import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -58,6 +48,7 @@ public class WeatherUpdateService extends Service {
 
   @Override
   public void onDestroy() {
+    Log.d("Weather Service", "onDestroy");
     scheduledExecutorService.shutdownNow();
     super.onDestroy();
   }
@@ -71,7 +62,7 @@ public class WeatherUpdateService extends Service {
   @Override
   public void onRebind(Intent intent) {
     // TODO Auto-generated method stub
-    Log.d("g53mdp", "service onRebind");
+    Log.d("Weather Service", "onUnbind");
     super.onRebind(intent);
   }
 
