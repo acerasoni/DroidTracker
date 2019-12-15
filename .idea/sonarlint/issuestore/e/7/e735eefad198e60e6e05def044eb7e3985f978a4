@@ -1,9 +1,7 @@
 
-hsquid:UselessImportCheck"=Remove this unused import 'android.location.LocationManager'.(Ü©ÎÎ8ÓËÒ­ð-
-_squid:UselessImportCheck"4Remove this unused import 'android.content.Context'.(©Ê‰è8­ÊÏ­ð-
-Qsquid:S1068"3Remove this unused "locationHandler" private field.(„æÂ‹8—´Î­ð-
-Ÿsquid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¡é††8ùžÄ­ð-
-squid:UselessImportCheck"TRemove this unused import 'com.ltm.runningtracker.location.TrackerLocationListener'.( ºÿ³8ã™Ò­ð-
-lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8ðòÌ©ð-
-|squid:S1450"^Remove the "locationHandler" field and declare it as a local variable in the relevant methods.(„æÂ‹8¢šÔ­ð-
-]squid:UselessImportCheck"-Remove this unused import 'android.util.Log'.(Ô¦Ø²øÿÿÿÿ8»²Ø­ð-
+nsquid:UselessImportCheck	">Remove this unused import 'androidx.appcompat.widget.Toolbar'.(ÔËûÝùÿÿÿÿ8âœöÃð-
+’squid:UselessImportCheck"bRemove this unused import 'com.google.android.material.floatingactionbutton.FloatingActionButton'.(ôˆêãÿÿÿÿÿ8âœöÃð-
+usquid:UselessImportCheck"JRemove this unused import 'com.google.android.material.snackbar.Snackbar'.(ë„ƒŠ8âœöÃð-
+lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8âœöÃð-
+^squid:UselessImportCheck
+".Remove this unused import 'android.view.View'.(Ø½­äþÿÿÿÿ8ª¹‘Äð-

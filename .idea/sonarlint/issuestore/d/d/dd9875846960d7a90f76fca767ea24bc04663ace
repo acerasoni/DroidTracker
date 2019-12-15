@@ -1,0 +1,6 @@
+
+squid:S1450"cRemove the "userProfileViewModel" field and declare it as a local variable in the relevant methods.(„±Ú“8ô¾ó¾ð-
+Lsquid:S1135"2Complete the task associated to this TODO comment.(ûìÿÖøÿÿÿÿ
+nsquid:S1450"YRemove the "mViewModel" field and declare it as a local variable in the relevant methods.(àþ˜Ý
+Csquid:S1068".Remove this unused "mViewModel" private field.(àþ˜Ý
+Nsquid:S1135"2Complete the task associated to this TODO comment.(…ïœ†8âÐ‘¿ð-

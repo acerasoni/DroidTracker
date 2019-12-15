@@ -1,0 +1,4 @@
+
+ƒsquid:UselessImportCheck	"XRemove this unused import 'com.survivingwithandroid.weather.lib.request.WeatherRequest'.(ÿà—’8Ú§÷Ãğ-
+rsquid:UselessImportCheck"BRemove this unused import 'com.ltm.runningtracker.RunningTracker'.(¤ÃÉúÿÿÿÿ8Ú§÷Ãğ-
+"squid:ClassVariableVisibilityCheck"ZMake weatherManager a static final constant or non-public and provide accessors if needed.(¯¥ØÏ8ÒÕøÃğ-

@@ -60,8 +60,4 @@ public class WeatherManager {
         TimeUnit.SECONDS);
   }
 
-  public void reqWe() {
-    WeatherRequest weatherRequest = new WeatherRequest(locationRepository.getLocation().getLatitude(), locationRepository.getLocation().getLongitude());
-    weatherClient.getCurrentCondition(weatherRequest, customWeatherListener);
-  }
 }
