@@ -3,6 +3,7 @@ package com.ltm.runningtracker.android.activity;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     getWeatherRepository().removeUpdates(this);
   }
 
-  public void navigate(View v) {
+  public void navigate(MenuItem m) {
     Navigation.findNavController(this,R.id.fragment2).navigate(R.id.performanceFragment);
   }
 }

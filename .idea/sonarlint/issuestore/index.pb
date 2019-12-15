@@ -33,3 +33,13 @@ t
 Dapp/src/main/java/com/ltm/runningtracker/manager/WeatherManager.java,6\9\69a3e3681c8a91c60677dcd918d87b118ee504c0
 Ç
 Rapp/src/main/java/com/ltm/runningtracker/android/service/WeatherUpdateService.java,0\9\09c2d62e985b2618e68907d39b41f27e443f88b8
+å
+\app/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/MainScreenViewModel.java,6\4\64db07f5806d5fd5d996bf93172c1e5121423d3f
+ç
+]app/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/PerformanceViewModel.java,d\0\d03291298b52af975e6fd66acc79b60cc6280f5e
+ã
+[app/src/main/java/com/ltm/runningtracker/android/activity/fragment/PerformanceFragment.java,c\a\ca175c42ae10060a6748e4e99e9068a187e69c19
+ã
+[app/src/main/java/com/ltm/runningtracker/android/activity/fragment/UserProfileFragment.java,e\1\e124a167bf98b6f6fb5d0a36b7986e1999492dc5
+m
+=app/src/main/java/com/ltm/runningtracker/parcelable/User.java,8\d\8d728bb8898c8d2fe7319a7e5eca373c0d4cb3eb
