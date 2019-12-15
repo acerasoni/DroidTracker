@@ -7,11 +7,11 @@ import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.Weather;
 
-public class CustomWeatherEventListener implements WeatherClient.WeatherEventListener {
+public class CustomWeatherListener implements WeatherClient.WeatherEventListener {
 
   private WeatherRepository weatherRepository;
 
-  public CustomWeatherEventListener(WeatherRepository weatherRepository) {
+  public CustomWeatherListener(WeatherRepository weatherRepository) {
     this.weatherRepository = weatherRepository;
   }
 

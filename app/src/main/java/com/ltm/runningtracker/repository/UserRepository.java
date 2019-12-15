@@ -1,5 +1,8 @@
 package com.ltm.runningtracker.repository;
 
+import static com.ltm.runningtracker.RunningTracker.getLocationRepository;
+import static com.ltm.runningtracker.RunningTracker.getWeatherRepository;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.RunningTracker;
@@ -12,8 +15,8 @@ public class UserRepository {
   private LiveData<User> user;
 
   public UserRepository() {
-    locationRepository = new LocationRepository(RunningTracker.getAppContext());
-    weatherRepository = new WeatherRepository(RunningTracker.getAppContext());
+    locationRepository = getLocationRepository();
+    weatherRepository = getWeatherRepository();
   }
 
   public LiveData<User> getUser() {

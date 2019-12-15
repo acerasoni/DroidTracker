@@ -2,4 +2,7 @@
   <string name="app_name">Running Tracker</string>
   <string name="openweather_api_key">678838031a4065f09e10bff3eda7bc65</string>
   <string name="title_activity_main">MainActivity</string>
+  <string name="app_properties">app.properties</string>
+  <string name="min_time">minTime</string>
+  <string name="min_distance">minDistance</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.RunningTracker.getWeatherRepository;
+
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -14,6 +16,10 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+  }
+
+  public void onClick(View v) {
+    getWeatherRepository().weatherManager.reqWe();
   }
 
 }

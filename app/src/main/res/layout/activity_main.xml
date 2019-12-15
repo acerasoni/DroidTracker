@@ -11,4 +11,10 @@
     android:name="com.ltm.runningtracker.android.activity.UserProfileFragment"
     android:layout_width="match_parent"
     android:layout_height="125dp" />
+  <Button
+    android:id="@+id/button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="onClick"
+    android:text="Button" />
 </LinearLayout>

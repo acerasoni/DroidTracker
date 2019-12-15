@@ -1,5 +1,7 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.RunningTracker.getUserRepository;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
@@ -15,7 +17,7 @@ public class UserProfileViewModel extends ViewModel {
 
   public UserProfileViewModel(SavedStateHandle savedStateHandle) {
     this.savedStateHandle = savedStateHandle;
-    userRepository = new UserRepository();
+    userRepository = getUserRepository();
     user = userRepository.getUser();
   }
 }
