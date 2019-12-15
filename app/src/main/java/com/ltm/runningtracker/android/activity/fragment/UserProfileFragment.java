@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.android.activity;
+package com.ltm.runningtracker.android.activity.fragment;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.SavedStateVMFactory;
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.android.activity.viewmodel.MainScreenViewModel;
 import com.ltm.runningtracker.parcelable.User;
 
 public class UserProfileFragment extends Fragment {
@@ -41,7 +42,7 @@ public class UserProfileFragment extends Fragment {
       }
     };
 
-    userProfileViewModel.user.observe(this, dataObserver);
+    userProfileViewModel.getUser().observe(this, dataObserver);
     return inflater.inflate(R.layout.user_profile_fragment, container, false);
   }
 

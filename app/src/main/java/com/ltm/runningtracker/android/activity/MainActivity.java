@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import androidx.navigation.Navigation;
 import com.ltm.runningtracker.R;
 import com.survivingwithandroid.weather.lib.model.Weather;
 
@@ -36,4 +37,7 @@ public class MainActivity extends AppCompatActivity {
     getWeatherRepository().removeUpdates(this);
   }
 
+  public void navigate(View v) {
+    Navigation.findNavController(this,R.id.fragment2).navigate(R.id.performanceFragment);
+  }
 }

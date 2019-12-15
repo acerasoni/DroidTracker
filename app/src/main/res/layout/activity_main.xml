@@ -18,6 +18,12 @@
     android:layout_height="wrap_content"
     android:onClick="stopService"
     android:text="Button" />
+  <Button
+    android:id="@+id/button5"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="navigate"
+    android:text="Button" />
   <EditText
     android:id="@+id/temperatureField"
     android:layout_width="match_parent"

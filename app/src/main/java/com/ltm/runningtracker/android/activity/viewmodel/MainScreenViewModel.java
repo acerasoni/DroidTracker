@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.android.activity;
+package com.ltm.runningtracker.android.activity.viewmodel;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 
@@ -12,7 +12,7 @@ public class MainScreenViewModel extends ViewModel {
 
   private SavedStateHandle savedStateHandle;
   private UserRepository userRepository;
-  protected LiveData<User> user;
+  private LiveData<User> user;
 
   public MainScreenViewModel(SavedStateHandle savedStateHandle) {
     this.savedStateHandle = savedStateHandle;
