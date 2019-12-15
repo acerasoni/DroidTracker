@@ -3,6 +3,7 @@ package com.ltm.runningtracker.repository;
 import static com.ltm.runningtracker.RunningTracker.getPropertyManager;
 import static com.ltm.runningtracker.RunningTracker.getUserRepository;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,7 +33,7 @@ public class WeatherRepository {
     weatherMutableLiveData.setValue(weather);
   }
 
-  public void requestWeatherUpdates(Context context) {
+  public void requestWeatherUpdates(Activity context) {
     weatherManager.requestWeatherUpdates(context);
   }
 

@@ -39,6 +39,8 @@ public class WeatherUpdateService extends Service {
 
   @Override
   public void onCreate() {
+    super.onCreate();
+    Log.d("hi","ho");
     customWeatherListener = new CustomWeatherListener(remoteCallbackList);
     Runnable requestWeatherTask = () -> {
       if (getLocationRepository().getLocation() != null) {
@@ -63,7 +65,28 @@ public class WeatherUpdateService extends Service {
   @Nullable
   @Override
   public IBinder onBind(Intent intent) {
-    return null;
+    return new WeatherServiceBinder();
+  }
+
+  @Override
+  public void onRebind(Intent intent) {
+    // TODO Auto-generated method stub
+    Log.d("g53mdp", "service onRebind");
+    super.onRebind(intent);
+  }
+
+  @Override
+  public boolean onUnbind(Intent intent) {
+    // TODO Auto-generated method stub
+    Log.d("g53mdp", "service onUnbind");
+    return super.onUnbind(intent);
+  }
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    // TODO Auto-generated method stub
+    Log.d("g53mdp", "service onStartCommand");
+    return Service.START_STICKY;
   }
 
   // Must stopSelf() when application is killed

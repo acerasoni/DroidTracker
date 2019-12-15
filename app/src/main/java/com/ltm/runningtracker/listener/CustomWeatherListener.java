@@ -25,6 +25,7 @@ public class CustomWeatherListener implements WeatherClient.WeatherEventListener
   @Override
   public void onWeatherRetrieved(CurrentWeather currentWeather) {
     doCallbacks(currentWeather.weather);
+    Log.d("Number of listeners", Integer.toString(remoteCallbackList.getRegisteredCallbackCount()));
     float currentTemp = currentWeather.weather.temperature.getTemp();
     Log.d("WL", "City [" + currentWeather.weather.location.getCity() + "] Current temp ["
         + currentTemp + "]");

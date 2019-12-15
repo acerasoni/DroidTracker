@@ -4,6 +4,7 @@ import static com.ltm.runningtracker.RunningTracker.getAppContext;
 import static com.ltm.runningtracker.RunningTracker.getLocationRepository;
 import static com.ltm.runningtracker.RunningTracker.getWeatherRepository;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -29,13 +30,13 @@ import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 
 public class WeatherManager {
 
-  Context context;
+  Activity context;
   private WeatherUpdateService.WeatherServiceBinder myService = null;
 
-  public void requestWeatherUpdates(Context context) {
+  public void requestWeatherUpdates(Activity context) {
     this.context = context;
-    getAppContext().startService(new Intent(context, WeatherUpdateService.class));
-    getAppContext().bindService(new Intent(context, WeatherUpdateService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+    context.startService(new Intent(context, WeatherUpdateService.class));
+    context.bindService(new Intent(context, WeatherUpdateService.class), serviceConnection, Context.BIND_AUTO_CREATE);
   }
 
   public void removeUpdates() {

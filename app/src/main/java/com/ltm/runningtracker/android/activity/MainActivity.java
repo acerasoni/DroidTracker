@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     // Create the observer which updates the UI.
     final Observer<Weather> weatherObserver = weather -> {
       // Update the UI, in this case, a TextView.
-      ((TextView) findViewById(R.id.temperatureField)).setText(weather.temperature.toString());
+      ((TextView) findViewById(R.id.temperatureField)).setText(Float.toString(weather.temperature.getTemp()));
     };
 
     weatherLiveData.observe(this, weatherObserver);
