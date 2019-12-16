@@ -11,11 +11,17 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.tabs.TabItem
-      android:text="nonosisino"/>
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:text="cold" />
     <com.google.android.material.tabs.TabItem
-      android:text="sisi"/>
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:text="mild" />
     <com.google.android.material.tabs.TabItem
-      android:text="no"/>
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:text="warm" />
 
   </com.google.android.material.tabs.TabLayout>
 

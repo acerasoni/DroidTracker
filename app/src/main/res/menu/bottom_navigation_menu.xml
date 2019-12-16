@@ -3,8 +3,10 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
 
   <item
+    android:onClick="startRun"
+    android:title="Run" />
+  <item android:title="Item" />
+  <item
     android:onClick="navigate"
     android:title="Performance" />
-  <item android:title="Item" />
-  <item android:title="Item" />
 </menu>

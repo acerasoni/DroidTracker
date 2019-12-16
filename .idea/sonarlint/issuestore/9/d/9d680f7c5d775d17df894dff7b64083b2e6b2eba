@@ -1,2 +1,5 @@
 
-`squid:S2094"BRemove this empty class, write its code or make it an "interface".(‹èÊê8¢’Äğ-
+ysquid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(íşÍ¸8Ç°´òğ-
+isquid:S1192
+"KDefine a constant instead of duplicating this literal "content://" 4 times.(Ü…€Ó8Ç°´òğ-
+Xsquid:S1118":Add a private constructor to hide the implicit public one.(‹èÊê8Ç°´òğ-

@@ -1,2 +1,5 @@
 
-^squid:S2094"BRemove this empty class, write its code or make it an "interface".(Ξ£ΕΡÿÿÿÿÿ
+"squid:ClassVariableVisibilityCheckj"TMake callback a static final constant or non-public and provide accessors if needed.(΅οΓόÿÿÿÿ8Λÿ½σπ-
+Usquid:S1135N"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-
+Usquid:S1135@"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-
+Usquid:S1135G"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-

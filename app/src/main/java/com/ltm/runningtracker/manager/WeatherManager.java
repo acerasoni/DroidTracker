@@ -4,7 +4,6 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherProviderInstantiationException;
-import com.survivingwithandroid.weather.lib.model.Weather;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 
@@ -55,12 +53,7 @@ public class WeatherManager {
     }
   };
 
-  WeatherCallback callback = new WeatherCallback() {
-    @Override
-    public void weatherUpdateEvent(final Weather weather) {
-      getWeatherRepository().setWeather(weather);
-    }
-  };
+  WeatherCallback callback = weather -> getWeatherRepository().setWeather(weather);
 
   // Weather objects builder methods
   public static WeatherRequest buildWeatherRequest() {

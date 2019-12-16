@@ -6,6 +6,11 @@
   android:layout_height="match_parent"
   android:orientation="vertical"
   tools:context=".android.activity.MainActivity" >
+  <fragment
+    android:id="@+id/fragment"
+    android:name="com.ltm.runningtracker.android.activity.fragment.TopWeatherFragment"
+    android:layout_width="match_parent"
+    android:layout_height="38dp" />
   <Button
     android:id="@+id/button"
     android:layout_width="match_parent"
@@ -29,7 +34,7 @@
     android:id="@+id/fragment2"
     android:name="androidx.navigation.fragment.NavHostFragment"
     android:layout_width="match_parent"
-    android:layout_height="423dp"
+    android:layout_height="461dp"
     app:defaultNavHost="true"
     app:navGraph="@navigation/nav_graph" />
   <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -11,7 +11,7 @@ public class UserRepository {
 
   private LocationRepository locationRepository;
   private WeatherRepository weatherRepository;
-  private LiveData<User> user;
+  private MutableLiveData<User> user;
 
   public UserRepository() {
     user = new MutableLiveData<>(new User());
@@ -19,7 +19,7 @@ public class UserRepository {
     weatherRepository = getWeatherRepository();
   }
 
-  public LiveData<User> getUser() {
+  public MutableLiveData<User> getUser() {
       return user;
   }
 }

@@ -1,2 +1,4 @@
 
-rsquid:UselessImportCheck"BRemove this unused import 'com.ltm.runningtracker.RunningTracker'.(¤ÃÉúÿÿÿÿ8ŠÃÿÃğ-
+Ysquid:S1068"6Remove this unused "locationRepository" private field.(Ãáì¦ùÿÿÿÿ8¤Ú¿òğ-
+Ssquid:S1068"5Remove this unused "weatherRepository" private field.(ôŠÒ8¤Ú¿òğ-
+hsquid:UselessImportCheck"8Remove this unused import 'androidx.lifecycle.LiveData'.(ß„İŞşÿÿÿÿ8¶º¨øğ-

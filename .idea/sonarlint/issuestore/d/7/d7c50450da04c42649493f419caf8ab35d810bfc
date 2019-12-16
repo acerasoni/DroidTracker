@@ -1,4 +1,5 @@
 
-zsquid:UselessImportCheck"ORemove this unused import 'com.survivingwithandroid.weather.lib.model.Weather'.(„®³š8¥šóÃð-
-Fsquid:S1148"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8¥šóÃð-
-Asquid:S1148#"#Use a logger to log this exception.(Óùóÿ8¥šóÃð-
+hsquid:UselessImportCheck"8Remove this unused import 'androidx.lifecycle.LiveData'.(ß„ÝÞþÿÿÿÿ8ù¸ûòð-
+Asquid:S1148+"#Use a logger to log this exception.(Óùóÿ8¥šóÃð-
+Fsquid:S1148%"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8¥šóÃð-
+€squid:UselessImportCheck"PRemove this unused import 'com.ltm.runningtracker.repository.WeatherRepository'.( §¼³ûÿÿÿÿ8ù¸ûòð-
