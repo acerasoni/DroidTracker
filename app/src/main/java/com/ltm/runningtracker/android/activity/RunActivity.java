@@ -70,7 +70,6 @@ public class RunActivity extends AppCompatActivity implements
             .elevation(5)
             .accuracyAlpha(.6f)
             .accuracyColor(Color.RED)
-            .foregroundDrawable(R.drawable.android_custom_location_icon)
             .build();
 
         // Get an instance of the component
@@ -88,7 +87,7 @@ public class RunActivity extends AppCompatActivity implements
         locationComponent.setLocationComponentEnabled(true);
 
         // Set the component's camera mode
-        locationComponent.setCameraMode(CameraMode.TRACKING);
+        locationComponent.setCameraMode(CameraMode.TRACKING,3, 15.0, null, null, null);
 
         // Set the component's render mode
         locationComponent.setRenderMode(RenderMode.COMPASS);

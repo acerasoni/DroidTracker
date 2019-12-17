@@ -1,8 +1,8 @@
 
 lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8ùÑ™ßð-
 nsquid:CommentedOutCodeLine3"<This block of commented-out lines of code should be removed.(ÂîŽÇúÿÿÿÿ8±Ý¢øð-
+Osquid:S1602!",Remove useless curly braces around statement(è™¡ãùÿÿÿÿ8±Ý¢øð-
 hsquid:UselessImportCheck"8Remove this unused import 'androidx.lifecycle.LiveData'.(ß„ÝÞþÿÿÿÿ8Ý¼¬øð-
 qsquid:UselessImportCheck"ARemove this unused import 'androidx.lifecycle.ViewModelProvider'.(ª´÷©øÿÿÿÿ8Åº”øð-
-isquid:CommentedOutCodeLine1"<This block of commented-out lines of code should be removed.(ìðê’8ÓÿŸøð-
-Osquid:S1602!",Remove useless curly braces around statement(è™¡ãùÿÿÿÿ8±Ý¢øð-
 osquid:UselessImportCheck"?Remove this unused import 'androidx.lifecycle.MutableLiveData'.(Íèæâýÿÿÿÿ8Ï¨Éøð-
+isquid:CommentedOutCodeLine1"<This block of commented-out lines of code should be removed.(ìðê’8ÓÿŸøð-
