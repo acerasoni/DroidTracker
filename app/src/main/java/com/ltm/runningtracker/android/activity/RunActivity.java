@@ -1,12 +1,17 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.ltm.runningtracker.R;
+import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -29,7 +34,6 @@ import java.util.List;
 public class RunActivity extends AppCompatActivity implements
     OnMapReadyCallback, OnLocationClickListener, PermissionsListener,
     OnCameraTrackingChangedListener {
-
 
   private PermissionsManager permissionsManager;
 
@@ -60,6 +64,10 @@ public class RunActivity extends AppCompatActivity implements
       });
     }
 
+    public void printout(View v){
+
+  }
+
     @SuppressWarnings( {"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
       // Check if permissions are enabled and if not request
@@ -78,6 +86,7 @@ public class RunActivity extends AppCompatActivity implements
         LocationComponentActivationOptions locationComponentActivationOptions =
             LocationComponentActivationOptions.builder(this, loadedMapStyle)
                 .locationComponentOptions(customLocationComponentOptions)
+                .locationEngine(getLocationRepository().getLocationEngine())
                 .build();
 
         // Activate with options
