@@ -1,9 +1,9 @@
 package com.ltm.runningtracker.android.service;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
-import static com.ltm.runningtracker.manager.WeatherManager.buildWeatherClient;
-import static com.ltm.runningtracker.manager.WeatherManager.buildWeatherRequest;
+import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
+import static com.ltm.runningtracker.repository.WeatherRepository.buildWeatherClient;
+import static com.ltm.runningtracker.repository.WeatherRepository.buildWeatherRequest;
 
 import android.app.Service;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import android.os.IInterface;
 import android.os.RemoteCallbackList;
 import android.util.Log;
 import androidx.annotation.Nullable;
-import com.ltm.runningtracker.listener.CustomWeatherListener;
+import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,22 +22,18 @@ import java.util.concurrent.TimeUnit;
 public class WeatherUpdateService extends Service {
 
   // Worker thread
-  ScheduledExecutorService scheduledExecutorService;
-
-  RemoteCallbackList<WeatherServiceBinder> remoteCallbackList = new RemoteCallbackList<>();
-  CustomWeatherListener customWeatherListener;
+  private ScheduledExecutorService scheduledExecutorService;
+  private WeatherClient weatherClient;
 
   @Override
   public void onCreate() {
     super.onCreate();
-    Log.d("hi","ho");
-    customWeatherListener = new CustomWeatherListener(remoteCallbackList);
+    weatherClient = buildWeatherClient();
+
     Runnable requestWeatherTask = () -> {
-      if (getLocationRepository().getLocation() != null) {
-        WeatherRequest weatherRequest = buildWeatherRequest();
-        buildWeatherClient()
-            .getCurrentCondition(weatherRequest, customWeatherListener);
-      }
+      weatherClient
+          .getCurrentCondition(buildWeatherRequest(), getWeatherRepository());
+      Log.d("Hi", "temp");
     };
 
     scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -87,23 +83,13 @@ public class WeatherUpdateService extends Service {
     super.onTaskRemoved(intent);
   }
 
-  public class WeatherServiceBinder extends Binder implements IInterface
-  {
+  public class WeatherServiceBinder extends Binder implements IInterface {
+
     @Override
     public IBinder asBinder() {
       return this;
     }
 
-    public void registerCallback(WeatherCallback callback) {
-      this.callback = callback;
-      remoteCallbackList.register(WeatherServiceBinder.this);
-    }
-
-    public void unregisterCallback(WeatherCallback callback) {
-      remoteCallbackList.unregister(WeatherServiceBinder.this);
-    }
-
-    public WeatherCallback callback;
   }
 
 }

@@ -19,7 +19,7 @@ public class UserRepository {
     weatherRepository = getWeatherRepository();
   }
 
-  public MutableLiveData<User> getUser() {
+  public LiveData<User> getUser() {
       return user;
   }
 }

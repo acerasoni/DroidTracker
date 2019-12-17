@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.manager;
+package com.ltm.runningtracker.util;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 

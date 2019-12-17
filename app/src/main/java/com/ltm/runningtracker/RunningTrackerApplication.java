@@ -2,7 +2,7 @@ package com.ltm.runningtracker;
 
 import android.app.Application;
 import android.content.Context;
-import com.ltm.runningtracker.manager.PropertyManager;
+import com.ltm.runningtracker.util.PropertyManager;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;

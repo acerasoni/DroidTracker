@@ -13,8 +13,6 @@ Kapp/src/main/java/com/ltm/runningtracker/android/activity/MainActivity.java,e\
 Lapp/src/main/java/com/ltm/runningtracker/listener/CustomWeatherListener.java,d\7\d7c50450da04c42649493f419caf8ab35d810bfc
 z
 Japp/src/main/java/com/ltm/runningtracker/repository/WeatherRepository.java,0\a\0acaaef35e404151334c1b9f4ed779df8cb3c4d8
-~
-Napp/src/main/java/com/ltm/runningtracker/listener/TrackerLocationListener.java,d\d\dd71768072430fa3565c6da0fe2472bea3534285
 w
 Gapp/src/main/java/com/ltm/runningtracker/repository/UserRepository.java,5\f\5f55bb7dbc559620370fd52c6c72600ab899030f
 u
@@ -49,3 +47,5 @@ p
 Mapp/src/main/java/com/ltm/runningtracker/android/service/WeatherCallback.java,c\2\c246e03c793268291388a47f5eb05546a9946a9b
 z
 Japp/src/main/java/com/ltm/runningtracker/android/activity/RunActivity.java,3\b\3b3b7137fad39167f509e94409e18c21d6d69d06
+r
+Bapp/src/main/java/com/ltm/runningtracker/util/PropertyManager.java,2\2\2226a1445e9a7af3ec364f8144bd560229401f77

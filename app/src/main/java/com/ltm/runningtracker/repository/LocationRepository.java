@@ -31,7 +31,8 @@ public class LocationRepository implements LocationEngineCallback {
     locationEngine = LocationEngineProvider.getBestLocationEngine(getAppContext());
 
     try {
-      LocationEngineRequest locationEngineRequest = new LocationEngineRequest.Builder(0).build();
+      LocationEngineRequest locationEngineRequest = new LocationEngineRequest.Builder(
+          getPropertyManager().getMinTime()).build();
       locationEngine.requestLocationUpdates(locationEngineRequest, this, null);
     } catch (SecurityException e) {
       Log.d("Security exception: ", e.toString());
@@ -49,8 +50,16 @@ public class LocationRepository implements LocationEngineCallback {
     return location;
   }
 
-  public Location getLocation(){
+  public Location getLocation() {
     return location.getValue();
+  }
+
+  public double getLatitude() {
+    return location.getValue().getLatitude();
+  }
+
+  public double getLongitude() {
+    return location.getValue().getLongitude();
   }
 
   public LocationEngine getLocationEngine() {

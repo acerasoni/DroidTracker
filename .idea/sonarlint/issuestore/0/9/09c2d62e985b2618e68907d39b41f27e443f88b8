@@ -1,5 +1,7 @@
 
-"squid:ClassVariableVisibilityCheckj"TMake callback a static final constant or non-public and provide accessors if needed.(΅οΓόÿÿÿÿ8Λÿ½σπ-
-Usquid:S1135N"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-
-Usquid:S1135@"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-
-Usquid:S1135G"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-
+zsquid:S1450"\Remove the "weatherClient" field and declare it as a local variable in the relevant methods.(»„ςί8ΫΨρ-
+ƒsquid:UselessImportCheck"XRemove this unused import 'com.survivingwithandroid.weather.lib.request.WeatherRequest'.(ÿΰ—’8ΧαΨρ-
+jsquid:UselessImportCheck":Remove this unused import 'android.os.RemoteCallbackList'.(―φΰΊύÿÿÿÿ8ΧαΨρ-
+Usquid:S1135C"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-
+Usquid:S1135J"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-
+Usquid:S1135<"2Complete the task associated to this TODO comment.(» ζÿÿÿÿÿ8Λÿ½σπ-

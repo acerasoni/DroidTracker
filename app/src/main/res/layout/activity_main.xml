@@ -23,13 +23,35 @@
     android:layout_height="wrap_content"
     android:onClick="stopService"
     android:text="Stop weather updates" />
-  <EditText
-    android:id="@+id/temperatureField"
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10"
-    android:inputType="textPersonName"
-    android:text="Name" />
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <EditText
+      android:id="@+id/temperatureField"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:ems="10"
+      android:inputType="textPersonName"
+      android:text="Name" />
+    <EditText
+      android:id="@+id/latField"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:ems="10"
+      android:inputType="textPersonName"
+      android:text="Name" />
+    <EditText
+      android:id="@+id/lonField"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:ems="10"
+      android:inputType="textPersonName"
+      android:text="Name" />
+  </LinearLayout>
   <fragment
     android:id="@+id/fragment2"
     android:name="androidx.navigation.fragment.NavHostFragment"

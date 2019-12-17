@@ -1,16 +1,9 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
-import static com.ltm.runningtracker.util.WeatherParser.parseWeatherToClassifier;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,19 +23,17 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     mainScreenViewModel = ViewModelProviders.of(this).get(MainScreenViewModel.class);
-    mainScreenViewModel.getUser().observe(this, user -> {
-      updateTemp(user.getLol());
+    mainScreenViewModel.getLocation().observe(this, location -> {
+      ((TextView) findViewById(R.id.latField)).setText("" + location.getLatitude());
+      ((TextView) findViewById(R.id.lonField)).setText("" + location.getLongitude());
+    });
+
+    mainScreenViewModel.getWeather().observe(this, weather -> {
+      ((TextView) findViewById(R.id.temperatureField)).setText("" + weather.temperature.getTemp());
     });
   }
 
-  private void updateTemp(float f) {
-    ((TextView) findViewById(R.id.temperatureField)).setText("" + f);
-  }
-
   public void onClick(View v) {
-
-
-    mainScreenViewModel.setUser(new User());
 
 
 //    // Create the observer which updates the UI.
@@ -55,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void stopService(View v) {
-    getWeatherRepository().removeUpdates(this);
+
   }
 
   public void navigate(MenuItem m) {
