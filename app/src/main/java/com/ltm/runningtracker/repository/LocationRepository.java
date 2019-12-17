@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import android.location.Location;
 import com.mapbox.android.core.location.LocationEngine;
@@ -40,6 +41,12 @@ public class LocationRepository implements LocationEngineCallback {
 
   private void setLocation(Location location) {
     this.location.setValue(location);
+  }
+
+  // Expose location as livedata object to make it immutable from outside the class
+  // Only the location engine change the value of location
+  public LiveData<Location> getLocationLiveData() {
+    return location;
   }
 
   public Location getLocation(){

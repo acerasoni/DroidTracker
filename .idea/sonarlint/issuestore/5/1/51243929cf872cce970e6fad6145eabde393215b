@@ -1,0 +1,10 @@
+
+asquid:UselessImportCheck"6Remove this unused import 'android.app.PendingIntent'.(šºŞ—8˜–ÕŠñ-
+hsquid:UselessImportCheck	"=Remove this unused import 'android.location.LocationManager'.(Ü©ÎÎ8Öˆ˜‹ñ-
+¤squid:S1186C"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(™Èˆèøÿÿÿÿ8ƒñ›‹ñ-
+dsquid:UselessImportCheck"9Remove this unused import 'androidx.annotation.Nullable'.(¾Èêš8˜–ÕŠñ-
+_squid:UselessImportCheck"4Remove this unused import 'android.content.Context'.(©Ê‰è8˜£’‹ñ-
+isquid:UselessImportCheck">Remove this unused import 'android.location.LocationListener'.(æ‡ë 8îÜ›‹ñ-
+Xsquid:UselessImportCheck".Remove this unused import 'android.os.Looper'.(âå8˜–ÕŠñ-
+^squid:UselessImportCheck
+".Remove this unused import 'android.os.Bundle'.(°şÊóøÿÿÿÿ8²ëŸ‹ñ-

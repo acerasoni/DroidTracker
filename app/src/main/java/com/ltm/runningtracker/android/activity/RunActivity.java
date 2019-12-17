@@ -86,6 +86,7 @@ public class RunActivity extends AppCompatActivity implements
         LocationComponentActivationOptions locationComponentActivationOptions =
             LocationComponentActivationOptions.builder(this, loadedMapStyle)
                 .locationComponentOptions(customLocationComponentOptions)
+                // utilising the repository's location engine, hence no redundancy
                 .locationEngine(getLocationRepository().getLocationEngine())
                 .build();
 
