@@ -41,17 +41,6 @@ public class MainActivity extends AppCompatActivity {
       ((TextView) findViewById(R.id.temperatureField)).setText("" + weather.temperature.getTemp());
     });
 
-
-    Run run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
-    Log.d("iddd", "" + run.getId());
-    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-    Log.d("iddd", "" + run.getId());
-    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
-    Log.d("iddd", "" + run.getId());
-    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
-    Log.d("iddd", "" + run.getId());
-    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
-    Log.d("iddd", "" + run.getId());
   }
 
   public void onClick(View v) {

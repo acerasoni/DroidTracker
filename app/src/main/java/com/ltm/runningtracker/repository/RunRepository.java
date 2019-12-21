@@ -19,36 +19,19 @@ public class RunRepository {
   // Runs are immutable - no need to store them in LiveData, as there are no changes to be observed in the Run objects
   private List<Run> runs;
   private RunDao runDao;
-  private Cursor runCursor;
 
   public RunRepository() {
     runs = new ArrayList<>();
-
-    AsyncTask.execute( new Runnable() {
-      @Override
-      public void run() {
-        runCursor = getApplicationContext().getContentResolver()
-            .query(ContentProviderContract.RUNS_URI, null, null, null, null, null);
-
-
-//        if (c.moveToFirst()) {
-//          do {
-//            Log.d("Type", "" + c.getType(0));
-//
-//          } while (c.moveToNext());
-//
-//        }
-      }
-    });
-
   }
 
   //TODO Fetch runs from content provider and populate list
 
 
   public Cursor getRunCursor() {
-    return runCursor;
+     return getApplicationContext().getContentResolver()
+            .query(ContentProviderContract.RUNS_URI, null, null, null, null, null);
   }
+
   public List<Run> getRuns() {
     return new ArrayList<>(runs);
   }

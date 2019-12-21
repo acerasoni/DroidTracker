@@ -21,9 +21,13 @@
     android:theme="@style/AppTheme"
     tools:ignore="GoogleAppIndexingWarning">
     <activity
+      android:name=".android.activity.BrowseRunDetailsActivity"
+      android:label="@string/title_activity_browse_run_details"
+      android:theme="@style/AppTheme.NoActionBar"></activity>
+    <activity
       android:name=".android.activity.PerformanceActivity"
       android:label="@string/title_activity_performance"
-      android:theme="@style/AppTheme.NoActionBar"></activity>
+      android:theme="@style/AppTheme.NoActionBar" />
     <activity
       android:name=".android.activity.RunActivity"
       android:label="@string/title_activity_run"
@@ -52,12 +56,12 @@
     </activity>
 
     <service android:name=".android.service.WeatherUpdateService" />
+
     <provider
       android:name=".android.contentprovider.RunningTrackerProvider"
       android:authorities="com.ltm.runningtracker.android.contentprovider.RunningTrackerProvider"
       android:enabled="true"
-      android:exported="false">
-    </provider>
+      android:exported="false"></provider>
   </application>
 
 </manifest>

@@ -33,8 +33,6 @@ w
 Gapp/src/main/java/com/ltm/runningtracker/RunningTrackerApplication.java,f\4\f422bc895195bff3b8ff87b41bbb64516b920c40
 p
 @app/src/main/java/com/ltm/runningtracker/util/WeatherParser.java,5\8\589271ded5b629c04aea0ad68a26d2bf73c96ece
-}
-Mapp/src/main/java/com/ltm/runningtracker/android/service/WeatherCallback.java,c\2\c246e03c793268291388a47f5eb05546a9946a9b
 z
 Japp/src/main/java/com/ltm/runningtracker/android/activity/RunActivity.java,3\b\3b3b7137fad39167f509e94409e18c21d6d69d06
 r
@@ -57,11 +55,5 @@ m
 =app/src/main/java/com/ltm/runningtracker/database/RunDao.java,7\1\71b6865c57f8a83159bb3bc6051a76006370f2f7
 j
 :app/src/main/java/com/ltm/runningtracker/database/Run.java,9\3\93b08b06f920a130372c4bfaad2c9a26468216a2
-{
-Kapp/src/main/java/com/ltm/runningtracker/android/activity/MapsActivity.java,a\8\a8404626771d7c70649838fd50ecfd2da022e7f2
-p
-@app/src/main/java/com/ltm/runningtracker/android/service/df.puml,e\a\ea8ca94700a7fe63a22a4e8de35bb60e52bc1cbb
-|
-Lapp/src/main/java/com/ltm/runningtracker/android/activity/BlankFragment.java,9\0\90f85a0b1c152e5ab406cc943b26fae755346b6a
-‚
-Rapp/src/main/java/com/ltm/runningtracker/android/service/WeatherServiceBinder.java,a\8\a8e5e3ec0cf7c3e4d3fbf26c8c65e010b075ad87
+‡
+Wapp/src/main/java/com/ltm/runningtracker/android/activity/BrowseRunDetailsActivity.java,2\6\26737a0e4e293a913f8d5d8cf0619381ac4f21bf

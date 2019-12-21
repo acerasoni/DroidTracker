@@ -14,7 +14,7 @@ public interface RunDao {
     @Query("SELECT * FROM run")
     Cursor getAll();
 
-    @Query("SELECT * FROM run WHERE id IN (:runIds)")
+    @Query("SELECT * FROM run WHERE _id IN (:runIds)")
     List<Run> loadAllByIds(int[] runIds);
 
     @Insert

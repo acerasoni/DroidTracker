@@ -33,8 +33,7 @@ public class RunningTrackerProvider extends ContentProvider {
   @Override
   public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s,
       @Nullable String[] strings1, @Nullable String s1) {
-
-    return null;
+    return runDao.getAll();
   }
 
   @Nullable
@@ -47,18 +46,18 @@ public class RunningTrackerProvider extends ContentProvider {
   @Override
   public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
 
-    final long[] id = new long[1];
+    long id;
 
-    id[0] = runDao
+    id = runDao
         .insert(
-            new Run(contentValues.getAsString("weather"), contentValues.getAsLong("duration"),
+            new Run(contentValues.getAsString("weather"), contentValues.getAsString("duration"),
                 contentValues.getAsDouble("startLat"), contentValues.getAsDouble("startLon"),
                 contentValues.getAsDouble("endLat"), contentValues.getAsDouble("endLon"),
                 contentValues.getAsDouble("totalDistance"),
                 contentValues.getAsDouble("averageSpeed"))
         );
 
-    Uri nu = ContentUris.withAppendedId(uri, id[0]);
+    Uri nu = ContentUris.withAppendedId(uri, id);
     Log.d("PsyagceProvider", "onInsert: " + nu.toString());
     getContext().getContentResolver().notifyChange(nu, null);
 

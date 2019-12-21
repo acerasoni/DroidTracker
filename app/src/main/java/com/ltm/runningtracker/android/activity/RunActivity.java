@@ -5,6 +5,7 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherReposit
 import static com.ltm.runningtracker.android.contentprovider.ContentProviderContract.URI_MATCHER;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/location/LocationComponentOptionsActivity.java
@@ -58,6 +60,7 @@ public class RunActivity extends AppCompatActivity implements
   private RunActivityViewModel runActivityViewModel;
   private Location currentLocation;
   private ContentValues contentValues;
+  private String temperature;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class RunActivity extends AppCompatActivity implements
     getContentResolver().registerContentObserver(
         ContentProviderContract.ALL_URI, true, new ChangeObserver(new Handler()));
 
+    startTime = Calendar.getInstance().getTime().getTime();
     startLat = runActivityViewModel.getLocation().getValue().getLatitude();
     startLon = runActivityViewModel.getLocation().getValue().getLongitude();
     currentLocation = runActivityViewModel.getLocation().getValue();
@@ -89,37 +93,36 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   public void onRunEnd(View v) {
-    endLat = getLocationRepository().getLatitude();
-    endLon = getLocationRepository().getLongitude();
-
-    double duration = Calendar.getInstance().getTime().getTime() - startTime;
-    double averageSpeed = getLocationRepository().calculateAverageSpeed(totalDistance, duration);
-
-    // contentValues.put("weather", getWeatherRepository().getTemperature());
-    contentValues.put("weather", "0.5");
-    contentValues.put("duration", duration);
-    contentValues.put("startLat", startLat);
-    contentValues.put("startLon", startLon);
-    contentValues.put("endLat", endLat);
-    contentValues.put("endLon", endLon);
-    contentValues.put("totalDistance", totalDistance);
-    contentValues.put("averageSpeed", averageSpeed);
-
-//    AsyncTask.execute(new Runnable() {
-//      @Override
-//      public void run() {
-//    Uri uri = getContentResolver().insert(ContentProviderContract.RUNS_URI, contentValues);
-//    Log.d("URI", uri.toString());
-//      }
-//    });
 
     /**
      * https://github.com/probelalkhan/android-room-database-example/blob/master/app/src/main/java/net/simplifiedcoding/mytodo/AddTaskActivity.java
      */
     class SaveRun extends AsyncTask<Void, Void, Void> {
-
       @Override
       protected Void doInBackground(Void... voids) {
+        temperature = getWeatherRepository().getTemperature();
+
+        endLat = runActivityViewModel.getLocation().getValue().getLatitude();
+        endLon = runActivityViewModel.getLocation().getValue().getLongitude();
+
+        long durationTime = Calendar.getInstance().getTime().getTime() - startTime;
+        @SuppressLint("DefaultLocale") String duration = String.format("%02d min, %02d sec",
+            TimeUnit.MILLISECONDS.toMinutes(durationTime),
+            TimeUnit.MILLISECONDS.toSeconds(durationTime) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationTime))
+        );
+
+        double averageSpeed = getLocationRepository().calculateAverageSpeed(totalDistance, durationTime);
+
+        contentValues.put("weather", temperature);
+        contentValues.put("duration", duration);
+        contentValues.put("startLat", startLat);
+        contentValues.put("startLon", startLon);
+        contentValues.put("endLat", endLat);
+        contentValues.put("endLon", endLon);
+        contentValues.put("totalDistance", totalDistance);
+        contentValues.put("averageSpeed", averageSpeed);
+
         Uri uri = getContentResolver().insert(ContentProviderContract.RUNS_URI, contentValues);
         Log.d("URI", uri.toString());
         return null;

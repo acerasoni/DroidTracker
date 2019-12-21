@@ -1,16 +1,0 @@
-
-ksquid:UselessImportCheck";Remove this unused import 'androidx.navigation.Navigation'.(ÄíÚÀÿÿÿÿÿ8«áÙğ-
-isquid:UselessImportCheck">Remove this unused import 'androidx.navigation.NavDirections'.(Á¥±8«áÙğ-
-ysquid:UselessImportCheck"IRemove this unused import 'androidx.navigation.fragment.NavHostFragment'.(ĞÖØ–ıÿÿÿÿ8ÃîÏÙğ-
-Bsquid:S1068"+Remove this unused "mParam1" private field.(•Íï‘
-Bsquid:S1068"+Remove this unused "mParam2" private field.(¡ˆ€ 
-msquid:S1450"VRemove the "mParam1" field and declare it as a local variable in the relevant methods.(•Íï‘
-Isquid:S1135J"2Complete the task associated to this TODO comment.(åµÈ¶
-Isquid:S1135l"2Complete the task associated to this TODO comment.(‡‚ùˆ
-^squid:S00112W"FDefine and throw a dedicated exception instead of using a generic one.(İŒÜ±
-msquid:S1450"VRemove the "mParam2" field and declare it as a local variable in the relevant methods.(¡ˆ€ 
-nsquid:UselessImportCheck
-">Remove this unused import 'androidx.navigation.NavController'.(ˆç×ƒÿÿÿÿÿ8«áÙğ-
-Nsquid:S1135/"2Complete the task associated to this TODO comment.(ßíŠÿÿÿÿÿ
-Nsquid:S1135"2Complete the task associated to this TODO comment.(ÜûŠ—øÿÿÿÿ
-Nsquid:S1135"2Complete the task associated to this TODO comment.(ğï¢öúÿÿÿÿ

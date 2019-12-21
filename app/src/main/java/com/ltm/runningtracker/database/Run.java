@@ -19,13 +19,13 @@ import java.io.Serializable;
 public class Run implements Serializable {
 
   @PrimaryKey(autoGenerate = true)
-  private int id;
+  private int _id;
 
   @ColumnInfo(name = "weather")
   private String weather;
 
   @ColumnInfo(name = "duration")
-  private long duration;
+  private String duration;
 
   @ColumnInfo(name = "start_lat")
   private double startLat;
@@ -45,7 +45,7 @@ public class Run implements Serializable {
   @ColumnInfo(name = "average_speed")
   private double averageSpeed;
 
-  public Run(String weather, long duration, double startLat, double startLon, double endLat,
+  public Run(String weather, String duration, double startLat, double startLon, double endLat,
       double endLon, double distance, double averageSpeed) {
     this.weather = weather;
     this.duration = duration;
@@ -58,11 +58,11 @@ public class Run implements Serializable {
     this.averageSpeed = averageSpeed;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setId(int _id) {
+    this._id = _id;
   }
 
-  public void setDuration(long duration) {
+  public void setDuration(String duration) {
     this.duration = duration;
   }
 
@@ -95,14 +95,14 @@ public class Run implements Serializable {
   }
 
   public int getId() {
-    return id;
+    return _id;
   }
 
   public String getWeather() {
     return weather;
   }
 
-  public long getDuration() {
+  public String getDuration() {
     return duration;
   }
 
