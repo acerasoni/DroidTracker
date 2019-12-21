@@ -12,6 +12,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,6 +20,9 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
+import com.google.android.material.tabs.TabLayout.Tab;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
 
@@ -27,9 +31,10 @@ public class PerformanceActivity extends AppCompatActivity {
 
   private SimpleCursorAdapter dataAdapter;
   private ListView listView;
+  private TabLayout tabLayout;
 
   private final String RUN_DISPLAYED_DATA[] = new String[]{
-      ContentProviderContract._ID,
+      ContentProviderContract.DATE,
       ContentProviderContract.WEATHER,
       ContentProviderContract.DURATION
   };
@@ -45,39 +50,116 @@ public class PerformanceActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_performance);
     listView = findViewById(R.id.runList);
+    dataAdapter = new SimpleCursorAdapter(
+        getApplicationContext(),
+        R.layout.run_list_item,
+        null,
+        RUN_DISPLAYED_DATA,
+        COLUMNS_RESULT_IDS,
+        0);
 
-    AsyncTask.execute(() -> {
-      Cursor c = getRunRepository().getRunCursor();
-      if (c.moveToFirst()) {
-        do {
-          Log.d("Cursor: ID", "" + c.getInt(0));
+    tabLayout = findViewById(R.id.weatherTabs);
+    tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
+      @Override
+      public void onTabSelected(Tab tab) {
+          switch (tab.getPosition()) {
+            case 0:
+              onFreezing(null);
+              break;
+            case 1:
+              onCold(null);
+              break;
+            case 2:
+              onMild(null);
+              break;
+            case 3:
+              onWarm(null);
+              break;
+            case 4:
+              onHot(null);
+              break;
+          }
+        }
 
-          Log.d("Cursor: Weather", "" + c.getString(1));
-        } while (c.moveToNext());
+      @Override
+      public void onTabUnselected(Tab tab) {
+
       }
-      Log.d("Cursor", "" + c.getCount());
-      dataAdapter = new SimpleCursorAdapter(
-          getApplicationContext(),
-          R.layout.run_list_item,
-          c,
-          RUN_DISPLAYED_DATA,
-          COLUMNS_RESULT_IDS,
-          0);
-      runOnUiThread(() -> listView.setAdapter(dataAdapter));
+
+      @Override
+      public void onTabReselected(Tab tab) {
+
+      }
     });
 
+    // Begin on freezing tab
+    onFreezing(null);
   }
 
-  public void onFreezing(View v) {
-
+  public void onFreezing(@Nullable View v) {
+    AsyncTask.execute(() -> {
+      Cursor c = getRunRepository().getFreezingRuns();
+      runOnUiThread(() -> {
+        dataAdapter.swapCursor(c);
+        dataAdapter.notifyDataSetChanged();
+      });
+    });
   }
 
-  public void onCold(View v) {
+  public void onCold(@Nullable View v) {
 
+    // Must do the following sequentially to ensure correct behaviour
+    // - fetch cursor from database asynchronously
+    // - Swap data adaptor's cursor with new one on UI thread
+    // - Notify data adapter on UI thread
+    AsyncTask.execute(() -> {
+      Cursor c = getRunRepository().getColdRuns();
+      runOnUiThread(() -> {
+        dataAdapter.swapCursor(c);
+        dataAdapter.notifyDataSetChanged();
+        listView.setAdapter(dataAdapter);
+      });
+    });
   }
 
-  public void onWarm(View v) {
+  public void onMild(@Nullable View v) {
+    AsyncTask.execute(() -> {
+      Cursor c = getRunRepository().getMildRuns();
+      runOnUiThread(() -> {
+        dataAdapter.swapCursor(c);
+        dataAdapter.notifyDataSetChanged();
+        listView.setAdapter(dataAdapter);
+      });
+    });
+  }
 
+  public void onWarm(@Nullable View v) {
+    AsyncTask.execute(() -> {
+      Cursor c = getRunRepository().getWarmRuns();
+      runOnUiThread(() -> {
+        dataAdapter.swapCursor(c);
+        dataAdapter.notifyDataSetChanged();
+        listView.setAdapter(dataAdapter);
+      });
+    });
+  }
+
+  public void onHot(@Nullable View v) {
+    AsyncTask.execute(() -> {
+      Cursor c = getRunRepository().getHotRuns();
+      runOnUiThread(() -> {
+        dataAdapter.swapCursor(c);
+        dataAdapter.notifyDataSetChanged();
+        listView.setAdapter(dataAdapter);
+      });
+    });
+  }
+
+  public void onAllRuns(@Nullable View v) {
+    AsyncTask.execute(() -> {
+      Cursor c = getRunRepository().getAllRuns();
+      runOnUiThread(() -> listView.setAdapter(dataAdapter));
+    });
   }
 
 }

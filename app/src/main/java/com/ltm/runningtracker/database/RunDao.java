@@ -12,7 +12,22 @@ import java.util.List;
 public interface RunDao {
 
     @Query("SELECT * FROM run")
-    Cursor getAll();
+    Cursor getAllRuns();
+
+    @Query("SELECT * FROM run WHERE weatherType='Freezing'")
+    Cursor getFreezingRuns();
+
+    @Query("SELECT * FROM run WHERE weatherType='Cold'")
+    Cursor getColdRuns();
+
+    @Query("SELECT * FROM run WHERE weatherType='Mild'")
+    Cursor getMildRuns();
+
+    @Query("SELECT * FROM run WHERE weatherType='Warm'")
+    Cursor getWarmRuns();
+
+    @Query("SELECT * FROM run WHERE weatherType='Hot'")
+    Cursor getHotRuns();
 
     @Query("SELECT * FROM run WHERE _id IN (:runIds)")
     List<Run> loadAllByIds(int[] runIds);

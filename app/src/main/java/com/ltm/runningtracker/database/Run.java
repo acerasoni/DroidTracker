@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.database;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.util.WeatherParser.parseTemperatureToString;
 
 import android.location.Location;
 import android.location.LocationProvider;
@@ -10,6 +11,9 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Storing speed and distance can be considered redundant as this can be derived at runtime, though
@@ -20,6 +24,12 @@ public class Run implements Serializable {
 
   @PrimaryKey(autoGenerate = true)
   private int _id;
+
+  @ColumnInfo(name = "date")
+  private String date;
+
+  @ColumnInfo(name = "weatherType")
+  private String weatherType;
 
   @ColumnInfo(name = "weather")
   private String weather;
@@ -47,13 +57,14 @@ public class Run implements Serializable {
 
   public Run(String weather, String duration, double startLat, double startLon, double endLat,
       double endLon, double distance, double averageSpeed) {
+    weatherType = parseTemperatureToString(weather);
+    date = new SimpleDateFormat("dd/M/yyyy").format(new Date());
     this.weather = weather;
     this.duration = duration;
     this.startLat = startLat;
     this.startLon = startLon;
     this.endLat = endLat;
     this.endLon = endLon;
-    this.duration = duration;
     this.distance = distance;
     this.averageSpeed = averageSpeed;
   }
@@ -62,8 +73,16 @@ public class Run implements Serializable {
     this._id = _id;
   }
 
+  public void setDate(String date) {
+    this.date = date;
+  }
+
   public void setDuration(String duration) {
     this.duration = duration;
+  }
+
+  public void setWeatherType(String weatherType) {
+    this.weatherType = weatherType;
   }
 
   public void setWeather(String weather) {
@@ -96,6 +115,14 @@ public class Run implements Serializable {
 
   public int getId() {
     return _id;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public String getWeatherType() {
+    return weatherType;
   }
 
   public String getWeather() {

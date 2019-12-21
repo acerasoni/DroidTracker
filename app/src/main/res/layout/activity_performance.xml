@@ -12,28 +12,46 @@
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
-      android:id="@+id/tabs"
+      android:id="@+id/weatherTabs"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
       <com.google.android.material.tabs.TabItem
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:onClick="onFreezing"
+        android:text="freezing" />
+
+      <com.google.android.material.tabs.TabItem
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="onCold"
         android:text="cold" />
+
       <com.google.android.material.tabs.TabItem
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:onClick="onMild"
         android:text="mild" />
+
       <com.google.android.material.tabs.TabItem
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:onClick="onWarm"
         android:text="warm" />
 
+      <com.google.android.material.tabs.TabItem
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="onHot"
+        android:text="hot" />
+
     </com.google.android.material.tabs.TabLayout>
+
     <ListView
       android:id="@+id/runList"
       android:layout_width="match_parent"
-      android:layout_height="283dp" />
+      android:layout_height="wrap_content" />
 
 
   </LinearLayout>

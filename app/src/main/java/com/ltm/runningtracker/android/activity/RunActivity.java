@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.RunActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
+import com.ltm.runningtracker.exception.WeatherNotAvailableException;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -98,9 +99,15 @@ public class RunActivity extends AppCompatActivity implements
      * https://github.com/probelalkhan/android-room-database-example/blob/master/app/src/main/java/net/simplifiedcoding/mytodo/AddTaskActivity.java
      */
     class SaveRun extends AsyncTask<Void, Void, Void> {
+
       @Override
       protected Void doInBackground(Void... voids) {
-        temperature = getWeatherRepository().getTemperature();
+        try {
+          temperature = getWeatherRepository().getTemperature();
+        } catch (NullPointerException e) {
+          temperature = "Unavailable";
+          throw new WeatherNotAvailableException("Weather unavailable");
+        }
 
         endLat = runActivityViewModel.getLocation().getValue().getLatitude();
         endLon = runActivityViewModel.getLocation().getValue().getLongitude();
@@ -112,7 +119,8 @@ public class RunActivity extends AppCompatActivity implements
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationTime))
         );
 
-        double averageSpeed = getLocationRepository().calculateAverageSpeed(totalDistance, durationTime);
+        double averageSpeed = getLocationRepository()
+            .calculateAverageSpeed(totalDistance, durationTime);
 
         contentValues.put("weather", temperature);
         contentValues.put("duration", duration);
@@ -132,7 +140,12 @@ public class RunActivity extends AppCompatActivity implements
       protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         finish();
-        Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
+        if (temperature.equals("Unavailable")) {
+          Toast.makeText(getApplicationContext(), "Weather unavailable - run saved",
+              Toast.LENGTH_LONG).show();
+        } else {
+          Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
+        }
       }
     }
 

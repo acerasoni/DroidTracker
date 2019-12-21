@@ -1,16 +1,16 @@
 
 gsquid:UselessImportCheck"7Remove this unused import 'androidx.room.RoomDatabase'.(´§¹ğøÿÿÿÿ8Ñïâ´ñ-
-Ÿsquid:UselessImportCheck"oRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract.URI_MATCHER'.(¨„ÄÙÿÿÿÿÿ8®Êì´ñ-
-_squid:UselessImportCheck"/Remove this unused import 'androidx.room.Room'.(ı½‘‹ÿÿÿÿÿ8É‰õ²ñ-
-Ysquid:S2696."6Make the enclosing method "static" or remove this set.(ÙµÈëùÿÿÿÿ8‘³Ñ²ñ-
-xsquid:UselessImportCheck"HRemove this unused import 'com.ltm.runningtracker.database.AppDatabase'.(üû¿æÿÿÿÿÿ8 ¬¤µñ-
-lsquid:UselessImportCheck"ARemove this unused import 'com.ltm.runningtracker.database.User'.(ñÙ½8‘³Ñ²ñ-
 \squid:UselessImportCheck",Remove this unused import 'android.net.Uri'.(òêû‘ıÿÿÿÿ8®Êì´ñ-
-nsquid:UselessImportCheck"CRemove this unused import 'com.ltm.runningtracker.database.RunDao'.(…ÓÊÀ8Ñïâ´ñ-
-hsquid:UselessImportCheck"=Remove this unused import 'android.database.ContentObserver'.(şÚĞä8®Êì´ñ-
-Zsquid:UselessImportCheck	"/Remove this unused import 'android.os.Handler'.(ûÛ’¡8®Êì´ñ-
-Ysquid:S2696-"6Make the enclosing method "static" or remove this set.(÷•¼Äÿÿÿÿÿ8óàşÃğ-
 psquid:UselessImportCheck"@Remove this unused import 'com.ltm.runningtracker.database.Run'.(Ú¡ù¡øÿÿÿÿ8Ñïâ´ñ-
+nsquid:UselessImportCheck"CRemove this unused import 'com.ltm.runningtracker.database.RunDao'.(…ÓÊÀ8Ñïâ´ñ-
+lsquid:UselessImportCheck"ARemove this unused import 'com.ltm.runningtracker.database.User'.(ñÙ½8‘³Ñ²ñ-
+_squid:UselessImportCheck"/Remove this unused import 'androidx.room.Room'.(ı½‘‹ÿÿÿÿÿ8É‰õ²ñ-
+hsquid:UselessImportCheck"=Remove this unused import 'android.database.ContentObserver'.(şÚĞä8®Êì´ñ-
+“squid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract'.(‰”èœûÿÿÿÿ8¦°ç´ñ-
 ^squid:UselessImportCheck
 "3Remove this unused import 'androidx.room.Database'.(™Ş„Ë8Ñïâ´ñ-
-“squid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract'.(‰”èœûÿÿÿÿ8¦°ç´ñ-
+Ÿsquid:UselessImportCheck"oRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract.URI_MATCHER'.(¨„ÄÙÿÿÿÿÿ8®Êì´ñ-
+Ysquid:S2696-"6Make the enclosing method "static" or remove this set.(÷•¼Äÿÿÿÿÿ8óàşÃğ-
+Zsquid:UselessImportCheck	"/Remove this unused import 'android.os.Handler'.(ûÛ’¡8®Êì´ñ-
+Ysquid:S2696."6Make the enclosing method "static" or remove this set.(ÙµÈëùÿÿÿÿ8‘³Ñ²ñ-
+xsquid:UselessImportCheck"HRemove this unused import 'com.ltm.runningtracker.database.AppDatabase'.(üû¿æÿÿÿÿÿ8 ¬¤µñ-

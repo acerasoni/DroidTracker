@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.util;
 
+import com.ltm.runningtracker.android.service.WeatherUpdateService;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Map;
 public class WeatherParser {
 
   public enum WeatherClassifier {
-    FREEZING("Freezing", 0), COLD("Cold", 1), WARM("Warm", 2), HOT("Hot", 3);
+    FREEZING("Freezing", 0), COLD("Cold", 1), MILD("Mild", 2), WARM("Warm", 3), HOT("Hot", 4);
 
     private String weatherDefinition;
     private int value;
@@ -33,20 +34,29 @@ public class WeatherParser {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
       return weatherDefinition;
     }
   }
 
-  public static WeatherClassifier parseWeatherToClassifier(Weather weather) {
-    float temperature = weather.temperature.getTemp();
+  public static String parseTemperatureToString(String temperature) {
+    if(temperature.equals("Unavailable")) {
+      return "Unavailable";
+    }
+    return parseTemperatureToClassifier(Float.parseFloat(temperature)).toString();
+  }
 
+  public static WeatherClassifier parseTemperatureToClassifier(float temperature) {
     if (temperature < 35f) {
       if (temperature < 20f) {
-        if (temperature < 5f) {
-          return WeatherClassifier.FREEZING;
+        if (temperature < 10f) {
+          if (temperature < 5f) {
+            return WeatherClassifier.FREEZING;
+          } else {
+            return WeatherClassifier.COLD;
+          }
         } else {
-          return WeatherClassifier.COLD;
+          return WeatherClassifier.MILD;
         }
       } else {
         return WeatherClassifier.WARM;
@@ -55,4 +65,5 @@ public class WeatherParser {
       return WeatherClassifier.HOT;
     }
   }
+
 }

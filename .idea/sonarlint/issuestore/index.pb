@@ -57,3 +57,5 @@ j
 :app/src/main/java/com/ltm/runningtracker/database/Run.java,9\3\93b08b06f920a130372c4bfaad2c9a26468216a2
 ‡
 Wapp/src/main/java/com/ltm/runningtracker/android/activity/BrowseRunDetailsActivity.java,2\6\26737a0e4e293a913f8d5d8cf0619381ac4f21bf
+„
+Tapp/src/main/java/com/ltm/runningtracker/exception/WeatherNotAvailableException.java,2\d\2d4f919e254b7efbecb0eaf390eacf99be70eb07

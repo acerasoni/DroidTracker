@@ -1,18 +1,13 @@
 package com.ltm.runningtracker.android.contentprovider;
 
-import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.ltm.runningtracker.android.activity.MainActivity;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.Run;
 import com.ltm.runningtracker.database.RunDao;
@@ -33,7 +28,27 @@ public class RunningTrackerProvider extends ContentProvider {
   @Override
   public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s,
       @Nullable String[] strings1, @Nullable String s1) {
-    return runDao.getAll();
+    Cursor c;
+    switch (ContentProviderContract.URI_MATCHER.match(uri)) {
+      case 1:
+        c = runDao.getFreezingRuns();
+        break;
+      case 2:
+        c = runDao.getColdRuns();
+        break;
+      case 3:
+        c = runDao.getMildRuns();
+        break;
+      case 4:
+        c = runDao.getWarmRuns();
+        break;
+      case 5:
+        c = runDao.getHotRuns();
+        break;
+      default: c = runDao.getAllRuns();
+    }
+
+    return c;
   }
 
   @Nullable

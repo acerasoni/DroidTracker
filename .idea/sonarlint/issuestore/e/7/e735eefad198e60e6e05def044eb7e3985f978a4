@@ -1,13 +1,14 @@
 
-Žsquid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel'.(äÆ³ú8•à³Áò-
-lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8ÑßÏžñ-
-nsquid:CommentedOutCodeLine4"<This block of commented-out lines of code should be removed.(ÂîŽÇúÿÿÿÿ8ÑßÏžñ-
-\squid:UselessImportCheck",Remove this unused import 'android.net.Uri'.(òêû‘ýÿÿÿÿ8§ÙÞ¦ñ-
-isquid:CommentedOutCodeLine2"<This block of commented-out lines of code should be removed.(ìðê’8ÑßÏžñ-
-hsquid:UselessImportCheck"=Remove this unused import 'android.database.ContentObserver'.(þÚÐä8§ÙÞ¦ñ-
 psquid:UselessImportCheck"@Remove this unused import 'com.ltm.runningtracker.database.Run'.(Ú¡ù¡øÿÿÿÿ8ê¼³Ëò-
-“squid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract'.(‰”èœûÿÿÿÿ8ÂÒá¦ñ-
-isquid:CommentedOutCodeLine@"<This block of commented-out lines of code should be removed.(Êò¶ß8ìö²Áò-
+hsquid:UselessImportCheck"=Remove this unused import 'android.database.ContentObserver'.(þÚÐä8§ÙÞ¦ñ-
+Žsquid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel'.(äÆ³ú8•à³Áò-
+\squid:UselessImportCheck",Remove this unused import 'android.net.Uri'.(òêû‘ýÿÿÿÿ8§ÙÞ¦ñ-
 ¤squid:S1186:"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(®œœ¥ùÿÿÿÿ8¡Ž·Áò-
 Zsquid:UselessImportCheck	"/Remove this unused import 'android.os.Handler'.(ûÛ’¡8§ÙÞ¦ñ-
+isquid:CommentedOutCodeLine@"<This block of commented-out lines of code should be removed.(Êò¶ß8ìö²Áò-
+isquid:CommentedOutCodeLine2"<This block of commented-out lines of code should be removed.(ìðê’8ÑßÏžñ-
+nsquid:CommentedOutCodeLine4"<This block of commented-out lines of code should be removed.(ÂîŽÇúÿÿÿÿ8ÑßÏžñ-
+lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8ÑßÏžñ-
 Osquid:S1602(",Remove useless curly braces around statement(®ÉÝÖÿÿÿÿÿ8ÑßÏžñ-
+“squid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract'.(‰”èœûÿÿÿÿ8ÂÒá¦ñ-
+œsquid:UselessImportCheck"lRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract.RUNS_URI'.(ûø˜ýýÿÿÿÿ8§±ƒÏò-
