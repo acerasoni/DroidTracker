@@ -3,17 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/nav_graph"
-  app:startDestination="@id/userProfileFragment">
-
-  <fragment
-    android:id="@+id/userProfileFragment"
-    android:name="com.ltm.runningtracker.android.activity.fragment.UserProfileFragment"
-    android:label="user_profile_fragment"
-    tools:layout="@layout/user_profile_fragment" >
-    <action
-      android:id="@+id/action_userProfileFragment_to_performanceFragment"
-      app:destination="@id/performanceFragment" />
-  </fragment>
+  app:startDestination="@id/performanceFragment">
   <fragment
     android:id="@+id/performanceFragment"
     android:name="com.ltm.runningtracker.android.activity.fragment.PerformanceFragment"

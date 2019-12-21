@@ -1,8 +1,13 @@
 
-qsquid:UselessImportCheck	"ARemove this unused import 'androidx.lifecycle.ViewModelProvider'.(ª´÷©øÿÿÿÿ8ÑßÏžñ-
-isquid:CommentedOutCodeLine("<This block of commented-out lines of code should be removed.(ìðê’8ÑßÏžñ-
-ssquid:UselessImportCheck"CRemove this unused import 'com.ltm.runningtracker.parcelable.User'.(¸Š÷¥ûÿÿÿÿ8ÑßÏžñ-
-¤squid:S11860"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(®œœ¥ùÿÿÿÿ8ÑßÏžñ-
-nsquid:CommentedOutCodeLine*"<This block of commented-out lines of code should be removed.(ÂîŽÇúÿÿÿÿ8ÑßÏžñ-
-lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8ÑßÏžñ-
-Osquid:S1602",Remove useless curly braces around statement(Á‹£çþÿÿÿÿ8ÑßÏžñ-
+hsquid:UselessImportCheck"=Remove this unused import 'android.database.ContentObserver'.(þÚÐä8§ÙÞ¦ñ-
+lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8ÑßÏžñ-
+“squid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract'.(‰”èœûÿÿÿÿ8ÂÒá¦ñ-
+isquid:CommentedOutCodeLineK"<This block of commented-out lines of code should be removed.(Êò¶ß8ìö²Áò-
+nsquid:CommentedOutCodeLine?"<This block of commented-out lines of code should be removed.(ÂîŽÇúÿÿÿÿ8ÑßÏžñ-
+Žsquid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel'.(äÆ³ú8•à³Áò-
+Zsquid:UselessImportCheck	"/Remove this unused import 'android.os.Handler'.(ûÛ’¡8§ÙÞ¦ñ-
+Osquid:S1602(",Remove useless curly braces around statement(®ÉÝÖÿÿÿÿÿ8ÑßÏžñ-
+\squid:UselessImportCheck",Remove this unused import 'android.net.Uri'.(òêû‘ýÿÿÿÿ8§ÙÞ¦ñ-
+isquid:CommentedOutCodeLine="<This block of commented-out lines of code should be removed.(ìðê’8ÑßÏžñ-
+¤squid:S1186E"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(®œœ¥ùÿÿÿÿ8¡Ž·Áò-
+œsquid:UselessImportCheck"lRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract.RUNS_URI'.(ûø˜ýýÿÿÿÿ8ŽêîÃò-

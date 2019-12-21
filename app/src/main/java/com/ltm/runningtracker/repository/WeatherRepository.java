@@ -28,16 +28,15 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
     getAppContext().startService(new Intent(getAppContext(), WeatherUpdateService.class));
   }
 
-  public Weather getWeather() {
-    return weatherMutableLiveData.getValue();
-  }
-
   public LiveData<Weather> getLiveDataWeather() { return weatherMutableLiveData;}
 
   private void setWeather(Weather weather) {
     weatherMutableLiveData.setValue(weather);
   }
 
+  public String getTemperature() {
+    return Float.toString(weatherMutableLiveData.getValue().temperature.getTemp());
+  }
   @Override
   public void onWeatherRetrieved(CurrentWeather weather) {
     setWeather(weather.weather);

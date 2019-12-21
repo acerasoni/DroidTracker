@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import android.location.Location;
+import androidx.room.Ignore;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -70,10 +71,29 @@ public class LocationRepository implements LocationEngineCallback {
   @Override
   public void onSuccess(Object result) {
     setLocation(((LocationEngineResult) result).getLastLocation());
+
   }
 
   @Override
   public void onFailure(@NonNull Exception exception) {
 
   }
+
+  public static double calculateDistance(double startLat, double startLon, double endLat, double endLon) {
+    Location a = new Location("Location A");
+    Location b = new Location("Location B");
+
+    a.setLatitude(startLat);
+    a.setLongitude(startLon);
+
+    b.setLatitude(endLat);
+    b.setLongitude(endLon);
+
+    return (double) a.distanceTo(b);
+  }
+
+  public static double calculateAverageSpeed(double distance, double duration) {
+    return distance / duration;
+  }
+
 }

@@ -1,7 +1,8 @@
 
+Usquid:S1135;"2Complete the task associated to this TODO comment.(» æžÿÿÿÿÿ8Ëÿ½óð-
 zsquid:S1450"\Remove the "weatherClient" field and declare it as a local variable in the relevant methods.(»„òß8ÛØšžñ-
-ƒsquid:UselessImportCheck"XRemove this unused import 'com.survivingwithandroid.weather.lib.request.WeatherRequest'.(ÿà—’8×áØžñ-
+Usquid:S1135B"2Complete the task associated to this TODO comment.(» æžÿÿÿÿÿ8Ëÿ½óð-
 jsquid:UselessImportCheck":Remove this unused import 'android.os.RemoteCallbackList'.(¯öàºýÿÿÿÿ8×áØžñ-
-Usquid:S1135C"2Complete the task associated to this TODO comment.(» æžÿÿÿÿÿ8Ëÿ½óð-
-Usquid:S1135J"2Complete the task associated to this TODO comment.(» æžÿÿÿÿÿ8Ëÿ½óð-
-Usquid:S1135<"2Complete the task associated to this TODO comment.(» æžÿÿÿÿÿ8Ëÿ½óð-
+Usquid:S1135I"2Complete the task associated to this TODO comment.(» æžÿÿÿÿÿ8Ëÿ½óð-
+ƒsquid:UselessImportCheck"XRemove this unused import 'com.survivingwithandroid.weather.lib.request.WeatherRequest'.(ÿà—’8×áØžñ-
+Jsquid:S1602!",Remove useless curly braces around statement(§ðï8¥öåÃò-

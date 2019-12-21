@@ -33,7 +33,6 @@ public class WeatherUpdateService extends Service {
     Runnable requestWeatherTask = () -> {
       weatherClient
           .getCurrentCondition(buildWeatherRequest(), getWeatherRepository());
-      Log.d("Hi", "temp");
     };
 
     scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();

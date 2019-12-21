@@ -1,6 +1,5 @@
 package com.ltm.runningtracker.util;
 
-import com.ltm.runningtracker.android.service.WeatherCallback;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import java.util.HashMap;
 import java.util.Map;

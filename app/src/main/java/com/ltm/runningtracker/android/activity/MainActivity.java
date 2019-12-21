@@ -1,36 +1,57 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.android.contentprovider.ContentProviderContract.RUNS_URI;
+
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.activity.viewmodel.MainScreenViewModel;
-import com.ltm.runningtracker.parcelable.User;
-import com.survivingwithandroid.weather.lib.model.Weather;
+import com.ltm.runningtracker.android.activity.viewmodel.MainActivityViewModel;
+import com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel;
+import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
+import com.ltm.runningtracker.database.Run;
 
 public class MainActivity extends AppCompatActivity {
 
-  MainScreenViewModel mainScreenViewModel;
+  MainActivityViewModel mainActivityViewModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    mainScreenViewModel = ViewModelProviders.of(this).get(MainScreenViewModel.class);
-    mainScreenViewModel.getLocation().observe(this, location -> {
+    mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
+    // observe location object
+    mainActivityViewModel.getLocation().observe(this, location -> {
       ((TextView) findViewById(R.id.latField)).setText("" + location.getLatitude());
       ((TextView) findViewById(R.id.lonField)).setText("" + location.getLongitude());
     });
 
-    mainScreenViewModel.getWeather().observe(this, weather -> {
+    // observe weather object
+    mainActivityViewModel.getWeather().observe(this, weather -> {
       ((TextView) findViewById(R.id.temperatureField)).setText("" + weather.temperature.getTemp());
     });
+
+
+    Run run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
+    Log.d("iddd", "" + run.getId());
+    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    Log.d("iddd", "" + run.getId());
+    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
+    Log.d("iddd", "" + run.getId());
+    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
+    Log.d("iddd", "" + run.getId());
+    run =  new Run("lol", 0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0);
+    Log.d("iddd", "" + run.getId());
   }
 
   public void onClick(View v) {
@@ -46,14 +67,16 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void stopService(View v) {
-
   }
 
   public void navigate(MenuItem m) {
-    Navigation.findNavController(this,R.id.fragment2).navigate(R.id.performanceFragment);
+
+    startActivity(new Intent(this, PerformanceActivity.class));
+   // Navigation.findNavController(this,R.id.fragment2).navigate(R.id.performanceFragment);
   }
 
   public void startRun(MenuItem m) {
     startActivity(new Intent(this, RunActivity.class));
   }
+
 }

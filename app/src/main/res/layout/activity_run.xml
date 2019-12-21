@@ -30,10 +30,10 @@
     android:id="@+id/button3"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="28dp"
-    android:layout_marginTop="480dp"
-    android:onClick="printout"
-    android:text="Button"
+    android:layout_marginStart="248dp"
+    android:layout_marginTop="504dp"
+    android:onClick="onRunEnd"
+    android:text="stop run"
     app:layout_constraintStart_toStartOf="@+id/mapView"
     app:layout_constraintTop_toTopOf="@+id/mapView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
