@@ -10,30 +10,32 @@
     android:id="@+id/mapView"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:layout_marginBottom="217dp"
+    android:layout_marginBottom="8dp"
     app:layout_constraintBottom_toTopOf="@+id/back_to_camera_tracking_mode"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.0" ></com.mapbox.mapboxsdk.maps.MapView>
 
   <com.google.android.material.floatingactionbutton.FloatingActionButton
     android:id="@+id/back_to_camera_tracking_mode"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginBottom="16dp"
+    android:layout_marginBottom="8dp"
+    android:src="@drawable/mapbox_compass_icon"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/mapView" />
+    app:layout_constraintTop_toBottomOf="@+id/mapView"
+    app:maxImageSize="56dp" />
   <Button
-    android:id="@+id/button3"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="248dp"
-    android:layout_marginTop="504dp"
-    android:onClick="onRunEnd"
-    android:text="stop run"
-    app:layout_constraintStart_toStartOf="@+id/mapView"
-    app:layout_constraintTop_toTopOf="@+id/mapView" />
+    android:id="@+id/toggleRunButton"
+    android:layout_width="328dp"
+    android:layout_height="73dp"
+    android:layout_marginEnd="8dp"
+    android:onClick="toggleRun"
+    android:text="start"
+    app:layout_constraintEnd_toStartOf="@+id/back_to_camera_tracking_mode"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/mapView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

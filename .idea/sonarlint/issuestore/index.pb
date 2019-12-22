@@ -71,3 +71,5 @@ k
 ;app/src/main/java/com/ltm/runningtracker/database/Diet.java,6\f\6f457590b87865b8da8939c1ff9ee21845c6f92b
 n
 >app/src/main/java/com/ltm/runningtracker/database/DietDao.java,5\b\5bbdfbd99c5ed6d137c5e310d279c7671f7aa19e
+ƒ
+Sapp/src/main/java/com/ltm/runningtracker/android/activity/UserSettingsActivity.java,f\5\f54f540d22cf7de8b76b3a746e291441a33f847d

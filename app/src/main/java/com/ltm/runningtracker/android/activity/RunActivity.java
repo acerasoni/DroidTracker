@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,11 +52,12 @@ public class RunActivity extends AppCompatActivity implements
 
   private PermissionsManager permissionsManager;
 
+  private static boolean isRunning = false;
   private MapboxMap mapboxMap;
   private LocationComponent locationComponent;
   private boolean isInTrackingMode;
   private MapView mapView;
-
+  private Button toggleRunButton;
   private double totalDistance, startLat, startLon, endLat, endLon;
   private long startTime;
   private RunActivityViewModel runActivityViewModel;
@@ -71,6 +73,8 @@ public class RunActivity extends AppCompatActivity implements
     totalDistance = 0;
     runActivityViewModel = ViewModelProviders.of(this).get(RunActivityViewModel.class);
     contentValues = new ContentValues();
+    toggleRunButton = findViewById(R.id.toggleRunButton);
+    toggleRunButton.setText("Start run");
 
     Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
     mapView = (MapView) findViewById(R.id.mapView);
@@ -79,6 +83,21 @@ public class RunActivity extends AppCompatActivity implements
     getContentResolver().registerContentObserver(
         ContentProviderContract.ALL_URI, true, new ChangeObserver(new Handler()));
 
+  }
+
+  public void toggleRun(View v) {
+    if(!isRunning) {
+      toggleRunButton.setText("End run");
+      onRunStart();
+      isRunning = true;
+    } else {
+      toggleRunButton.setText("Start run");
+      onRunEnd();
+      isRunning = false;
+    }
+  }
+
+  public void onRunStart() {
     startTime = Calendar.getInstance().getTime().getTime();
     startLat = runActivityViewModel.getLocation().getValue().getLatitude();
     startLon = runActivityViewModel.getLocation().getValue().getLongitude();
@@ -90,10 +109,9 @@ public class RunActivity extends AppCompatActivity implements
       currentLocation = location;
       Log.d("Current distance", "" + totalDistance);
     });
-
   }
 
-  public void onRunEnd(View v) {
+  public void onRunEnd() {
 
     /**
      * https://github.com/probelalkhan/android-room-database-example/blob/master/app/src/main/java/net/simplifiedcoding/mytodo/AddTaskActivity.java

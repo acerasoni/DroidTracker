@@ -6,6 +6,7 @@ import static com.ltm.runningtracker.util.WeatherParser.parseTemperatureToString
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import java.io.Serializable;
@@ -14,13 +15,14 @@ import java.util.Date;
 
 /**
  * Storing speed and distance can be considered redundant as this can be derived at runtime, though
- * it is a tradeoff between runtime resources vs having an additional column in the database
+ * it is a tradeoff between runtime resources vs having an additional column in the database. We
+ * saved parsed weather because it will allow a custom cursor on specific weather types
  */
 @Entity(foreignKeys = @ForeignKey(entity = Diet.class,
     parentColumns = "name",
     childColumns = "dietName",
     onDelete = CASCADE), indices = {
-    @Index(name = "dietName_index", value = {"dietName"})})
+    @Index(name = "dietName_runIndex", value = {"dietName"})})
 public class Run implements Serializable {
 
   @PrimaryKey(autoGenerate = true)
@@ -59,6 +61,21 @@ public class Run implements Serializable {
   @ColumnInfo(name = "average_speed")
   private double averageSpeed;
 
+  public Run(String dietName, String weatherType, String weather, String duration, double startLat,
+      double startLon, double endLat, double endLon, double distance, double averageSpeed) {
+    this.dietName = dietName;
+    this.weatherType = weatherType;
+    this.weather = weather;
+    this.duration = duration;
+    this.startLat = startLat;
+    this.startLon = startLon;
+    this.endLat = endLat;
+    this.endLon = endLon;
+    this.distance = distance;
+    this.averageSpeed = averageSpeed;
+  }
+
+  @Ignore
   public Run(String weather, String duration, double startLat, double startLon, double endLat,
       double endLon, double distance, double averageSpeed) {
     weatherType = parseTemperatureToString(weather);

@@ -32,40 +32,19 @@ public class MainActivity extends AppCompatActivity {
 
     // observe location object
     mainActivityViewModel.getLocation().observe(this, location -> {
-      ((TextView) findViewById(R.id.latField)).setText("" + location.getLatitude());
-      ((TextView) findViewById(R.id.lonField)).setText("" + location.getLongitude());
     });
 
     // observe weather object
     mainActivityViewModel.getWeather().observe(this, weather -> {
-      ((TextView) findViewById(R.id.temperatureField)).setText("" + weather.temperature.getTemp());
     });
 
   }
 
-  public void onClick(View v) {
-
-
-//    // Create the observer which updates the UI.
-//    final Observer<Weather> weatherObserver = weather -> {
-//      // Update the UI, in this case, a TextView.
-//      Log.d("Weather", Float.toString(weather.temperature.getTemp()));
-//      ((TextView) findViewById(R.id.temperatureField)).setText(parseWeatherToClassifier(weather).toString());
-//    };
-
-  }
-
-  public void stopService(View v) {
-  }
-
-  public void navigate(MenuItem m) {
-
-    startActivity(new Intent(this, PerformanceActivity.class));
-   // Navigation.findNavController(this,R.id.fragment2).navigate(R.id.performanceFragment);
-  }
-
-  public void startRun(MenuItem m) {
+  public void startRunActivity(View v) {
     startActivity(new Intent(this, RunActivity.class));
   }
 
+  public void startPerformanceActivity(View v) {
+    startActivity(new Intent(this, PerformanceActivity.class));
+  }
 }

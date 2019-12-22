@@ -64,7 +64,7 @@ public class RunningTrackerProvider extends ContentProvider {
 
     long id;
 
-    appDatabase.dietDao().insert(new Diet("NAN"));
+    appDatabase.dietDao().insert(new Diet("LOS"));
     id = runDao
         .insert(
             new Run(contentValues.getAsString("weather"), contentValues.getAsString("duration"),

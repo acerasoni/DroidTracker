@@ -9,7 +9,7 @@ public class UserRepository {
   private MutableLiveData<User> user;
 
   public UserRepository() {
-    user = new MutableLiveData<>(new User());
+    user = new MutableLiveData<>(new User("Tizio", "Paleo", 152, 170, false));
   }
 
   public LiveData<User> getUser() {
