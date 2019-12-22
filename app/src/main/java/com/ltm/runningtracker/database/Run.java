@@ -1,29 +1,33 @@
 package com.ltm.runningtracker.database;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static androidx.room.ForeignKey.CASCADE;
 import static com.ltm.runningtracker.util.WeatherParser.parseTemperatureToString;
 
-import android.location.Location;
-import android.location.LocationProvider;
-import android.util.Log;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Storing speed and distance can be considered redundant as this can be derived at runtime, though
  * it is a tradeoff between runtime resources vs having an additional column in the database
  */
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Diet.class,
+    parentColumns = "name",
+    childColumns = "dietName",
+    onDelete = CASCADE), indices = {
+    @Index(name = "dietName_index", value = {"dietName"})})
 public class Run implements Serializable {
 
   @PrimaryKey(autoGenerate = true)
   private int _id;
+
+  @ColumnInfo(name = "dietName")
+  private String dietName;
 
   @ColumnInfo(name = "date")
   private String date;
@@ -61,6 +65,7 @@ public class Run implements Serializable {
     date = new SimpleDateFormat("dd/M/yyyy").format(new Date());
     this.weather = weather;
     this.duration = duration;
+    this.dietName = "NAN";
     this.startLat = startLat;
     this.startLon = startLon;
     this.endLat = endLat;
@@ -69,8 +74,12 @@ public class Run implements Serializable {
     this.averageSpeed = averageSpeed;
   }
 
-  public void setId(int _id) {
+  public void set_id(int _id) {
     this._id = _id;
+  }
+
+  public void setDietName(String dietName) {
+    this.dietName = dietName;
   }
 
   public void setDate(String date) {
@@ -113,12 +122,16 @@ public class Run implements Serializable {
     this.endLon = endLon;
   }
 
-  public int getId() {
+  public int get_id() {
     return _id;
   }
 
   public String getDate() {
     return date;
+  }
+
+  public String getDietName() {
+    return dietName;
   }
 
   public String getWeatherType() {

@@ -8,16 +8,12 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import com.ltm.runningtracker.R;
 
-/**
- * The purpose of this activity is to browse details relating to a specific run, and tag the associated diet
- * Details shown are start location, end location ... //TODO finish
- */
-public class BrowseRunDetailsActivity extends AppCompatActivity {
+public class UserSettingsActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_browse_run_details);
+    setContentView(R.layout.activity_user_settings);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 

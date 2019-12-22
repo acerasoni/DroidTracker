@@ -106,7 +106,7 @@ public class RunActivity extends AppCompatActivity implements
           temperature = getWeatherRepository().getTemperature();
         } catch (NullPointerException e) {
           temperature = "Unavailable";
-          throw new WeatherNotAvailableException("Weather unavailable");
+        //  throw new WeatherNotAvailableException("Weather unavailable");
         }
 
         endLat = runActivityViewModel.getLocation().getValue().getLatitude();

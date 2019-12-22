@@ -27,7 +27,7 @@ public class ContentProviderContract {
   public static final Uri HOT_RUNS_URI =
       Uri.parse("content://"+AUTHORITY+"/runs/hot");
 
-  public static final String _ID = "_id";
+  public static final String RUN_ID = "runId";
   public static final String DATE = "date";
   public static final String WEATHER = "weather";
   public static final String DURATION = "duration";

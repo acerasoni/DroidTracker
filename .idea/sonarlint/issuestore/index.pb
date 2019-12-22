@@ -59,3 +59,15 @@ j
 Wapp/src/main/java/com/ltm/runningtracker/android/activity/BrowseRunDetailsActivity.java,2\6\26737a0e4e293a913f8d5d8cf0619381ac4f21bf
 „
 Tapp/src/main/java/com/ltm/runningtracker/exception/WeatherNotAvailableException.java,2\d\2d4f919e254b7efbecb0eaf390eacf99be70eb07
+–
+fapp/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/PerformanceByWeatherViewModel.java,6\1\61db36cf3ed47b4da4a1c52a5180ed596ab21c62
+’
+bapp/src/main/java/com/ltm/runningtracker/android/activity/fragment/PerformanceByDietViewModel.java,e\6\e659781b32dcdd3e6639b929eb6a367e8c8a941b
+‘
+aapp/src/main/java/com/ltm/runningtracker/android/activity/fragment/PerformanceByDietFragment.java,9\9\996e94287281c4d2d560d95c1ad5f2f30979d42f
+”
+dapp/src/main/java/com/ltm/runningtracker/android/activity/fragment/PerformanceByWeatherFragment.java,f\2\f227005e6a77b26bd96ceeae7b5934c4de040c44
+k
+;app/src/main/java/com/ltm/runningtracker/database/Diet.java,6\f\6f457590b87865b8da8939c1ff9ee21845c6f92b
+n
+>app/src/main/java/com/ltm/runningtracker/database/DietDao.java,5\b\5bbdfbd99c5ed6d137c5e310d279c7671f7aa19e

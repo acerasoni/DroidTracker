@@ -12,44 +12,24 @@
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
-      android:id="@+id/weatherTabs"
+      android:id="@+id/sortByTabs"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
       <com.google.android.material.tabs.TabItem
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="onFreezing"
-        android:text="freezing" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="By weather" />
 
       <com.google.android.material.tabs.TabItem
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="onCold"
-        android:text="cold" />
-
-      <com.google.android.material.tabs.TabItem
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="onMild"
-        android:text="mild" />
-
-      <com.google.android.material.tabs.TabItem
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="onWarm"
-        android:text="warm" />
-
-      <com.google.android.material.tabs.TabItem
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="onHot"
-        android:text="hot" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="by diet" />
 
     </com.google.android.material.tabs.TabLayout>
-
-    <ListView
-      android:id="@+id/runList"
+    <fragment
+      android:id="@+id/fragment3"
+      android:name="com.ltm.runningtracker.android.activity.fragment.PerformanceByWeatherFragment"
       android:layout_width="match_parent"
       android:layout_height="wrap_content" />
 

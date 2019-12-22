@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
  * https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942
  */
 // Database instantiated in the app's constructor above
-@Database(entities = {Run.class}, version = 7, exportSchema = false)
+@Database(entities = {Diet.class, Run.class}, version = 15, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
   private static final String DB_NAME = "tracker_db";
@@ -25,5 +25,5 @@ public abstract class AppDatabase extends RoomDatabase {
   }
 
   public abstract RunDao runDao();
-
+  public abstract DietDao dietDao();
 }

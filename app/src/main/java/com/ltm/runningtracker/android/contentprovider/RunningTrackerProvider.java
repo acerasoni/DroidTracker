@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.ltm.runningtracker.database.AppDatabase;
+import com.ltm.runningtracker.database.Diet;
 import com.ltm.runningtracker.database.Run;
 import com.ltm.runningtracker.database.RunDao;
 
@@ -63,6 +64,7 @@ public class RunningTrackerProvider extends ContentProvider {
 
     long id;
 
+    appDatabase.dietDao().insert(new Diet("NAN"));
     id = runDao
         .insert(
             new Run(contentValues.getAsString("weather"), contentValues.getAsString("duration"),
