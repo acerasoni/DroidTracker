@@ -3,8 +3,6 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
-{
-Kapp/src/main/java/com/ltm/runningtracker/android/activity/MainActivity.java,e\7\e735eefad198e60e6e05def044eb7e3985f978a4
 ç
 ]app/src/main/java/com/ltm/runningtracker/android/contentprovider/ContentProviderContract.java,9\d\9d680f7c5d775d17df894dff7b64083b2e6b2eba
 <
@@ -61,8 +59,6 @@ Wapp/src/main/java/com/ltm/runningtracker/android/activity/BrowseRunDetailsActiv
 Tapp/src/main/java/com/ltm/runningtracker/exception/WeatherNotAvailableException.java,2\d\2d4f919e254b7efbecb0eaf390eacf99be70eb07
 ñ
 fapp/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/PerformanceByWeatherViewModel.java,6\1\61db36cf3ed47b4da4a1c52a5180ed596ab21c62
-í
-bapp/src/main/java/com/ltm/runningtracker/android/activity/fragment/PerformanceByDietViewModel.java,e\6\e659781b32dcdd3e6639b929eb6a367e8c8a941b
 ë
 aapp/src/main/java/com/ltm/runningtracker/android/activity/fragment/PerformanceByDietFragment.java,9\9\996e94287281c4d2d560d95c1ad5f2f30979d42f
 î
@@ -73,3 +69,13 @@ n
 >app/src/main/java/com/ltm/runningtracker/database/DietDao.java,5\b\5bbdfbd99c5ed6d137c5e310d279c7671f7aa19e
 É
 Sapp/src/main/java/com/ltm/runningtracker/android/activity/UserSettingsActivity.java,f\5\f54f540d22cf7de8b76b3a746e291441a33f847d
+Ä
+Papp/src/main/java/com/ltm/runningtracker/android/activity/UserSetupActivity.java,2\c\2c864a37f3556acca1c54083723f9a898978b625
+n
+>app/src/main/java/com/ltm/runningtracker/database/UserDao.java,f\0\f05b649ae39d2e46f5e42c6f6056e5c5b1dc07c8
+ì
+capp/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/PerformanceByDietViewModel.java,5\e\5e310d7e8f96821886768d2f4080fbcb12555acc
+Å
+Qapp/src/main/java/com/ltm/runningtracker/android/activity/MainScreenActivity.java,3\2\326a3462861b0ece081e2ddeb4fcbf5d0368e28d
+Å
+Qapp/src/main/java/com/ltm/runningtracker/android/activity/EntryPointActivity.java,e\7\e70a71ba0f40fc70e0fd471bb7fc65879ac4663e

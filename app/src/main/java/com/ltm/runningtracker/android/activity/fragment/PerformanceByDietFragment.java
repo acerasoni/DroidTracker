@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.android.activity.viewmodel.PerformanceByDietViewModel;
 
 public class PerformanceByDietFragment extends Fragment {
 

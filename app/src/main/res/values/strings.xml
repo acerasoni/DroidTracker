@@ -11,4 +11,6 @@
   <string name="title_activity_performance">PerformanceActivity</string>
   <string name="title_activity_browse_run_details">BrowseRunDetailsActivity</string>
   <string name="title_activity_user_settings">UserSettingsActivity</string>
+  <string name="title_activity_user_setup">UserSetupActivity</string>
+  <string name="title_activity_performance_type_selector">PerformanceTypeSelectorActivity</string>
 </resources>

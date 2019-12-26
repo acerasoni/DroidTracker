@@ -1,10 +1,12 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.android.contentprovider.ContentProviderContract.RUNS_URI;
 
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,7 +22,7 @@ import com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel;
 import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
 import com.ltm.runningtracker.database.Run;
 
-public class MainActivity extends AppCompatActivity {
+public class MainScreenActivity extends AppCompatActivity {
 
   MainActivityViewModel mainActivityViewModel;
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
     mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
     // observe location object
@@ -45,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void startPerformanceActivity(View v) {
-    startActivity(new Intent(this, PerformanceActivity.class));
+    startActivity(new Intent(this, PerformanceTypeSelectorActivity.class));
   }
 }

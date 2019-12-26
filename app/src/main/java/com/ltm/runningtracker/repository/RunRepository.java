@@ -18,7 +18,6 @@ public class RunRepository {
 
   // Runs are immutable - no need to store them in LiveData, as there are no changes to be observed in the Run objects
   private List<Run> runs;
-  private RunDao runDao;
 
   public RunRepository() {
     runs = new ArrayList<>();

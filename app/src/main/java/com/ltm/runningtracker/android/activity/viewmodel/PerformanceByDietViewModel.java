@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.android.activity.fragment;
+package com.ltm.runningtracker.android.activity.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 

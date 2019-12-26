@@ -26,4 +26,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
   public abstract RunDao runDao();
   public abstract DietDao dietDao();
+  public abstract UserDao userDao();
 }

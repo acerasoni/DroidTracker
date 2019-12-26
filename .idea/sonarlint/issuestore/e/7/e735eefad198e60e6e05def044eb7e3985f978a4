@@ -1,14 +1,0 @@
-
-Zsquid:UselessImportCheck	"/Remove this unused import 'android.os.Handler'.(ûÛ’¡8§ÙÞ¦ñ-
-hsquid:UselessImportCheck"=Remove this unused import 'android.database.ContentObserver'.(þÚÐä8§ÙÞ¦ñ-
-]squid:UselessImportCheck"2Remove this unused import 'android.view.MenuItem'.(Ð¬Ó‘8ã…öïò-
-Žsquid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel'.(äÆ³ú8•à³Áò-
-œsquid:UselessImportCheck"lRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract.RUNS_URI'.(ûø˜ýýÿÿÿÿ8§±ƒÏò-
-“squid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract'.(‰”èœûÿÿÿÿ8ÂÒá¦ñ-
-\squid:UselessImportCheck",Remove this unused import 'android.net.Uri'.(òêû‘ýÿÿÿÿ8§ÙÞ¦ñ-
-lsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(²Ú±Ž8ÑßÏžñ-
-ksquid:UselessImportCheck";Remove this unused import 'androidx.navigation.Navigation'.(ÄíÚÀÿÿÿÿÿ8ã…öïò-
-psquid:UselessImportCheck"@Remove this unused import 'com.ltm.runningtracker.database.Run'.(Ú¡ù¡øÿÿÿÿ8ê¼³Ëò-
-dsquid:UselessImportCheck"4Remove this unused import 'android.widget.TextView'.(„Ë‚ˆÿÿÿÿÿ8Ýœøïò-
-]squid:UselessImportCheck
-"-Remove this unused import 'android.util.Log'.(Ô¦Ø²øÿÿÿÿ8Ýœøïò-

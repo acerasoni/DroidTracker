@@ -10,18 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.Diet;
+import com.ltm.runningtracker.database.DietDao;
 import com.ltm.runningtracker.database.Run;
 import com.ltm.runningtracker.database.RunDao;
+import com.ltm.runningtracker.database.UserDao;
 
 public class RunningTrackerProvider extends ContentProvider {
 
   private AppDatabase appDatabase;
   private RunDao runDao;
+  private UserDao userDao;
+  private DietDao dietDao;
 
   @Override
   public boolean onCreate() {
     appDatabase = AppDatabase.getInstance(getContext());
     this.runDao = appDatabase.runDao();
+    this.userDao = appDatabase.userDao();
+    this.dietDao = appDatabase.dietDao();
     return true;
   }
 
@@ -46,6 +52,8 @@ public class RunningTrackerProvider extends ContentProvider {
       case 5:
         c = runDao.getHotRuns();
         break;
+      case 7:
+        c =  userDao.getUser();
       default: c = runDao.getAllRuns();
     }
 

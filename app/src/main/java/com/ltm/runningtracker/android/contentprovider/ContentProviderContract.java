@@ -9,6 +9,12 @@ public class ContentProviderContract {
   public static final String CONTENT_TYPE_MULTIPLE = "vnd.android.cursor.dir/PsyagceProvider.data.text";
   public static final Uri ALL_URI = Uri.parse("content://"+AUTHORITY+"/");
 
+  public static final Uri USER_URI =
+      Uri.parse("content://"+AUTHORITY+"/user");
+
+  public static final Uri DIET_URI =
+      Uri.parse("content://"+AUTHORITY+"/diet");
+
   public static final Uri RUNS_URI =
       Uri.parse("content://"+AUTHORITY+"/runs");
 
@@ -43,6 +49,7 @@ public class ContentProviderContract {
     URI_MATCHER.addURI(AUTHORITY, "runs/warm", 4);
     URI_MATCHER.addURI(AUTHORITY, "runs/hot", 5);
     URI_MATCHER.addURI(AUTHORITY, "runs/#", 6);
+    URI_MATCHER.addURI(AUTHORITY, "user", 7);
   }
 
 }

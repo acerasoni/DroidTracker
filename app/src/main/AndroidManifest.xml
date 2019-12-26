@@ -21,9 +21,17 @@
     android:theme="@style/AppTheme"
     tools:ignore="GoogleAppIndexingWarning">
     <activity
+      android:name=".android.activity.PerformanceTypeSelectorActivity"
+      android:label="@string/title_activity_performance_type_selector"
+      android:theme="@style/AppTheme.NoActionBar"></activity>
+    <activity
+      android:name=".android.activity.UserSetupActivity"
+      android:label="@string/title_activity_user_setup"
+      android:theme="@style/AppTheme.NoActionBar" />
+    <activity
       android:name=".android.activity.UserSettingsActivity"
       android:label="@string/title_activity_user_settings"
-      android:theme="@style/AppTheme.NoActionBar"></activity>
+      android:theme="@style/AppTheme.NoActionBar" />
     <activity
       android:name=".android.activity.BrowseRunDetailsActivity"
       android:label="@string/title_activity_browse_run_details"
@@ -49,7 +57,7 @@
       android:value="@string/google_maps_key" />
 
     <activity
-      android:name=".android.activity.MainActivity"
+      android:name=".android.activity.MainScreenActivity"
       android:label="@string/title_activity_main"
       android:theme="@style/AppTheme.NoActionBar">
       <intent-filter>
