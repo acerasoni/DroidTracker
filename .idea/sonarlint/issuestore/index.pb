@@ -79,3 +79,9 @@ capp/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/Performance
 Qapp/src/main/java/com/ltm/runningtracker/android/activity/MainScreenActivity.java,3\2\326a3462861b0ece081e2ddeb4fcbf5d0368e28d
 Å
 Qapp/src/main/java/com/ltm/runningtracker/android/activity/EntryPointActivity.java,e\7\e70a71ba0f40fc70e0fd471bb7fc65879ac4663e
+é
+^app/src/main/java/com/ltm/runningtracker/android/activity/PerformanceTypeSelectorActivity.java,3\e\3e5f8c27adf29c55a622f2b410c4ef3586b93f40
+Ü
+Vapp/src/main/java/com/ltm/runningtracker/android/activity/DietPerformanceActivity.java,f\e\fead59174df1b9341180c75df5a1a94440fb4ac8
+â
+Yapp/src/main/java/com/ltm/runningtracker/android/activity/WeatherPerformanceActivity.java,0\8\089872ed2e1fb757d6c1e2c72f1f7be8dd2aee7a
