@@ -16,18 +16,14 @@ import java.util.List;
 
 public class RunRepository {
 
-  // Runs are immutable - no need to store them in LiveData, as there are no changes to be observed in the Run objects
-  private List<Run> runs;
-
   public RunRepository() {
-    runs = new ArrayList<>();
   }
 
   //TODO Fetch runs from content provider and populate list
 
   public Cursor getAllRuns() {
-     return getApplicationContext().getContentResolver()
-            .query(ContentProviderContract.RUNS_URI, null, null, null, null, null);
+    return getApplicationContext().getContentResolver()
+        .query(ContentProviderContract.RUNS_URI, null, null, null, null, null);
   }
 
   public Cursor getFreezingRuns() {
@@ -36,7 +32,7 @@ public class RunRepository {
   }
 
   public Cursor getColdRuns() {
-     return getApplicationContext().getContentResolver()
+    return getApplicationContext().getContentResolver()
         .query(ContentProviderContract.COLD_RUNS_URI, null, null, null, null, null);
   }
 
@@ -55,15 +51,4 @@ public class RunRepository {
         .query(ContentProviderContract.HOT_RUNS_URI, null, null, null, null, null);
   }
 
-  public List<Run> getRuns() {
-    return new ArrayList<>(runs);
-  }
-
-  public Run getRun(int index) throws RunNotFoundException {
-    try {
-      return runs.get(index);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      throw new RunNotFoundException("Run not found.");
-    }
-  }
 }

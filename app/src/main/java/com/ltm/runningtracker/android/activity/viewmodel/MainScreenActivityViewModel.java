@@ -19,13 +19,9 @@ public class MainScreenActivityViewModel extends ViewModel {
 
   public MainScreenActivityViewModel() {
     locationLiveData = getLocationRepository().getLocationLiveData();
-    userLiveData = getUserRepository().getUser();
+    userLiveData = getUserRepository().getUserLiveData();
     weatherLiveData = getWeatherRepository().getLiveDataWeather();
     countyLiveData = getLocationRepository().getCountyLiveData();
-  }
-
-  public LiveData<User> getUser() {
-    return userLiveData;
   }
 
   public LiveData<Location> getLocation() {
@@ -40,7 +36,9 @@ public class MainScreenActivityViewModel extends ViewModel {
     return countyLiveData;
   }
 
+  public LiveData<User> getUser() { return userLiveData; }
+
   public boolean doesUserExist() {
-    return getUserRepository().isUserSetup();
+    return getUserRepository().doesUserExist();
   }
 }

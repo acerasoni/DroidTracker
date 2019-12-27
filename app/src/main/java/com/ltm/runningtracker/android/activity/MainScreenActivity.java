@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,9 +17,13 @@ import com.ltm.runningtracker.android.activity.viewmodel.MainScreenActivityViewM
 
 public class MainScreenActivity extends AppCompatActivity {
 
+  public static final int USER_CREATION_REQUEST = 1;
+  public static final int USER_MODIFICATION_REQUEST = 2;
+
   private MainScreenActivityViewModel mainActivityViewModel;
   private TextView weatherTextField, locationTextField;
-  private Button runButton, performanceButton, settingsButton;
+  private Button runButton, performanceButton, settingsButton, userProfileButton;
+  private Context context = this;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +34,9 @@ public class MainScreenActivity extends AppCompatActivity {
     runButton = findViewById(R.id.runButton);
     performanceButton = findViewById(R.id.performanceButton);
     settingsButton = findViewById(R.id.settingsButton);
+    userProfileButton = findViewById(R.id.userProfileButton);
 
-    checkUserExists();
+    setupButtons();
 
     weatherTextField = findViewById(R.id.weatherField);
     locationTextField = findViewById(R.id.locationField);
@@ -50,42 +56,67 @@ public class MainScreenActivity extends AppCompatActivity {
 
   }
 
-  public void startRunActivity(View v) {
-    startActivity(new Intent(this, RunActivity.class));
-  }
-
-  public void startPerformanceActivity(View v) {
-    startActivity(new Intent(this, PerformanceTypeSelectorActivity.class));
-  }
-
-  private void checkUserExists() {
+  private void setupButtons() {
     if (!mainActivityViewModel.doesUserExist()) {
-      View.OnClickListener sharedListener = v -> {
-        Toast.makeText(getApplicationContext(), "User setup required",
-            Toast.LENGTH_LONG).show();
-      };
-      disableButton(runButton);
-      disableButton(performanceButton);
-      disableButton(settingsButton);
-      runButton.setOnClickListener(sharedListener);
-      performanceButton.setOnClickListener(sharedListener);
-      settingsButton.setOnClickListener(sharedListener);
-    } else {
-      Context context = this;
-      runButton.setOnClickListener(v -> startActivity(new Intent(context, RunActivity.class)));
-      performanceButton.setOnClickListener(
-          v -> startActivity(new Intent(context, PerformanceTypeSelectorActivity.class)));
-      settingsButton.setOnClickListener(v -> {
-        startActivity(new Intent(context, UserProfileActivity.class));
+      mainActivityViewModel.getUser().observe(this, user -> {
+        enableButtons();
       });
+      // If user does not exist, observe the object (as the database is pinged asynchronously)
+      // In other words, disable buttons temporarily, but re-enable them if user is ever fetched from the db
+      disableButtons();
+
+    } else {
+      enableButtons();
     }
   }
 
-  private static void disableButton(Button button) {
-    button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == 1) {
+      if (resultCode == Activity.RESULT_OK) {
+        enableButtons();
+      }
+      if (resultCode == Activity.RESULT_CANCELED) {
+        disableButtons();
+      }
+    }
+  }//onActivityResult
+
+  private void disableButtons() {
+    View.OnClickListener sharedListener = v -> {
+      Toast.makeText(getApplicationContext(), "User setup required",
+          Toast.LENGTH_LONG).show();
+    };
+    runButton.setOnClickListener(sharedListener);
+    performanceButton.setOnClickListener(sharedListener);
+    settingsButton.setOnClickListener(sharedListener);
+    // If user has not been setup before, we request activity for result
+    userProfileButton.setOnClickListener(
+        v -> startActivityForResult(new Intent(context, UserProfileActivity.class),
+            USER_CREATION_REQUEST));
+
+    runButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+    performanceButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+    settingsButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
   }
 
-  private static void enableButton(Button button) {
+  private void enableButtons() {
+    runButton.getBackground().clearColorFilter();
+    performanceButton.getBackground().clearColorFilter();
+    settingsButton.getBackground().clearColorFilter();
 
+    runButton.setOnClickListener(v -> startActivity(new Intent(context, RunActivity.class)));
+    performanceButton.setOnClickListener(
+        v -> startActivity(new Intent(context, PerformanceTypeSelectorActivity.class)));
+    settingsButton.setOnClickListener(v -> {
+      startActivity(new Intent(context, SettingsActivity.class));
+    });
+    userProfileButton
+        .setOnClickListener(v -> {
+          Intent intent = new Intent(context, UserProfileActivity.class);
+          intent.putExtra("request", USER_MODIFICATION_REQUEST);
+          startActivity(intent);
+        });
   }
 }

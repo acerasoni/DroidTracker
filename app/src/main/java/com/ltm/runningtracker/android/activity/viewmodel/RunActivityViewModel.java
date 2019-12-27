@@ -12,17 +12,11 @@ import com.survivingwithandroid.weather.lib.model.Weather;
 
 public class RunActivityViewModel extends ViewModel {
   private LiveData<Location> locationLiveData;
-  private LiveData<User> userLiveData;
   private LiveData<Weather> weatherLiveData;
 
   public RunActivityViewModel() {
     locationLiveData = getLocationRepository().getLocationLiveData();
-    userLiveData = getUserRepository().getUser();
     weatherLiveData = getWeatherRepository().getLiveDataWeather();
-  }
-
-  public LiveData<User> getUser() {
-    return userLiveData;
   }
 
   public LiveData<Location> getLocation() {

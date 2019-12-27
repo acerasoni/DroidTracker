@@ -77,7 +77,7 @@ public class RunActivity extends AppCompatActivity implements
     toggleRunButton.setText("Start run");
 
     Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-    mapView = (MapView) findViewById(R.id.mapView);
+    mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
     getContentResolver().registerContentObserver(

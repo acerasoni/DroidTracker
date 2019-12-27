@@ -1,8 +1,10 @@
 
-Usquid:S1135;"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8Ëÿ½óğ-
-zsquid:S1450"\Remove the "weatherClient" field and declare it as a local variable in the relevant methods.(»„òß8ÛØšñ-
-Usquid:S1135B"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8Ëÿ½óğ-
-jsquid:UselessImportCheck":Remove this unused import 'android.os.RemoteCallbackList'.(¯öàºıÿÿÿÿ8×áØñ-
-Usquid:S1135I"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8Ëÿ½óğ-
-ƒsquid:UselessImportCheck"XRemove this unused import 'com.survivingwithandroid.weather.lib.request.WeatherRequest'.(ÿà—’8×áØñ-
-Jsquid:S1602!",Remove useless curly braces around statement(§ğï8¥öåÃò-
+Usquid:S1135["2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8Ëÿ½óğ-
+ƒsquid:UselessImportCheck"XRemove this unused import 'com.survivingwithandroid.weather.lib.request.WeatherRequest'.(ÿà—’8×áØñ-
+Xsquid:S2274-":Remove this call to "wait" or move it into a "while" loop.(ŒºÙ8†¯‡¶ô-
+zsquid:S1450"\Remove the "weatherClient" field and declare it as a local variable in the relevant methods.(»„òß8ïøµô-
+jsquid:UselessImportCheck":Remove this unused import 'android.os.RemoteCallbackList'.(¯öàºıÿÿÿÿ8×áØñ-
+dsquid:S21422"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8å¸óµô-
+Usquid:S1135M"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8Ëÿ½óğ-
+Usquid:S1135T"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8Ëÿ½óğ-
+vsquid:S1450"SRemove the "lock" field and declare it as a local variable in the relevant methods.(Ò¤°¡úÿÿÿÿ8Œ­ûµô-

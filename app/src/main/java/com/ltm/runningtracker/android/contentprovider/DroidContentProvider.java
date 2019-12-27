@@ -1,5 +1,7 @@
 package com.ltm.runningtracker.android.contentprovider;
 
+import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
+
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -13,6 +15,7 @@ import com.ltm.runningtracker.database.Diet;
 import com.ltm.runningtracker.database.DietDao;
 import com.ltm.runningtracker.database.Run;
 import com.ltm.runningtracker.database.RunDao;
+import com.ltm.runningtracker.database.User;
 import com.ltm.runningtracker.database.UserDao;
 
 public class DroidContentProvider extends ContentProvider {
@@ -53,8 +56,10 @@ public class DroidContentProvider extends ContentProvider {
         c = runDao.getHotRuns();
         break;
       case 7:
-        c =  userDao.getUser();
-      default: c = runDao.getAllRuns();
+        c = userDao.getUser();
+        break;
+      default:
+        c = runDao.getAllRuns();
     }
 
     return c;
@@ -69,21 +74,34 @@ public class DroidContentProvider extends ContentProvider {
   @Nullable
   @Override
   public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+    long id = -1;
 
-    long id;
+    switch (ContentProviderContract.URI_MATCHER.match(uri)) {
+      case 0:
+        id = runDao
+            .insert(
+                new Run(contentValues.getAsString("weather"), contentValues.getAsString("duration"),
+                    contentValues.getAsDouble("startLat"), contentValues.getAsDouble("startLon"),
+                    contentValues.getAsDouble("endLat"), contentValues.getAsDouble("endLon"),
+                    contentValues.getAsDouble("totalDistance"),
+                    contentValues.getAsDouble("averageSpeed"))
+            );
+        break;
+      case 7:
+        User user = new User(contentValues.getAsString("name"), contentValues.getAsString("dietName"),
+            contentValues.getAsFloat("bmi"));
 
-    appDatabase.dietDao().insert(new Diet("LOS"));
-    id = runDao
-        .insert(
-            new Run(contentValues.getAsString("weather"), contentValues.getAsString("duration"),
-                contentValues.getAsDouble("startLat"), contentValues.getAsDouble("startLon"),
-                contentValues.getAsDouble("endLat"), contentValues.getAsDouble("endLon"),
-                contentValues.getAsDouble("totalDistance"),
-                contentValues.getAsDouble("averageSpeed"))
-        );
+        // Cache
+        getUserRepository().setUserAsync(user);
+
+        // Insert
+        dietDao.insert(new Diet(user.getDietName()));
+        id = userDao.insert(user);
+        break;
+    }
 
     Uri nu = ContentUris.withAppendedId(uri, id);
-    Log.d("PsyagceProvider", "onInsert: " + nu.toString());
+    Log.d("DroidContentProvider ", "onInsert: " + nu.toString());
     getContext().getContentResolver().notifyChange(nu, null);
 
     return nu;
@@ -91,6 +109,11 @@ public class DroidContentProvider extends ContentProvider {
 
   @Override
   public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
+    switch (ContentProviderContract.URI_MATCHER.match(uri)) {
+      case 7:
+        userDao.delete();
+        break;
+    }
     return 0;
   }
 

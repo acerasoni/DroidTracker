@@ -34,13 +34,6 @@ public class User {
     this.bmi = bmi;
   }
 
-  @Ignore
-  public User(String name, String dietName, int weight, int height, boolean isMetric) {
-    this.name = name;
-    this.dietName = dietName;
-    this.bmi = calculateBMI(weight, height, isMetric);
-  }
-
   public void set_id(int _id) {
     this._id = _id;
   }
@@ -72,24 +65,5 @@ public class User {
   public void setDietName(String dietName) {
     this.dietName = dietName;
   }
-
-  /**
-   * https://www.cdc.gov/healthyweight/assessing/bmi/childrens_bmi/childrens_bmi_formula.html
-   */
-  @Ignore
-  private float calculateBMI(int weight, int height, boolean isMetric) {
-    return isMetric ? calculateMetricBMI(weight, height) : calculateImperialBMI(weight, height);
-  }
-
-  @Ignore
-  private float calculateMetricBMI(int weight, int height) {
-    return weight / (height * height);
-  }
-
-  @Ignore
-  private float calculateImperialBMI(int weight, int height) {
-    return 703 * weight / (height * height);
-  }
-
 
 }

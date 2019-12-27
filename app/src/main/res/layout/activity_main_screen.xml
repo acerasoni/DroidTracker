@@ -4,12 +4,12 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/colorPrimary"
   android:orientation="vertical"
   tools:context=".android.activity.MainScreenActivity">
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:weightSum="2">
     <LinearLayout
@@ -22,13 +22,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Location" />
+        android:text="Location"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
       <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Weather" />
+        android:text="Weather"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
     </LinearLayout>
     <LinearLayout
       android:layout_width="match_parent"
@@ -40,13 +44,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
       <TextView
         android:id="@+id/weatherField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
     </LinearLayout>
   </LinearLayout>
   <View
@@ -83,7 +91,7 @@
       android:layout_height="0dp"
       android:layout_weight="1">
       <Button
-        android:id="@+id/button14"
+        android:id="@+id/userProfileButton"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

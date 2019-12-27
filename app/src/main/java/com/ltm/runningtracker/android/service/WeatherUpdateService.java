@@ -36,7 +36,7 @@ public class WeatherUpdateService extends Service {
 
     // Reasons for this:
     // 1. Need to wait for location service to fetch at least one valid location
-    // 2. Updating weather and location must not happen at the same time as this could
+    // 2. Updating weather and location must not happen concurrently as this could
     // cause inconsistencies.
     Runnable requestWeatherTask = () -> {
       try {
