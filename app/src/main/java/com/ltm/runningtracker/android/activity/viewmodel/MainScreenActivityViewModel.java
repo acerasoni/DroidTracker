@@ -10,16 +10,18 @@ import androidx.lifecycle.ViewModel;
 import com.ltm.runningtracker.database.User;
 import com.survivingwithandroid.weather.lib.model.Weather;
 
-public class MainActivityViewModel extends ViewModel {
+public class MainScreenActivityViewModel extends ViewModel {
 
   private LiveData<Location> locationLiveData;
   private LiveData<User> userLiveData;
   private LiveData<Weather> weatherLiveData;
+  private LiveData<String> countyLiveData;
 
-  public MainActivityViewModel() {
+  public MainScreenActivityViewModel() {
     locationLiveData = getLocationRepository().getLocationLiveData();
     userLiveData = getUserRepository().getUser();
     weatherLiveData = getWeatherRepository().getLiveDataWeather();
+    countyLiveData = getLocationRepository().getCountyLiveData();
   }
 
   public LiveData<User> getUser() {
@@ -30,5 +32,15 @@ public class MainActivityViewModel extends ViewModel {
     return locationLiveData;
   }
 
-  public LiveData<Weather> getWeather() { return weatherLiveData; }
+  public LiveData<Weather> getWeather() {
+    return weatherLiveData;
+  }
+
+  public LiveData<String> getCounty() {
+    return countyLiveData;
+  }
+
+  public boolean doesUserExist() {
+    return getUserRepository().isUserSetup();
+  }
 }

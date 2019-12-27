@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.service;
 
+import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 import static com.ltm.runningtracker.repository.WeatherRepository.buildWeatherClient;
@@ -24,15 +25,32 @@ public class WeatherUpdateService extends Service {
   // Worker thread
   private ScheduledExecutorService scheduledExecutorService;
   private WeatherClient weatherClient;
+  private Object lock;
 
   @Override
   public void onCreate() {
     super.onCreate();
     weatherClient = buildWeatherClient();
 
+    lock = getLocationRepository().lock;
+
+    // Reasons for this:
+    // 1. Need to wait for location service to fetch at least one valid location
+    // 2. Updating weather and location must not happen at the same time as this could
+    // cause inconsistencies.
     Runnable requestWeatherTask = () -> {
-      weatherClient
-          .getCurrentCondition(buildWeatherRequest(), getWeatherRepository());
+      try {
+        synchronized (lock) {
+          if (getLocationRepository().getLocation() == null) {
+            lock.wait();
+          }
+          weatherClient
+              .getCurrentCondition(buildWeatherRequest(), getWeatherRepository());
+        }
+      } catch (InterruptedException e) {
+        Log.e("WeatherUpdateService: ", "StartUp thread interrupted.");
+      }
+
     };
 
     scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -82,6 +100,8 @@ public class WeatherUpdateService extends Service {
     super.onTaskRemoved(intent);
   }
 
+  // No need to use callbacks as the worker thread updating our weather client is already implemented
+  // we just call it periodically. Activities observe weather object
   public class WeatherServiceBinder extends Binder implements IInterface {
 
     @Override

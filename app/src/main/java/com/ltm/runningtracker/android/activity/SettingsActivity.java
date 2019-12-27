@@ -8,7 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import com.ltm.runningtracker.R;
 
-public class UserSettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

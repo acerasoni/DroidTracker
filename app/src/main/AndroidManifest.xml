@@ -29,11 +29,11 @@
       android:label="@string/title_activity_performance_type_selector"
       android:theme="@style/AppTheme.NoActionBar" />
     <activity
-      android:name=".android.activity.UserSetupActivity"
+      android:name=".android.activity.UserProfileActivity"
       android:label="@string/title_activity_user_setup"
       android:theme="@style/AppTheme.NoActionBar" />
     <activity
-      android:name=".android.activity.UserSettingsActivity"
+      android:name=".android.activity.SettingsActivity"
       android:label="@string/title_activity_user_settings"
       android:theme="@style/AppTheme.NoActionBar" />
     <activity
@@ -74,8 +74,8 @@
     <service android:name=".android.service.WeatherUpdateService" />
 
     <provider
-      android:name=".android.contentprovider.RunningTrackerProvider"
-      android:authorities="com.ltm.runningtracker.android.contentprovider.RunningTrackerProvider"
+      android:name=".android.contentprovider.DroidContentProvider"
+      android:authorities="com.ltm.runningtracker.android.contentprovider.DroidContentProvider"
       android:enabled="true"
       android:exported="false" />
   </application>

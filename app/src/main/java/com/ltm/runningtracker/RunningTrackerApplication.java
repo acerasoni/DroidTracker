@@ -1,23 +1,8 @@
 package com.ltm.runningtracker;
 
-import static com.ltm.runningtracker.android.contentprovider.ContentProviderContract.URI_MATCHER;
-
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
-import androidx.room.Database;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
-import com.ltm.runningtracker.android.activity.UserSetupActivity;
-import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
-import com.ltm.runningtracker.android.contentprovider.RunningTrackerProvider;
-import com.ltm.runningtracker.database.AppDatabase;
-import com.ltm.runningtracker.database.Run;
-import com.ltm.runningtracker.database.RunDao;
-import com.ltm.runningtracker.database.User;
+import com.ltm.runningtracker.android.contentprovider.DroidContentProvider;
 import com.ltm.runningtracker.repository.RunRepository;
 import com.ltm.runningtracker.util.PropertyManager;
 import com.ltm.runningtracker.repository.LocationRepository;
@@ -40,15 +25,21 @@ public class RunningTrackerApplication extends Application {
   private static RunRepository runRepository;
 
   // Content provider
-  private static RunningTrackerProvider runningTrackerProvider;
+  private static DroidContentProvider droidContentProvider;
 
   public void onCreate() {
     super.onCreate();
     context = getApplicationContext();
+
+    // Initialise repositories
     propertyManager = new PropertyManager(getResources().getString(R.string.app_properties));
+    locationRepository = getLocationRepository();
+    userRepository = getUserRepository();
+    weatherRepository = getWeatherRepository();
+    runRepository = getRunRepository();
+
     // Mapbox Access token
     Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
-
   }
 
   public static Context getAppContext() {
@@ -88,11 +79,11 @@ public class RunningTrackerApplication extends Application {
     return runRepository;
   }
 
-  public static synchronized RunningTrackerProvider getRunningTrackerProvider() {
-    if (runningTrackerProvider == null) {
-      runningTrackerProvider = new RunningTrackerProvider();
+  public static synchronized DroidContentProvider getDroidContentProvider() {
+    if (droidContentProvider == null) {
+      droidContentProvider = new DroidContentProvider();
     }
-    return runningTrackerProvider;
+    return droidContentProvider;
   }
 
 }

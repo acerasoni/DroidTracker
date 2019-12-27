@@ -35,8 +35,6 @@ z
 Japp/src/main/java/com/ltm/runningtracker/android/activity/RunActivity.java,3\b\3b3b7137fad39167f509e94409e18c21d6d69d06
 r
 Bapp/src/main/java/com/ltm/runningtracker/util/PropertyManager.java,2\2\2226a1445e9a7af3ec364f8144bd560229401f77
-Ç
-Rapp/src/main/java/com/ltm/runningtracker/android/activity/PerformanceActivity.java,f\f\ffdb643fcc9a030f0e49e56c0115f044b2b59ce6
 |
 Lapp/src/main/java/com/ltm/runningtracker/exception/RunNotFoundException.java,5\7\57fabee48e9b08c4e7d1f6464d70387a3b0900a4
 é
@@ -77,8 +75,6 @@ n
 capp/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/PerformanceByDietViewModel.java,5\e\5e310d7e8f96821886768d2f4080fbcb12555acc
 Å
 Qapp/src/main/java/com/ltm/runningtracker/android/activity/MainScreenActivity.java,3\2\326a3462861b0ece081e2ddeb4fcbf5d0368e28d
-Å
-Qapp/src/main/java/com/ltm/runningtracker/android/activity/EntryPointActivity.java,e\7\e70a71ba0f40fc70e0fd471bb7fc65879ac4663e
 é
 ^app/src/main/java/com/ltm/runningtracker/android/activity/PerformanceTypeSelectorActivity.java,3\e\3e5f8c27adf29c55a622f2b410c4ef3586b93f40
 Ü

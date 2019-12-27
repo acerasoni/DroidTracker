@@ -12,18 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.activity.viewmodel.MainActivityViewModel;
+import com.ltm.runningtracker.android.activity.viewmodel.MainScreenActivityViewModel;
 import com.ltm.runningtracker.database.User;
 
 public class UserProfileFragment extends Fragment {
 
-  private MainActivityViewModel mViewModel;
+  private MainScreenActivityViewModel mViewModel;
 
   public static UserProfileFragment newInstance() {
     return new UserProfileFragment();
   }
 
-  private MainActivityViewModel userProfileViewModel;
+  private MainScreenActivityViewModel userProfileViewModel;
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -31,7 +31,7 @@ public class UserProfileFragment extends Fragment {
 
     // Get the view model
     userProfileViewModel = new ViewModelProvider(this, new SavedStateVMFactory(this))
-        .get(MainActivityViewModel.class);
+        .get(MainScreenActivityViewModel.class);
 
     // Define the observer which updates UI
     // Create the observer which updates the UI.
@@ -49,7 +49,7 @@ public class UserProfileFragment extends Fragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+    mViewModel = ViewModelProviders.of(this).get(MainScreenActivityViewModel.class);
     // TODO: Use the ViewModel
   }
 

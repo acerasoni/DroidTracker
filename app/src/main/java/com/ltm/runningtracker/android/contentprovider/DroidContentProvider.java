@@ -15,7 +15,7 @@ import com.ltm.runningtracker.database.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.UserDao;
 
-public class RunningTrackerProvider extends ContentProvider {
+public class DroidContentProvider extends ContentProvider {
 
   private AppDatabase appDatabase;
   private RunDao runDao;
