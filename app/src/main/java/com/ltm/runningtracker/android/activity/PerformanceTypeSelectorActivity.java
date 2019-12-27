@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -17,11 +18,11 @@ public class PerformanceTypeSelectorActivity extends AppCompatActivity {
   }
 
   public void onSelectDiet(View v) {
-
+    startActivity(new Intent(this, DietPerformanceActivity.class));
   }
 
   public void onSelectWeather(View v) {
-
+    startActivity(new Intent(this, WeatherPerformanceActivity.class));
   }
 
 }

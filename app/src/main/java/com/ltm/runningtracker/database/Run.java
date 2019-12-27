@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.database;
 
 import static androidx.room.ForeignKey.CASCADE;
+import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.util.WeatherParser.parseTemperatureToString;
 
 import androidx.room.ColumnInfo;
@@ -82,7 +83,7 @@ public class Run implements Serializable {
     date = new SimpleDateFormat("dd/M/yyyy").format(new Date());
     this.weather = weather;
     this.duration = duration;
-    this.dietName = "NAN";
+    this.dietName = getUserRepository().getUser().getDietName();
     this.startLat = startLat;
     this.startLon = startLon;
     this.endLat = endLat;

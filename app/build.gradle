@@ -42,6 +42,9 @@ dependencies {
     // optional - Guava support for Room, including Optional and ListenableFuture
     implementation "androidx.room:room-guava:$room_version"
 
+    // graphs
+    implementation 'com.jjoe64:graphview:4.2.2'
+
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.navigation:navigation-fragment:$nav_version"

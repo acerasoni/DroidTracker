@@ -40,12 +40,16 @@ public class WeatherParser {
   }
 
   public static String parseTemperatureToString(String temperature) {
-    if(temperature.equals("Unavailable")) {
+    if (temperature.equals("Unavailable")) {
       return "Unavailable";
     }
     return parseTemperatureToClassifier(Float.parseFloat(temperature)).toString();
   }
 
+  /**
+   * Freezing = Less than 5°C Cold = Between 5°C and 10°C Mild = Between 10°C and 20°C Warm =
+   * Between 20°C and 35°C Hot = Above 35°C
+   */
   public static WeatherClassifier parseTemperatureToClassifier(float temperature) {
     if (temperature < 35f) {
       if (temperature < 20f) {

@@ -154,8 +154,16 @@ public class LocationRepository implements LocationEngineCallback {
     return (double) a.distanceTo(b);
   }
 
+  /**
+   *
+   * @param distance in metres
+   * @param duration in milliseconds
+   * @return mph
+   */
   public static double calculateAverageSpeed(double distance, double duration) {
-    return distance / duration;
+    double metersPerSecond = distance / (duration / 1000);
+    double mph = metersPerSecond * 2.237;
+    return mph;
   }
 
 }

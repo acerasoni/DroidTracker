@@ -79,3 +79,13 @@ Zapp/src/main/java/com/ltm/runningtracker/android/contentprovider/DroidContentPr
 dapp/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/MainScreenActivityViewModel.java,0\6\06ca007d05f7d1278fa603895deaaeaa2b34139f
 ‚
 Rapp/src/main/java/com/ltm/runningtracker/android/activity/UserProfileActivity.java,4\4\44f5786a003a8c7f7d42e0c9e47585c35c4c9eb0
+
+Oapp/src/main/java/com/ltm/runningtracker/android/activity/SettingsActivity.java,d\9\d9f570bedd48f04022784b540eec00c7b5795bfd
+7
+gradlew,5\b\5bbfa66edb4db3c7c33c5181f43510990d3307f9
+;
+gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
+A
+gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
+?
+settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
