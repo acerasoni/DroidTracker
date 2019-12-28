@@ -3,4 +3,9 @@
   <color name="colorPrimary">#ed832b</color>
   <color name="colorPrimaryDark">#00574B</color>
   <color name="colorAccent">#D81B60</color>
+  <color name="freezingColor">#3517fc</color>
+  <color name="coldColor">#69c7fa</color>
+  <color name="mildColor">#f5c836</color>
+  <color name="warmColor">#f28430</color>
+  <color name="hotColor">#ff0000</color>
 </resources>

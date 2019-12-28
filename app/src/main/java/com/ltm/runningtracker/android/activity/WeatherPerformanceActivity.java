@@ -37,6 +37,12 @@ public class WeatherPerformanceActivity extends AppCompatActivity {
       LineGraphSeries<DataPoint> mildLine = graphLineBuilder(MILD_RUNS_URI);
       LineGraphSeries<DataPoint> warmLine = graphLineBuilder(WARM_RUNS_URI);
       LineGraphSeries<DataPoint> hotLine = graphLineBuilder(HOT_RUNS_URI);
+      freezingLine.setBackgroundColor(getColor(R.color.freezingColor));
+      coldLine.setBackgroundColor(getColor(R.color.coldColor));
+      mildLine.setBackgroundColor(getColor(R.color.mildColor));
+      warmLine.setBackgroundColor(getColor(R.color.warmColor));
+      hotLine.setBackgroundColor(getColor(R.color.hotColor));
+
       graphView.addSeries(freezingLine);
       graphView.addSeries(coldLine);
       graphView.addSeries(mildLine);
