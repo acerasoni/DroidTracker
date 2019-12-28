@@ -82,48 +82,61 @@
     android:layout_width="match_parent"
     android:layout_height="10dp"
     android:background="?android:attr/listDivider" />
-  <LinearLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:background="@color/backgroundColor"
-    android:orientation="vertical"
-    android:weightSum="2">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="0dp"
+      android:layout_marginStart="12dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginEnd="12dp"
+      android:layout_marginBottom="12dp"
       android:layout_weight="1"
-      android:orientation="horizontal">
-      <Button
-        android:id="@+id/runButton"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:weightSum="2"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="run" />
-      <Button
-        android:id="@+id/performanceButton"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="performance" />
+        android:orientation="horizontal">
+        <Button
+          android:id="@+id/runButton"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="run" />
+        <Button
+          android:id="@+id/performanceButton"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="performance" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <Button
+          android:id="@+id/userProfileButton"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="user profile" />
+        <Button
+          android:id="@+id/settingsButton"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="settings" />
+      </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1">
-      <Button
-        android:id="@+id/userProfileButton"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="user profile" />
-      <Button
-        android:id="@+id/settingsButton"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="settings" />
-    </LinearLayout>
-  </LinearLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
