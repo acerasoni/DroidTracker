@@ -85,12 +85,21 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   public void toggleRun(View v) {
+    if (!isInTrackingMode) {
+      isInTrackingMode = true;
+      locationComponent.setCameraMode(CameraMode.TRACKING);
+      locationComponent.zoomWhileTracking(16f);
+      Toast.makeText(RunActivity.this, "Run started",
+          Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(RunActivity.this, "Run ended",
+          Toast.LENGTH_SHORT).show();
+    }
     if(!isRunning) {
       toggleRunButton.setText("End run");
       onRunStart();
       isRunning = true;
     } else {
-      toggleRunButton.setText("Start run");
       onRunEnd();
       isRunning = false;
     }
@@ -221,23 +230,6 @@ public class RunActivity extends AppCompatActivity implements
 
       // Add the camera tracking listener. Fires if the map camera is manually moved.
       locationComponent.addOnCameraTrackingChangedListener(this);
-
-      findViewById(R.id.back_to_camera_tracking_mode)
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (!isInTrackingMode) {
-                isInTrackingMode = true;
-                locationComponent.setCameraMode(CameraMode.TRACKING);
-                locationComponent.zoomWhileTracking(16f);
-                Toast.makeText(RunActivity.this, "Tracking mode re-enabled",
-                    Toast.LENGTH_SHORT).show();
-              } else {
-                Toast.makeText(RunActivity.this, "Tracking mode already enabled, move map",
-                    Toast.LENGTH_SHORT).show();
-              }
-            }
-          });
 
     } else {
       permissionsManager = new PermissionsManager(this);

@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
-import com.ltm.runningtracker.database.User;
+import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
 
 public class DroidContentProvider extends ContentProvider {
@@ -85,7 +85,7 @@ public class DroidContentProvider extends ContentProvider {
         break;
       case 7:
         User user = new User(contentValues.getAsString("name"),
-            contentValues.getAsFloat("bmi"));
+            contentValues.getAsInteger("weight"), contentValues.getAsInteger("height"), contentValues.getAsFloat("walkingPace"), contentValues.getAsFloat("joggingPace"), contentValues.getAsFloat("runningPace"));
 
         // Cache
         getUserRepository().setUserAsync(user);

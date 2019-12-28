@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/coordinatorLayout2"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".android.activity.PerformanceActivity" >
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
+
+    <TextView
+      android:id="@+id/textView6"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:text="Performance"
+      android:textColor="#FFFFFF"
+      android:textSize="30sp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.0" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewPager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.tabs.TabLayout
+      android:id="@+id/tabLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:tabBackground="@color/colorPrimaryDark"
+      app:tabMode="fixed"
+      app:tabTextAppearance="@style/MineCustomTabText"
+      app:tabTextColor="#FFFFFF">
+
+      <com.google.android.material.tabs.TabItem
+        android:id="@+id/tabItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Freezing" />
+      <com.google.android.material.tabs.TabItem
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cold" />
+
+      <com.google.android.material.tabs.TabItem
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mild" />
+
+      <com.google.android.material.tabs.TabItem
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Warm" />
+      <com.google.android.material.tabs.TabItem
+        android:id="@+id/tabItem2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hot" />
+    </com.google.android.material.tabs.TabLayout>
+
+  </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

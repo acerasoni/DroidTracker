@@ -7,7 +7,7 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherReposit
 import android.location.Location;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
-import com.ltm.runningtracker.database.User;
+import com.ltm.runningtracker.database.model.User;
 import com.survivingwithandroid.weather.lib.model.Weather;
 
 public class MainScreenActivityViewModel extends ViewModel {

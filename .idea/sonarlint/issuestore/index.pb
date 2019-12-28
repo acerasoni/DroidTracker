@@ -89,3 +89,11 @@ A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
+~
+Napp/src/main/java/com/ltm/runningtracker/android/activity/EditBmiActivity.java,8\e\8e505f88c4264d709b057aedc8dd17bf5601a31c
+q
+Aapp/src/main/java/com/ltm/runningtracker/database/model/User.java,0\4\04b11772b8274dcb483bc158a954c74a2215bbd9
+p
+@app/src/main/java/com/ltm/runningtracker/database/model/Run.java,b\e\be9781129c25f26ff51a2eb5b02601ab3f4c21df
+‚
+Rapp/src/main/java/com/ltm/runningtracker/android/activity/PerformanceActivity.java,f\f\ffdb643fcc9a030f0e49e56c0115f044b2b59ce6

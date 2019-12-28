@@ -1,4 +1,4 @@
 
-–"squid:ClassVariableVisibilityCheck"bMake weatherMutableLiveData a static final constant or non-public and provide accessors if needed.(àÉ°08×ƒ‰Ñğ-
 Ÿsquid:S1186."€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(©çÌ8Ï™üñ-
+–"squid:ClassVariableVisibilityCheck"bMake weatherMutableLiveData a static final constant or non-public and provide accessors if needed.(àÉ°08×ƒ‰Ñğ-
 ¤squid:S11863"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(áö†³ÿÿÿÿÿ8Ï™üñ-

@@ -128,14 +128,14 @@ public class LocationRepository implements LocationEngineCallback {
       city = address.get(0).getSubAdminArea();
     } catch (IOException ioException) {
       // Catch network or other I/O problems.
-      Log.e("Location Repository: ", "IOException occurred while fetching address", ioException);
+      Log.e("Location Repository ", "IOException occurred while fetching address", ioException);
     } catch (IllegalArgumentException illegalArgumentException) {
       // Catch invalid latitude or longitude values.
       throw new InvalidLatitudeOrLongitudeException(
           "Invalid values for Latitude = " + location.getLatitude() +
               ", Longitude = " + location.getLongitude());
     } catch (NullPointerException nullPointerException) {
-      Log.e("Location Repository: ", "Could not fetch location", nullPointerException);
+      Log.e("Location Repository ", "Could not fetch location", nullPointerException);
     }
     return city;
   }

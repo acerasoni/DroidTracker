@@ -1,13 +1,11 @@
 package com.ltm.runningtracker.android.activity.viewmodel;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
 import android.location.Location;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
-import com.ltm.runningtracker.database.User;
 import com.survivingwithandroid.weather.lib.model.Weather;
 
 public class RunActivityViewModel extends ViewModel {

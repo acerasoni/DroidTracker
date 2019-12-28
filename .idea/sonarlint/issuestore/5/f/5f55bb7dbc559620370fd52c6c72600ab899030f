@@ -1,8 +1,5 @@
 
-_squid:S2184n"ACast one of the operands of this division operation to a "float".(ˆ‡ûŞ8€áÓÇô-
-“squid:UselessImportCheck"cRemove this unused import 'com.ltm.runningtracker.android.contentprovider.ContentProviderContract'.(‰”èœûÿÿÿÿ8æßìÁô-
-Tsquid:UselessImportCheck")Remove this unused import 'java.net.URI'.(Ö¦¨°8£‚íÁô-
-dsquid:S2184i"ACast one of the operands of this division operation to a "float".(‘ãèÛüÿÿÿÿ8°ïÇô-
-ysquid:S1450"VRemove the "userURI" field and declare it as a local variable in the relevant methods.(š¸ºèÿÿÿÿÿ8Àñ‘Ãô-
-\squid:UselessImportCheck"1Remove this unused import 'androidx.room.Ignore'.(†ê¶®8ÒßòÁô-
-Nsquid:S1068"+Remove this unused "userURI" private field.(š¸ºèÿÿÿÿÿ8Àñ‘Ãô-
+ysquid:S1450"VRemove the "userURI" field and declare it as a local variable in the relevant methods.(š¸ºèÿÿÿÿÿ8Àñ‘Ãô-
+Gsquid:S16598")Declare "joggingPace" on a separate line.(¨—Í—8‹Îâéô-
+Nsquid:S1068"+Remove this unused "userURI" private field.(š¸ºèÿÿÿÿÿ8Àñ‘Ãô-
+Gsquid:S16598")Declare "runningPace" on a separate line.(¨—Í—8‹Îâéô-
