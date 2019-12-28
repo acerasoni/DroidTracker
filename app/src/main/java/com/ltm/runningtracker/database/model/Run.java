@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.database;
+package com.ltm.runningtracker.database.model;
 
 import static androidx.room.ForeignKey.CASCADE;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
@@ -19,21 +19,17 @@ import java.util.Date;
  * it is a tradeoff between runtime resources vs having an additional column in the database. We
  * saved parsed weather because it will allow a custom cursor on specific weather types
  */
-@Entity(foreignKeys = @ForeignKey(entity = Diet.class,
-    parentColumns = "name",
-    childColumns = "dietName",
-    onDelete = CASCADE), indices = {
-    @Index(name = "dietName_runIndex", value = {"dietName"})})
+@Entity
 public class Run implements Serializable {
 
   @PrimaryKey(autoGenerate = true)
   private int _id;
 
-  @ColumnInfo(name = "dietName")
-  private String dietName;
-
   @ColumnInfo(name = "date")
   private String date;
+
+  @ColumnInfo(name = "type")
+  private String type;
 
   @ColumnInfo(name = "weatherType")
   private String weatherType;
@@ -62,10 +58,10 @@ public class Run implements Serializable {
   @ColumnInfo(name = "average_speed")
   private double averageSpeed;
 
-  public Run(String dietName, String weatherType, String weather, String duration, double startLat,
+  public Run(String weatherType, String type, String weather, String duration, double startLat,
       double startLon, double endLat, double endLon, double distance, double averageSpeed) {
-    this.dietName = dietName;
     this.weatherType = weatherType;
+    this.type = type;
     this.weather = weather;
     this.duration = duration;
     this.startLat = startLat;
@@ -82,8 +78,8 @@ public class Run implements Serializable {
     weatherType = parseTemperatureToString(weather);
     date = new SimpleDateFormat("dd/M/yyyy").format(new Date());
     this.weather = weather;
+    this.type = "Uncategorised";
     this.duration = duration;
-    this.dietName = getUserRepository().getUser().getDietName();
     this.startLat = startLat;
     this.startLon = startLon;
     this.endLat = endLat;
@@ -92,12 +88,12 @@ public class Run implements Serializable {
     this.averageSpeed = averageSpeed;
   }
 
-  public void set_id(int _id) {
-    this._id = _id;
+  public void setType(String type) {
+    this.type = type;
   }
 
-  public void setDietName(String dietName) {
-    this.dietName = dietName;
+  public void set_id(int _id) {
+    this._id = _id;
   }
 
   public void setDate(String date) {
@@ -144,12 +140,12 @@ public class Run implements Serializable {
     return _id;
   }
 
-  public String getDate() {
-    return date;
+  public String getType() {
+    return type;
   }
 
-  public String getDietName() {
-    return dietName;
+  public String getDate() {
+    return date;
   }
 
   public String getWeatherType() {

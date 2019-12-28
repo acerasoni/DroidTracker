@@ -31,13 +31,6 @@ public class RunningTrackerApplication extends Application {
     super.onCreate();
     context = getApplicationContext();
 
-    // Initialise repositories
-    propertyManager = new PropertyManager(getResources().getString(R.string.app_properties));
-    locationRepository = getLocationRepository();
-    userRepository = getUserRepository();
-    weatherRepository = getWeatherRepository();
-    runRepository = getRunRepository();
-
     // Mapbox Access token
     Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
   }
@@ -47,7 +40,9 @@ public class RunningTrackerApplication extends Application {
   }
 
   public static PropertyManager getPropertyManager() {
-    return RunningTrackerApplication.propertyManager;
+    if(propertyManager == null) {
+      propertyManager = new PropertyManager(getAppContext().getResources().getString(R.string.app_properties));
+    } return propertyManager;
   }
 
   public static synchronized LocationRepository getLocationRepository() {

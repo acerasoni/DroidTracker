@@ -1,8 +1,17 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
+import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
+
+import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -11,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.MainScreenActivityViewModel;
@@ -35,14 +46,36 @@ public class MainScreenActivity extends AppCompatActivity {
     performanceButton = findViewById(R.id.performanceButton);
     settingsButton = findViewById(R.id.settingsButton);
     userProfileButton = findViewById(R.id.userProfileButton);
-
-    setupButtons();
-
     weatherTextField = findViewById(R.id.weatherField);
     locationTextField = findViewById(R.id.locationField);
 
+    if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this,
+          new String[]{permission.ACCESS_FINE_LOCATION},
+          0);
+    } else {
+      setup();
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+      String[] permissions, int[] grantResults) {
+    setup();
+  }
+
+  private void setup() {
     weatherTextField.setText("Fetching weather...");
     locationTextField.setText("Fetching location...");
+
+    // Initialise repositories
+    getPropertyManager();
+    getLocationRepository();
+    getUserRepository();
+    getWeatherRepository();
+    getRunRepository();
+    setupButtons();
 
     // observe location object
     mainActivityViewModel.getCounty().observe(this, county -> {
@@ -53,7 +86,6 @@ public class MainScreenActivity extends AppCompatActivity {
     mainActivityViewModel.getWeather().observe(this, weather -> {
       weatherTextField.setText(weather.temperature.getTemp() + " °C");
     });
-
   }
 
   private void setupButtons() {
@@ -108,7 +140,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     runButton.setOnClickListener(v -> startActivity(new Intent(context, RunActivity.class)));
     performanceButton.setOnClickListener(
-        v -> startActivity(new Intent(context, PerformanceTypeSelectorActivity.class)));
+        v -> startActivity(new Intent(context, PerformanceActivity.class)));
     settingsButton.setOnClickListener(v -> {
       startActivity(new Intent(context, SettingsActivity.class));
     });

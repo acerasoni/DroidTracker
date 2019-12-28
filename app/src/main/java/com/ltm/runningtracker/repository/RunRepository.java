@@ -3,16 +3,7 @@ package com.ltm.runningtracker.repository;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 import android.database.Cursor;
-import android.os.AsyncTask;
-import android.util.Log;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
-import com.ltm.runningtracker.database.RunDao;
-import com.ltm.runningtracker.exception.RunNotFoundException;
-import com.ltm.runningtracker.database.Run;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RunRepository {
 

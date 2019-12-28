@@ -20,7 +20,7 @@ import com.ltm.runningtracker.R;
 /**
  * Graph 1 = Running pace (average speed) Graph 2 = Total distance Graph 3 = Total time
  */
-public class WeatherPerformanceActivity extends AppCompatActivity {
+public class PerformanceActivity extends AppCompatActivity {
 
   private GraphView graphView;
 

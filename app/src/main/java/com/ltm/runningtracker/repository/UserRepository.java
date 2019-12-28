@@ -59,7 +59,6 @@ public class UserRepository {
     float bmi = calculateBMI(weight, height, true);
     Log.d("BMI", Float.toString(bmi));
     contentValues.put("name", name);
-    contentValues.put("dietName", dietName);
     contentValues.put("bmi", bmi);
 
     AsyncTask.execute(() -> {
@@ -86,9 +85,8 @@ public class UserRepository {
   private User buildUserFromMemory(Cursor c) {
     c.moveToFirst();
     String name = c.getString(0);
-    String dietName = c.getString(1);
     float bmi = c.getInt(2);
-    return new User(name, dietName, bmi);
+    return new User(name, bmi);
   }
 
   /**

@@ -11,9 +11,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.ltm.runningtracker.database.AppDatabase;
-import com.ltm.runningtracker.database.Diet;
-import com.ltm.runningtracker.database.DietDao;
-import com.ltm.runningtracker.database.Run;
+import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.User;
 import com.ltm.runningtracker.database.UserDao;
@@ -23,14 +21,12 @@ public class DroidContentProvider extends ContentProvider {
   private AppDatabase appDatabase;
   private RunDao runDao;
   private UserDao userDao;
-  private DietDao dietDao;
 
   @Override
   public boolean onCreate() {
     appDatabase = AppDatabase.getInstance(getContext());
     this.runDao = appDatabase.runDao();
     this.userDao = appDatabase.userDao();
-    this.dietDao = appDatabase.dietDao();
     return true;
   }
 
@@ -88,14 +84,12 @@ public class DroidContentProvider extends ContentProvider {
             );
         break;
       case 7:
-        User user = new User(contentValues.getAsString("name"), contentValues.getAsString("dietName"),
+        User user = new User(contentValues.getAsString("name"),
             contentValues.getAsFloat("bmi"));
 
         // Cache
         getUserRepository().setUserAsync(user);
 
-        // Insert
-        dietDao.insert(new Diet(user.getDietName()));
         id = userDao.insert(user);
         break;
     }

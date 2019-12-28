@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.database;
+package com.ltm.runningtracker.database.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

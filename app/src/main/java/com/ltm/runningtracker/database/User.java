@@ -9,33 +9,58 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(foreignKeys = @ForeignKey(entity = Diet.class,
-    parentColumns = "name",
-    childColumns = "dietName",
-    onDelete = CASCADE), indices = {
-    @Index(name = "dietName_userIndex", value = {"dietName"})})
+@Entity
 public class User {
 
   @PrimaryKey
   private int _id;
 
-  @ColumnInfo(name = "first_name")
+  @ColumnInfo(name = "name")
   private String name;
 
-  @ColumnInfo(name = "dietName")
-  private String dietName;
+  @ColumnInfo(name = "weight")
+  private String weight;
+
+  @ColumnInfo(name = "height")
+  private String height;
 
   @ColumnInfo
   private float bmi;
 
-  public User(String name, String dietName, float bmi) {
+  @ColumnInfo
+  private float pace;
+
+  public User(String name, float bmi) {
     this.name = name;
-    this.dietName = dietName;
     this.bmi = bmi;
   }
 
   public void set_id(int _id) {
     this._id = _id;
+  }
+
+  public void setHeight(String height) {
+    this.height = height;
+  }
+
+  public void setWeight(String weight) {
+    this.weight = weight;
+  }
+
+  public String getHeight() {
+    return height;
+  }
+
+  public float getPace() {
+    return pace;
+  }
+
+  public void setPace(float pace) {
+    this.pace = pace;
+  }
+
+  public String getWeight() {
+    return weight;
   }
 
   public int get_id() {
@@ -56,14 +81,6 @@ public class User {
 
   public String getName() {
     return name;
-  }
-
-  public String getDietName() {
-    return dietName;
-  }
-
-  public void setDietName(String dietName) {
-    this.dietName = dietName;
   }
 
 }

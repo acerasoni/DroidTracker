@@ -82,7 +82,6 @@ public class RunActivity extends AppCompatActivity implements
     mapView.getMapAsync(this);
     getContentResolver().registerContentObserver(
         ContentProviderContract.ALL_URI, true, new ChangeObserver(new Handler()));
-
   }
 
   public void toggleRun(View v) {

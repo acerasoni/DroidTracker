@@ -21,12 +21,12 @@
     android:theme="@style/AppTheme"
     tools:ignore="GoogleAppIndexingWarning">
     <activity
-      android:name=".android.activity.WeatherPerformanceActivity"
-      android:label="@string/title_activity_weather_performance"
+      android:name=".android.activity.EditBmiActivity"
+      android:label="@string/title_activity_edit_bmi"
       android:theme="@style/AppTheme.NoActionBar"></activity>
     <activity
-      android:name=".android.activity.PerformanceTypeSelectorActivity"
-      android:label="@string/title_activity_performance_type_selector"
+      android:name=".android.activity.PerformanceActivity"
+      android:label="@string/title_activity_weather_performance"
       android:theme="@style/AppTheme.NoActionBar" />
     <activity
       android:name=".android.activity.UserProfileActivity"
@@ -39,10 +39,6 @@
     <activity
       android:name=".android.activity.BrowseRunDetailsActivity"
       android:label="@string/title_activity_browse_run_details"
-      android:theme="@style/AppTheme.NoActionBar" />
-    <activity
-      android:name=".android.activity.DietPerformanceActivity"
-      android:label="@string/title_activity_performance"
       android:theme="@style/AppTheme.NoActionBar" />
     <activity
       android:name=".android.activity.RunActivity"
