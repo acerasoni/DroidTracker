@@ -3,6 +3,8 @@
   <color name="colorPrimary">#ed832b</color>
   <color name="colorPrimaryDark">#d66d16</color>
   <color name="colorAccent">#D81B60</color>
+  <color name="tabColor">#64B5F6</color>
+  <color name="backgroundColor">#E4F3F7</color>
   <color name="freezingColor">#3517fc</color>
   <color name="coldColor">#69c7fa</color>
   <color name="mildColor">#f5c836</color>

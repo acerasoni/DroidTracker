@@ -31,13 +31,17 @@
   <androidx.viewpager.widget.ViewPager
     android:id="@+id/viewPager"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
 
     <com.google.android.material.tabs.TabLayout
       android:id="@+id/tabLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       app:tabBackground="@color/colorPrimaryDark"
+      app:tabIndicatorColor="@color/tabColor"
+      app:tabIndicatorGravity="bottom"
+      app:tabIndicatorHeight="5dp"
       app:tabMode="fixed"
       app:tabTextAppearance="@style/MineCustomTabText"
       app:tabTextColor="#FFFFFF">

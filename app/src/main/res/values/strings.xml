@@ -15,4 +15,7 @@
   <string name="title_activity_performance_type_selector">PerformanceTypeSelectorActivity</string>
   <string name="title_activity_weather_performance">WeatherPerformanceActivity</string>
   <string name="title_activity_edit_bmi">EditBmiActivity</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
