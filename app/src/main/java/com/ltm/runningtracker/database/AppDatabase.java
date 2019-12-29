@@ -13,7 +13,7 @@ import com.ltm.runningtracker.util.RunCoordinates;
  * https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942
  */
 // Database instantiated in the app's constructor above
-@Database(entities = {Run.class, User.class}, version = 191, exportSchema = false)
+@Database(entities = {Run.class, User.class}, version = 194, exportSchema = false)
 @TypeConverters(RunCoordinates.class)
 public abstract class AppDatabase extends RoomDatabase {
 

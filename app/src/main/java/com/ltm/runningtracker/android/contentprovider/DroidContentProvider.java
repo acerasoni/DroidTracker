@@ -167,7 +167,7 @@ public class DroidContentProvider extends ContentProvider {
     User.Builder builder = new User.Builder(contentValues.getAsString("name"),
         contentValues.getAsInteger("weight"),
         contentValues.getAsInteger("height")).withWalkingPace(Float.MIN_VALUE)
-        .withJoggingPace(Float.MIN_VALUE).withRunningPace(Float.MIN_VALUE);
+        .withJoggingPace(Float.MIN_VALUE).withRunningPace(Float.MIN_VALUE).withSprintingPace(Float.MIN_VALUE);
 
     return builder;
   }

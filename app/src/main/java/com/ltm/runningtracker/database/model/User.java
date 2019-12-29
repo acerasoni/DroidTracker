@@ -36,6 +36,9 @@ public class User {
   @ColumnInfo(name = "runningPace")
   public float runningPace;
 
+  @ColumnInfo(name = "sprintingPace")
+  public float sprintingPace;
+
   public User() {
   }
 
@@ -52,6 +55,7 @@ public class User {
     private float walkingPace;
     private float joggingPace;
     private float runningPace;
+    private float sprintingPace;
 
     /**
      * Minimum required information
@@ -80,6 +84,11 @@ public class User {
       return this;
     }
 
+    public User.Builder withSprintingPace(float sprintingPace) {
+      this.sprintingPace = sprintingPace;
+      return this;
+    }
+
     public User build() {
       User user = new User();
       user.name = this.name;
@@ -88,6 +97,7 @@ public class User {
       user.walkingPace = this.walkingPace;
       user.joggingPace = this.joggingPace;
       user.runningPace = this.runningPace;
+      user.sprintingPace = this.sprintingPace;
 
       return user;
     }

@@ -1,31 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/coordinatorLayout3"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:orientation="vertical"
   tools:context=".android.activity.BrowseRunDetailsActivity">
 
-  <com.google.android.material.appbar.AppBarLayout
-    android:layout_width="match_parent"
+  <TextView
+    android:id="@+id/viewTv"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.AppBarOverlay">
-
-    <androidx.appcompat.widget.Toolbar
-      android:id="@+id/toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
-      android:background="?attr/colorPrimary"
-      app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-  </com.google.android.material.appbar.AppBarLayout>
-
-  <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/fab"
+    android:background="@color/colorPrimary"
+    android:textColor="#FFFFFF"
+    android:textSize="30sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:layout_conversion_absoluteHeight="41dp"
+    tools:layout_conversion_absoluteWidth="411dp"
+    tools:text="Placeholder" />
+  <TextView
+    android:id="@+id/weatherView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_margin="@dimen/fab_margin"
-    app:srcCompat="@android:drawable/ic_dialog_email" />
+    android:text="TextView"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="258dp"
+    tools:layout_editor_absoluteX="86dp"
+    tools:layout_editor_absoluteY="549dp" />
+  <TextView
+    android:id="@+id/textView17"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark"
+    android:text="Performance"
+    android:textColor="#FFFFFF"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="138dp"
+    tools:layout_editor_absoluteX="6dp"
+    tools:layout_editor_absoluteY="621dp" />
+  <TextView
+    android:id="@+id/textView14"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="24dp"
+    android:text="Location"
+    android:textSize="24sp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/viewTv"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="93dp" />
+  <TextView
+    android:id="@+id/typeView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TextView"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="258dp"
+    tools:layout_editor_absoluteX="86dp"
+    tools:layout_editor_absoluteY="422dp" />
+  <TextView
+    android:id="@+id/durationView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TextView"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="258dp"
+    tools:layout_editor_absoluteX="86dp"
+    tools:layout_editor_absoluteY="496dp" />
+  <TextView
+    android:id="@+id/textView14"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Date"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="49dp"
+    tools:layout_editor_absoluteY="707dp" />
+  <TextView
+    android:id="@+id/paceView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TextView"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="258dp"
+    tools:layout_editor_absoluteX="86dp"
+    tools:layout_editor_absoluteY="563dp" />
+  <TextView
+    android:id="@+id/distanceView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TextView"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="258dp"
+    tools:layout_editor_absoluteX="86dp"
+    tools:layout_editor_absoluteY="614dp" />
+  <TextView
+    android:id="@+id/textView14"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Pace"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="53dp"
+    tools:layout_editor_absoluteY="675dp" />
+  <TextView
+    android:id="@+id/textView14"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Distance covered"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="184dp"
+    tools:layout_editor_absoluteY="621dp" />
+  <TextView
+    android:id="@+id/textView14"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Type"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="52dp"
+    tools:layout_editor_absoluteX="16dp"
+    tools:layout_editor_absoluteY="373dp" />
+  <TextView
+    android:id="@+id/locationView"
+    android:layout_width="98dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="24dp"
+    android:layout_marginEnd="16dp"
+    android:textSize="24sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/textView14"
+    app:layout_constraintTop_toBottomOf="@+id/viewTv"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="275dp" />
+  <TextView
+    android:id="@+id/textView14"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Duration"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="90dp"
+    tools:layout_editor_absoluteY="581dp" />
+  <TextView
+    android:id="@+id/dateView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TextView"
+    android:textSize="24sp"
+    tools:layout_conversion_absoluteHeight="32dp"
+    tools:layout_conversion_absoluteWidth="258dp"
+    tools:layout_editor_absoluteX="86dp"
+    tools:layout_editor_absoluteY="672dp" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

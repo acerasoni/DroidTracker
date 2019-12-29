@@ -59,7 +59,7 @@ public class RunActivity extends AppCompatActivity implements
   private MapView mapView;
   private Button toggleRunButton;
   private double totalDistance;
-  private float  startLat, startLon, endLat, endLon;
+  private float startLat, startLon, endLat, endLon;
   private long startTime;
   private RunActivityViewModel runActivityViewModel;
   private Location currentLocation;
@@ -92,11 +92,9 @@ public class RunActivity extends AppCompatActivity implements
       locationComponent.zoomWhileTracking(16f);
       Toast.makeText(RunActivity.this, "Run started",
           Toast.LENGTH_SHORT).show();
-    } else {
-      Toast.makeText(RunActivity.this, "Run ended",
-          Toast.LENGTH_SHORT).show();
     }
-    if(!isRunning) {
+
+    if (!isRunning) {
       toggleRunButton.setText("End run");
       onRunStart();
       isRunning = true;
@@ -133,26 +131,21 @@ public class RunActivity extends AppCompatActivity implements
           temperature = getWeatherRepository().getTemperature();
         } catch (NullPointerException e) {
           temperature = "Unavailable";
-        //  throw new WeatherNotAvailableException("Weather unavailable");
+          //  throw new WeatherNotAvailableException("Weather unavailable");
         }
 
         endLat = (float) runActivityViewModel.getLocation().getValue().getLatitude();
         endLon = (float) runActivityViewModel.getLocation().getValue().getLongitude();
 
         long durationTime = Calendar.getInstance().getTime().getTime() - startTime;
-        @SuppressLint("DefaultLocale") String duration = String.format("%02d min, %02d sec",
-            TimeUnit.MILLISECONDS.toMinutes(durationTime),
-            TimeUnit.MILLISECONDS.toSeconds(durationTime) -
-                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationTime))
-        );
-
-          byte[] runCoordinates = RunCoordinates.toByteArray(new RunCoordinates(startLat, startLon, endLat, endLon));
-          contentValues.put("runCoordinates", runCoordinates);
+        byte[] runCoordinates = RunCoordinates
+            .toByteArray(new RunCoordinates(startLat, startLon, endLat, endLon));
+        contentValues.put("runCoordinates", runCoordinates);
         contentValues.put("temperature", temperature);
         contentValues.put("duration", durationTime);
-        contentValues.put("totalDistance", totalDistance);
-
-        Uri uri = getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
+        contentValues.put("distance", totalDistance);
+        contentValues.put("date", System. currentTimeMillis());
+        getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
         return null;
       }
 

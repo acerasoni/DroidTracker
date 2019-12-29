@@ -21,7 +21,6 @@ import com.ltm.runningtracker.android.activity.fragment.WarmPerformanceFragment;
  */
 public class PerformanceActivity extends AppCompatActivity {
 
-  private GraphView graphView;
   private TabLayout tabLayout;
   private ViewPager viewPager;
 

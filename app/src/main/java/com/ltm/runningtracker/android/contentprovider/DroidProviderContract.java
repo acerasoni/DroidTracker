@@ -15,9 +15,9 @@ public class DroidProviderContract {
   public static final Uri RUNS_URI =
       Uri.parse("content://"+AUTHORITY+"/runs");
 
-  public static final String RUN_ID = "runId";
+  public static final String ID = "_id";
+  public static final String LOCATION = "location";
   public static final String DATE = "date";
-  public static final String WEATHER = "temperature";
   public static final String DURATION = "duration";
 
 }

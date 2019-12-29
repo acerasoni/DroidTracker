@@ -3,6 +3,7 @@ package com.ltm.runningtracker.database.model;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.util.WeatherParser.parseTemperatureToString;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -14,10 +15,12 @@ import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.WeatherParser;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Storing speed and distance can be considered redundant as this can be derived at runtime, though
@@ -30,9 +33,19 @@ public class Run {
   @PrimaryKey(autoGenerate = true)
   public int _id;
 
+  @ColumnInfo(name = "location")
+  public String location;
+
   // Store as milliseconds since 1970
   @ColumnInfo(name = "date")
-  public long date;
+  public String date;
+
+  @ColumnInfo(name = "distance")
+  public double distance;
+
+  // Store as milliseconds
+  @ColumnInfo(name = "duration")
+  public String duration;
 
   @ColumnInfo(name = "runType")
   public int runType;
@@ -43,17 +56,10 @@ public class Run {
   @ColumnInfo(name = "temperature")
   public float temperature;
 
-  // Store as milliseconds
-  @ColumnInfo(name = "duration")
-  public long duration;
-
   @ColumnInfo(name = "runCoordinates")
   public RunCoordinates runCoordinates;
 
-  @ColumnInfo(name = "distance")
-  public double distance;
-
-  // Pace is always < 100, can store as float
+  // Pace is always < Float.MAX_VALUE, can store as float
   @ColumnInfo(name = "average_speed")
   public float pace;
 
@@ -68,9 +74,10 @@ public class Run {
    */
   public static class Builder {
 
-    private long date;
+    private String date;
     private double distance;
-    private long duration;
+    private String location;
+    private String duration;
     private float pace;
     private RunCoordinates runCoordinates;
     private int runType;
@@ -80,11 +87,20 @@ public class Run {
     /**
      * Minimum required information
      */
+    @SuppressLint("DefaultLocale")
     public Builder(long date, double distance, long duration) {
-      this.date = date;
+      Date obj = new Date(date);
+      DateFormat dateFormatter = new SimpleDateFormat("d MMM yyyy");
+      this.date = dateFormatter.format(obj);
       this.distance = distance;
-      this.duration = duration;
       this.pace = LocationRepository.calculatePace(distance, duration);
+      this.duration = String.format("%02d min, %02d sec",
+          TimeUnit.MILLISECONDS.toMinutes(duration),
+          TimeUnit.MILLISECONDS.toSeconds(duration) -
+              TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+      );
+
+      this.location = getLocationRepository().getCountyLiveData().getValue();
     }
 
     /**
@@ -116,6 +132,7 @@ public class Run {
       run.runType = this.runType;
       run.temperature = this.temperature;
       run.weatherType = this.weatherType;
+      run.location = this.location;
 
       return run;
     }

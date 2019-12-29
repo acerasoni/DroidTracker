@@ -17,7 +17,7 @@ import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 public class UserProfileActivity extends AppCompatActivity {
 
   EditText nameField, weightField, heightField;
-  TextView walkingPaceField, joggingPaceField, runningPaceField, bmiField;
+  TextView walkingPaceField, joggingPaceField, runningPaceField, sprintingPaceField, bmiField;
   boolean creatingUser;
   private int weight = -1, height = -1;
 
@@ -32,6 +32,7 @@ public class UserProfileActivity extends AppCompatActivity {
     walkingPaceField = findViewById(R.id.walkingPaceField);
     joggingPaceField = findViewById(R.id.joggingPaceField);
     runningPaceField = findViewById(R.id.runningPaceField);
+    sprintingPaceField = findViewById(R.id.sprintingPaceField);
     bmiField = findViewById(R.id.bmiField);
 
     setupBmiListeners();
@@ -52,7 +53,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
   public void populateViews() {
     User user = getUserRepository().getUser();
-    float bmi = calculateBMI(user.weight, user.weight, true);
+    float bmi = calculateBMI(user.weight, user.height);
 
     nameField.setText(user.name);
     weightField.setText(Integer.toString(user.weight));
@@ -60,6 +61,7 @@ public class UserProfileActivity extends AppCompatActivity {
     walkingPaceField.setText(parsePace(user.walkingPace, RunTypeClassifier.WALK));
     joggingPaceField.setText(parsePace(user.joggingPace, RunTypeClassifier.JOG));
     runningPaceField.setText(parsePace(user.runningPace, RunTypeClassifier.RUN));
+    sprintingPaceField.setText(parsePace(user.sprintingPace, RunTypeClassifier.SPRINT));
     bmiField.setText(Float.toString(bmi));
   }
 
@@ -83,20 +85,13 @@ public class UserProfileActivity extends AppCompatActivity {
   /**
    * https://www.cdc.gov/healthyweight/assessing/bmi/childrens_bmi/childrens_bmi_formula.html
    *
-   * @param weight in kg for metric, lbs for imperial
-   * @param height in cm for metric, in for imperial
+   * @param weight in kg for
+   * @param height in cm for
    */
-  private float calculateBMI(int weight, int height, boolean isMetric) {
-    return isMetric ? calculateMetricBMI(weight, height) : calculateImperialBMI(weight, height);
-  }
-
-  private float calculateMetricBMI(int weight, int height) {
+  private float calculateBMI(int weight, int height) {
     float metres = height / 100;
-    return (weight / (metres * metres));
-  }
-
-  private float calculateImperialBMI(int weight, int height) {
-    return 703 * weight / (height * height);
+    metres *= 2;
+    return weight / metres;
   }
 
   private void setupBmiListeners() {
@@ -106,7 +101,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if (text != null && !text.equals("")) {
           weight = Integer.parseInt(text);
           if (height > 0) {
-            bmiField.setText(Float.toString(calculateBMI(weight, height, true)));
+            bmiField.setText(Float.toString(calculateBMI(weight, height)));
           }
         }
       }
@@ -118,7 +113,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if(text != null && !text.equals("")){
           height = Integer.parseInt(text);
           if(weight > 0) {
-            bmiField.setText(Float.toString(calculateBMI(weight, height, true)));
+            bmiField.setText(Float.toString(calculateBMI(weight, height)));
           }
         }
 
@@ -131,7 +126,7 @@ public class UserProfileActivity extends AppCompatActivity {
       return Float.toString(pace);
     } else {
       StringBuilder sb = new StringBuilder("Data unavailable for ");
-      sb.append(runTypeClassifier.toString()).append(" activity");
+      sb.append(runTypeClassifier.toString());
       return sb.toString();
     }
   }

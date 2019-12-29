@@ -61,9 +61,12 @@ public class UserRepository {
   }
 
   public void updateUser(String name, int weight, int height) {
+    // Update cache
     user.getValue().name = name;
     user.getValue().weight = weight;
     user.getValue().height = height;
+
+    // Asynchronously update DB
     AsyncTask.execute(
         () -> getApplicationContext().getContentResolver().update(USER_URI, null, null, null));
   }
@@ -90,9 +93,10 @@ public class UserRepository {
     float walkingPace = c.getFloat(4);
     float joggingPace = c.getFloat(5);
     float runningPace = c.getFloat(6);
+    float sprintingPace = c.getFloat(7);
 
     return new User.Builder(name, weight, height).withWalkingPace(walkingPace)
-        .withJoggingPace(joggingPace).withRunningPace(runningPace).build();
+        .withJoggingPace(joggingPace).withRunningPace(runningPace).withSprintingPace(sprintingPace).build();
   }
 
 
