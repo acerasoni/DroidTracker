@@ -1,187 +1,124 @@
 package com.ltm.runningtracker.database.model;
 
-import static androidx.room.ForeignKey.CASCADE;
-import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.util.WeatherParser.parseTemperatureToString;
 
+import android.util.Log;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import com.ltm.runningtracker.repository.LocationRepository;
+import com.ltm.runningtracker.util.RunCoordinates;
+import com.ltm.runningtracker.util.WeatherParser;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Storing speed and distance can be considered redundant as this can be derived at runtime, though
  * it is a tradeoff between runtime resources vs having an additional column in the database. We
- * saved parsed weather because it will allow a custom cursor on specific weather types
+ * saved parsed temperature because it will allow a custom cursor on specific temperature types
  */
 @Entity
-public class Run implements Serializable {
+public class Run {
 
   @PrimaryKey(autoGenerate = true)
-  private int _id;
+  public int _id;
 
+  // Store as milliseconds since 1970
   @ColumnInfo(name = "date")
-  private String date;
+  public long date;
 
-  @ColumnInfo(name = "type")
-  private String type;
+  @ColumnInfo(name = "runType")
+  public int runType;
 
   @ColumnInfo(name = "weatherType")
-  private String weatherType;
+  public int weatherType;
 
-  @ColumnInfo(name = "weather")
-  private String weather;
+  @ColumnInfo(name = "temperature")
+  public float temperature;
 
+  // Store as milliseconds
   @ColumnInfo(name = "duration")
-  private String duration;
+  public long duration;
 
-  @ColumnInfo(name = "start_lat")
-  private double startLat;
-
-  @ColumnInfo(name = "start_lon")
-  private double startLon;
-
-  @ColumnInfo(name = "end_lat")
-  private double endLat;
-
-  @ColumnInfo(name = "end_lon")
-  private double endLon;
+  @ColumnInfo(name = "runCoordinates")
+  public RunCoordinates runCoordinates;
 
   @ColumnInfo(name = "distance")
-  private double distance;
+  public double distance;
 
+  // Pace is always < 100, can store as float
   @ColumnInfo(name = "average_speed")
-  private double averageSpeed;
+  public float pace;
 
-  public Run(String weatherType, String type, String weather, String duration, double startLat,
-      double startLon, double endLat, double endLon, double distance, double averageSpeed) {
-    this.weatherType = weatherType;
-    this.type = type;
-    this.weather = weather;
-    this.duration = duration;
-    this.startLat = startLat;
-    this.startLon = startLon;
-    this.endLat = endLat;
-    this.endLon = endLon;
-    this.distance = distance;
-    this.averageSpeed = averageSpeed;
+  // Builder pattern usually wants class constructor to be empty and private. However, this collides with Room
+  // as it wants an empty public constructor.
+  public Run() {
   }
 
-  @Ignore
-  public Run(String weather, String duration, double startLat, double startLon, double endLat,
-      double endLon, double distance, double averageSpeed) {
-    weatherType = parseTemperatureToString(weather);
-    date = new SimpleDateFormat("dd/M/yyyy").format(new Date());
-    this.weather = weather;
-    this.type = "Uncategorised";
-    this.duration = duration;
-    this.startLat = startLat;
-    this.startLon = startLon;
-    this.endLat = endLat;
-    this.endLon = endLon;
-    this.distance = distance;
-    this.averageSpeed = averageSpeed;
-  }
+  /**
+   * We need a builder pattern as some values could be unavailable - Fetching weather/temperature -
+   * IOException when serializing location - Run runType tagging
+   */
+  public static class Builder {
 
-  public void setType(String type) {
-    this.type = type;
-  }
+    private long date;
+    private double distance;
+    private long duration;
+    private float pace;
+    private RunCoordinates runCoordinates;
+    private int runType;
+    private float temperature;
+    private int weatherType;
 
-  public void set_id(int _id) {
-    this._id = _id;
-  }
+    /**
+     * Minimum required information
+     */
+    public Builder(long date, double distance, long duration) {
+      this.date = date;
+      this.distance = distance;
+      this.duration = duration;
+      this.pace = LocationRepository.calculatePace(distance, duration);
+    }
 
-  public void setDate(String date) {
-    this.date = date;
-  }
+    /**
+     * Fails if serialization of coordinate fails
+     */
+    public Builder withRunCoordinates(byte[] runCoordinates) {
+      this.runCoordinates = RunCoordinates.fromByteArray(runCoordinates);
+      return this;
+    }
 
-  public void setDuration(String duration) {
-    this.duration = duration;
-  }
+    public Builder withRunType(int runType) {
+      this.runType = runType;
+      return this;
+    }
 
-  public void setWeatherType(String weatherType) {
-    this.weatherType = weatherType;
-  }
+    public Builder withTemperature(float temperature) {
+      this.temperature = temperature;
+      this.weatherType = WeatherParser.parseTemperatureToClassifier(temperature).getValue();
+      return this;
+    }
 
-  public void setWeather(String weather) {
-    this.weather = weather;
-  }
+    public Run build() {
+      Run run = new Run();
+      run.date = this.date;
+      run.distance = this.distance;
+      run.duration = this.duration;
+      run.pace = this.pace;
+      run.runCoordinates = this.runCoordinates;
+      run.runType = this.runType;
+      run.temperature = this.temperature;
+      run.weatherType = this.weatherType;
 
-  public void setDistance(double distance) {
-    this.distance = distance;
-  }
-
-  public void setAverageSpeed(double averageSpeed) {
-    this.averageSpeed = averageSpeed;
-  }
-
-  public void setStartLat(double startLat) {
-    this.startLat = startLat;
-  }
-
-  public void setEndLat(double endLat) {
-    this.endLat = endLat;
-  }
-
-  public void setStartLon(double startLon) {
-    this.startLon = startLon;
-  }
-
-  public void setEndLon(double endLon) {
-    this.endLon = endLon;
-  }
-
-  public int get_id() {
-    return _id;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public String getDate() {
-    return date;
-  }
-
-  public String getWeatherType() {
-    return weatherType;
-  }
-
-  public String getWeather() {
-    return weather;
-  }
-
-  public String getDuration() {
-    return duration;
-  }
-
-  public double getStartLat() {
-    return startLat;
-  }
-
-  public double getStartLon() {
-    return startLon;
-  }
-
-  public double getEndLat() {
-    return endLat;
-  }
-
-  public double getEndLon() {
-    return endLon;
-  }
-
-  public double getDistance() {
-    return distance;
-  }
-
-  public double getAverageSpeed() {
-    return averageSpeed;
+      return run;
+    }
   }
 
 }

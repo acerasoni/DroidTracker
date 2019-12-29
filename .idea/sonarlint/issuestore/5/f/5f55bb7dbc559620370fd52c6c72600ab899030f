@@ -1,5 +1,2 @@
 
-ysquid:S1450"VRemove the "userURI" field and declare it as a local variable in the relevant methods.(š¸ºèÿÿÿÿÿ8Àñ‘Ãô-
-Gsquid:S16598")Declare "joggingPace" on a separate line.(¨—Í—8‹Îâéô-
-Nsquid:S1068"+Remove this unused "userURI" private field.(š¸ºèÿÿÿÿÿ8Àñ‘Ãô-
-Gsquid:S16598")Declare "runningPace" on a separate line.(¨—Í—8‹Îâéô-
+\squid:UselessImportCheck	",Remove this unused import 'android.net.Uri'.(òêû‘ıÿÿÿÿ8ûÜÀõ-

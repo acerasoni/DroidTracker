@@ -4,6 +4,7 @@ import android.database.Cursor;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 import com.ltm.runningtracker.database.model.User;
 
 @Dao
@@ -13,9 +14,11 @@ public interface UserDao {
   Cursor getUser();
 
   @Query("DELETE FROM user")
-  void delete();
+  int delete();
 
   @Insert
   long insert(User user);
 
+  @Update
+  int update(User user);
 }

@@ -1,97 +1,96 @@
 package com.ltm.runningtracker.database.model;
 
+import android.util.Log;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import com.ltm.runningtracker.database.model.Run.Builder;
+import com.ltm.runningtracker.repository.LocationRepository;
+import com.ltm.runningtracker.util.RunCoordinates;
+import java.io.IOException;
 
 @Entity
 public class User {
 
   @PrimaryKey
-  private int _id;
+  public int _id;
 
   @ColumnInfo(name = "name")
-  private String name;
+  public String name;
 
   @ColumnInfo(name = "weight")
-  private int weight;
+  public int weight;
 
   @ColumnInfo(name = "height")
-  private int height;
+  public int height;
 
+  // Values of Float.MIN_VALUE for paces mean no runs of that type were recorded hence no data available
+  // to compute pace
   @ColumnInfo(name = "walkingPace")
-  private float walkingPace;
+  public float walkingPace;
 
   @ColumnInfo(name = "joggingPace")
-  private float joggingPace;
+  public float joggingPace;
 
   @ColumnInfo(name = "runningPace")
-  private float runningPace;
+  public float runningPace;
 
-  public User(String name, int weight, int height, float walkingPace, float joggingPace,
-      float runningPace) {
-    this.name = name;
-    this.weight = weight;
-    this.height = height;
-    this.walkingPace = walkingPace;
-    this.joggingPace = joggingPace;
-    this.runningPace = runningPace;
+  public User() {
   }
 
-  public void setJoggingPace(float joggingPace) {
-    this.joggingPace = joggingPace;
-  }
+  /**
+   * We need a builder pattern as some values could be unavailable - Pace information
+   * User will not have pace relating to walks, for instance, if he never completed a walk.
+   * However, he could have a pace related to jogging and running.
+   */
+  public static class Builder {
 
-  public void setRunningPace(float runningPace) {
-    this.runningPace = runningPace;
-  }
+    private String name;
+    private int weight;
+    private int height;
+    private float walkingPace;
+    private float joggingPace;
+    private float runningPace;
 
-  public float getJoggingPace() {
-    return joggingPace;
-  }
+    /**
+     * Minimum required information
+     */
+    public Builder(String name, int weight, int height) {
+      this.name = name;
+      this.weight = weight;
+      this.height = height;
+    }
 
-  public float getRunningPace() {
-    return runningPace;
-  }
+    /**
+     * Fails if serialization of coordinate fails
+     */
+    public User.Builder withWalkingPace(float walkingPace) {
+      this.walkingPace = walkingPace;
+      return this;
+    }
 
-  public void set_id(int _id) {
-    this._id = _id;
-  }
+    public User.Builder withJoggingPace(float joggingPace) {
+      this.joggingPace = joggingPace;
+      return this;
+    }
 
-  public void setHeight(int height) {
-    this.height = height;
-  }
+    public User.Builder withRunningPace(float runningPace) {
+      this.runningPace = runningPace;
+      return this;
+    }
 
-  public void setWeight(int weight) {
-    this.weight = weight;
-  }
+    public User build() {
+      User user = new User();
+      user.name = this.name;
+      user.weight = this.weight;
+      user.height = this.height;
+      user.walkingPace = this.walkingPace;
+      user.joggingPace = this.joggingPace;
+      user.runningPace = this.runningPace;
 
-  public int getHeight() {
-    return height;
-  }
-
-  public float getWalkingPace() {
-    return walkingPace;
-  }
-
-  public void setWalkingPace(float walkingPace) {
-    this.walkingPace = walkingPace;
-  }
-
-  public int getWeight() {
-    return weight;
-  }
-
-  public int get_id() {
-    return _id;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getName() {
-    return name;
+      return user;
+    }
   }
 
 }

@@ -6,12 +6,12 @@ public class CustomWeatherProviderType implements IProviderType {
 
   @Override
   public String getProviderClass() {
-    return "com.ltm.runningtracker.weather.CustomWeatherProvider";
+    return "com.ltm.runningtracker.temperature.CustomWeatherProvider";
   }
 
   @Override
   public String getCodeProviderClass() {
-    return "com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOCodeProvider";
+    return "com.survivingwithandroid.temperature.lib.provider.forecastio.ForecastIOCodeProvider";
   }
 }
 

@@ -1,6 +1,14 @@
 package com.ltm.runningtracker.android.contentprovider;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.COLD_RUNS;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.FREEZING_RUNS;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.HOT_RUNS;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.MILD_RUNS;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.RUNS;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.URI_MATCHER;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.USER;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.WARM_RUNS;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -10,11 +18,13 @@ import android.net.Uri;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Ignore;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
+import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
 public class DroidContentProvider extends ContentProvider {
 
@@ -34,28 +44,21 @@ public class DroidContentProvider extends ContentProvider {
   @Override
   public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s,
       @Nullable String[] strings1, @Nullable String s1) {
-    Cursor c;
-    switch (ContentProviderContract.URI_MATCHER.match(uri)) {
-      case 1:
-        c = runDao.getFreezingRuns();
+    Cursor c = null;
+    switch (URI_MATCHER.match(uri)) {
+      case RUNS:
+        return runDao.getAll();
+      case FREEZING_RUNS:
+      case COLD_RUNS:
+      case MILD_RUNS:
+      case WARM_RUNS:
+      case HOT_RUNS:
+        c = runDao.getByWeather(
+            WeatherClassifier.valueOf(uri.getLastPathSegment().toUpperCase()).getValue());
         break;
-      case 2:
-        c = runDao.getColdRuns();
-        break;
-      case 3:
-        c = runDao.getMildRuns();
-        break;
-      case 4:
-        c = runDao.getWarmRuns();
-        break;
-      case 5:
-        c = runDao.getHotRuns();
-        break;
-      case 7:
+      case USER:
         c = userDao.getUser();
         break;
-      default:
-        c = runDao.getAllRuns();
     }
 
     return c;
@@ -63,33 +66,17 @@ public class DroidContentProvider extends ContentProvider {
 
   @Nullable
   @Override
-  public String getType(@NonNull Uri uri) {
-    return null;
-  }
-
-  @Nullable
-  @Override
   public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-    long id = -1;
+    long id = Integer.MIN_VALUE;
 
-    switch (ContentProviderContract.URI_MATCHER.match(uri)) {
-      case 0:
-        id = runDao
-            .insert(
-                new Run(contentValues.getAsString("weather"), contentValues.getAsString("duration"),
-                    contentValues.getAsDouble("startLat"), contentValues.getAsDouble("startLon"),
-                    contentValues.getAsDouble("endLat"), contentValues.getAsDouble("endLon"),
-                    contentValues.getAsDouble("totalDistance"),
-                    contentValues.getAsDouble("averageSpeed"))
-            );
+    switch (URI_MATCHER.match(uri)) {
+      case RUNS:
+        id = runDao.insert(getParsedRunBuilder(contentValues).build());
         break;
-      case 7:
-        User user = new User(contentValues.getAsString("name"),
-            contentValues.getAsInteger("weight"), contentValues.getAsInteger("height"), contentValues.getAsFloat("walkingPace"), contentValues.getAsFloat("joggingPace"), contentValues.getAsFloat("runningPace"));
-
+      case USER:
+        User user = getParsedUserBuilder(contentValues).build();
         // Cache
         getUserRepository().setUserAsync(user);
-
         id = userDao.insert(user);
         break;
     }
@@ -103,18 +90,86 @@ public class DroidContentProvider extends ContentProvider {
 
   @Override
   public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-    switch (ContentProviderContract.URI_MATCHER.match(uri)) {
-      case 7:
-        userDao.delete();
+    int id = Integer.MIN_VALUE;
+
+    switch (URI_MATCHER.match(uri)) {
+      case FREEZING_RUNS:
+      case COLD_RUNS:
+      case MILD_RUNS:
+      case WARM_RUNS:
+      case HOT_RUNS:
+        id = runDao.deleteByWeather(
+            WeatherClassifier.valueOf(uri.getLastPathSegment().toUpperCase()).getValue());
+        break;
+      case USER:
+        id = userDao.delete();
         break;
     }
-    return 0;
+
+    return id;
   }
 
+  /**
+   * This method updates records in the database. As runs are immutable, we will only ever need to
+   * update the user, hence URI matching is not required.
+   *
+   * Another advantage of caching the user is that we can use it to update the DB without having to
+   * pass individual values in the ContentValues;
+   *
+   * @return record _id
+   */
   @Override
   public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s,
       @Nullable String[] strings) {
-    return 0;
+    return userDao.update(getUserRepository().getUser());
+  }
+
+
+  @Nullable
+  @Override
+  public String getType(@NonNull Uri uri) {
+    String contentType;
+
+    if (uri.getLastPathSegment() == null) {
+      contentType = DroidProviderContract.CONTENT_TYPE_MULTIPLE;
+    } else {
+      contentType = DroidProviderContract.CONTENT_TYPE_SINGLE;
+    }
+
+    return contentType;
+  }
+
+  /**
+   * This method handles the absence of some values via builder pattern. This can be caused by
+   * network issues (couldn't retrieve weather information), or lack of user input.
+   */
+  @Ignore
+  private Run.Builder getParsedRunBuilder(ContentValues contentValues) {
+    Run.Builder builder = new Run.Builder(contentValues.getAsLong("date"),
+        contentValues.getAsDouble("distance"), contentValues.getAsLong("duration"));
+
+    if (contentValues.containsKey("temperature")) {
+      builder = builder.withTemperature(contentValues.getAsFloat("temperature"));
+    }
+    if (contentValues.containsKey("runCoordinates")) {
+      builder = builder.withRunCoordinates(contentValues.getAsByteArray("runCoordinates"));
+    }
+
+    if (contentValues.containsKey("runType")) {
+      builder = builder.withRunType(contentValues.getAsInteger("runType"));
+    }
+
+    return builder;
+  }
+
+  @Ignore
+  private User.Builder getParsedUserBuilder(ContentValues contentValues) {
+    User.Builder builder = new User.Builder(contentValues.getAsString("name"),
+        contentValues.getAsInteger("weight"),
+        contentValues.getAsInteger("height")).withWalkingPace(Float.MIN_VALUE)
+        .withJoggingPace(Float.MIN_VALUE).withRunningPace(Float.MIN_VALUE);
+
+    return builder;
   }
 
 }

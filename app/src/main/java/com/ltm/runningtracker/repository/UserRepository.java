@@ -1,7 +1,7 @@
 package com.ltm.runningtracker.repository;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
-import static com.ltm.runningtracker.android.contentprovider.ContentProviderContract.USER_URI;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 import android.content.ContentValues;
@@ -15,8 +15,6 @@ import com.ltm.runningtracker.database.model.User;
 
 public class UserRepository {
 
-  private Uri userURI;
-
   // Cache
   private MutableLiveData<User> user;
 
@@ -25,16 +23,16 @@ public class UserRepository {
     fetchUser();
   }
 
+  public boolean doesUserExist() {
+    return user.getValue() != null;
+  }
+
   public LiveData<User> getUserLiveData() {
     return user;
   }
 
-  public void setUser(User user) {
-    this.user.setValue(user);
-  }
-
-  public boolean doesUserExist() {
-    return user.getValue() != null;
+  public User getUser() {
+    return user.getValue();
   }
 
   /**
@@ -44,42 +42,30 @@ public class UserRepository {
     this.user.postValue(user);
   }
 
-  public User getUser() {
-    return user.getValue();
+  public void setUser(User user) {
+    this.user.setValue(user);
   }
+
 
   /**
    * This method is called from the UI thread. It will call the db asynchronously which will create
    * the User object and assign it to the user repository (cache) and database (memory)
    */
-  public void createUser(String name, int weight, int height, boolean creatingUser) {
-    float walkingPace, joggingPace, runningPace;
-    if (creatingUser) {
-      walkingPace = 0f;
-      joggingPace = 0f;
-      runningPace = 0f;
-
-    } else {
-      walkingPace = getUser().getWalkingPace();
-      joggingPace = getUser().getJoggingPace();
-      runningPace = getUser().getRunningPace();
-    }
-
+  public void createUser(String name, int weight, int height) {
     ContentValues contentValues = new ContentValues();
     contentValues.put("name", name);
     contentValues.put("weight", weight);
     contentValues.put("height", height);
-    contentValues.put("walkingPace", walkingPace);
-    contentValues.put("joggingPace", joggingPace);
-    contentValues.put("runningPace", runningPace);
+    AsyncTask.execute(
+        () -> getApplicationContext().getContentResolver().insert(USER_URI, contentValues));
+  }
 
-    AsyncTask.execute(() -> {
-      // Flush the DB
-      getApplicationContext().getContentResolver().delete(USER_URI, null, null);
-
-      // Insert in DB
-      userURI = getApplicationContext().getContentResolver().insert(USER_URI, contentValues);
-    });
+  public void updateUser(String name, int weight, int height) {
+    user.getValue().name = name;
+    user.getValue().weight = weight;
+    user.getValue().height = height;
+    AsyncTask.execute(
+        () -> getApplicationContext().getContentResolver().update(USER_URI, null, null, null));
   }
 
   public void fetchUser() {
@@ -98,13 +84,15 @@ public class UserRepository {
 
   private User buildUserFromMemory(Cursor c) {
     c.moveToFirst();
-    String name = c.getString(0);
-    int weight = c.getInt(1);
-    int height = c.getInt(2);
-    float walkingPace = c.getFloat(3);
-    float joggingPace = c.getFloat(4);
-    float runningPace = c.getFloat(5);
-    return new User(name, weight, height, walkingPace, joggingPace, runningPace);
+    String name = c.getString(1);
+    int weight = c.getInt(2);
+    int height = c.getInt(3);
+    float walkingPace = c.getFloat(4);
+    float joggingPace = c.getFloat(5);
+    float runningPace = c.getFloat(6);
+
+    return new User.Builder(name, weight, height).withWalkingPace(walkingPace)
+        .withJoggingPace(joggingPace).withRunningPace(runningPace).build();
   }
 
 

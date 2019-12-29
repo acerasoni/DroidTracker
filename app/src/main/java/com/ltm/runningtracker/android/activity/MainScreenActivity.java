@@ -66,7 +66,7 @@ public class MainScreenActivity extends AppCompatActivity {
   }
 
   private void setup() {
-    weatherTextField.setText("Fetching weather...");
+    weatherTextField.setText("Fetching temperature...");
     locationTextField.setText("Fetching location...");
 
     // Initialise repositories
@@ -82,7 +82,7 @@ public class MainScreenActivity extends AppCompatActivity {
       locationTextField.setText(county);
     });
 
-    // observe weather object
+    // observe temperature object
     mainActivityViewModel.getWeather().observe(this, weather -> {
       weatherTextField.setText(weather.temperature.getTemp() + " °C");
     });

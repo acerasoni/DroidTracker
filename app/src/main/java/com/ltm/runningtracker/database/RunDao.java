@@ -7,42 +7,22 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 import com.ltm.runningtracker.database.model.Run;
+import java.io.IOException;
 import java.util.List;
 
 @Dao
 public interface RunDao {
 
     @Query("SELECT * FROM run")
-    Cursor getAllRuns();
+    Cursor getAll();
 
-    @Query("SELECT * FROM run WHERE weatherType='Freezing'")
-    Cursor getFreezingRuns();
+    @Query("SELECT * FROM run WHERE weatherType=:type")
+    Cursor getByWeather(int type);
 
-    @Query("SELECT * FROM run WHERE weatherType='Cold'")
-    Cursor getColdRuns();
-
-    @Query("SELECT * FROM run WHERE weatherType='Mild'")
-    Cursor getMildRuns();
-
-    @Query("SELECT * FROM run WHERE weatherType='Warm'")
-    Cursor getWarmRuns();
-
-    @Query("SELECT * FROM run WHERE weatherType='Hot'")
-    Cursor getHotRuns();
-
-    @Query("SELECT * FROM run WHERE _id IN (:runIds)")
-    List<Run> loadAllByIds(int[] runIds);
-
-    @Insert
-    void insertAll(Run... runs);
+    @Query("DELETE FROM run WHERE weatherType=:type")
+    int deleteByWeather(int type);
 
     @Insert
     long insert(Run run);
-
-    @Delete
-    void delete(Run run);
-
-    @Update
-    void update(Run run);
 
 }

@@ -36,7 +36,7 @@ public class WeatherUpdateService extends Service {
 
     // Reasons for this:
     // 1. Need to wait for location service to fetch at least one valid location
-    // 2. Updating weather and location must not happen concurrently as this could
+    // 2. Updating temperature and location must not happen concurrently as this could
     // cause inconsistencies.
     Runnable requestWeatherTask = () -> {
       try {
@@ -100,8 +100,8 @@ public class WeatherUpdateService extends Service {
     super.onTaskRemoved(intent);
   }
 
-  // No need to use callbacks as the worker thread updating our weather client is already implemented
-  // we just call it periodically. Activities observe weather object
+  // No need to use callbacks as the worker thread updating our temperature client is already implemented
+  // we just call it periodically. Activities observe temperature object
   public class WeatherServiceBinder extends Binder implements IInterface {
 
     @Override

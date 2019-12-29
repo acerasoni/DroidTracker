@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.PerformanceActivity;
+import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
 public class ColdPerformanceFragment extends PerformanceFragment {
 
@@ -25,7 +26,7 @@ public class ColdPerformanceFragment extends PerformanceFragment {
     // - Swap data adaptor's cursor with new one on UI thread
     // - Notify data adapter on UI thread
     AsyncTask.execute(() -> {
-      Cursor c = getRunRepository().getColdRuns();
+      Cursor c = getRunRepository().getRuns(WeatherClassifier.COLD);
       getActivity().runOnUiThread(() -> {
         dataAdapter.swapCursor(c);
         dataAdapter.notifyDataSetChanged();

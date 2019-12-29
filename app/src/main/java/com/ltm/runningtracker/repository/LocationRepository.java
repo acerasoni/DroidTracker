@@ -58,8 +58,8 @@ public class LocationRepository implements LocationEngineCallback {
   }
 
   private void setLocation(Location location) {
-    // If this is the first time we set location, we can notify the weather update service to start
-    // fetching weather updates
+    // If this is the first time we set location, we can notify the temperature update service to start
+    // fetching temperature updates
     synchronized (lock) {
       this.location.setValue(location);
       lock.notify();
@@ -160,10 +160,10 @@ public class LocationRepository implements LocationEngineCallback {
    * @param duration in milliseconds
    * @return mph
    */
-  public static double calculateAverageSpeed(double distance, double duration) {
+  public static float calculatePace(double distance, double duration) {
     double metersPerSecond = distance / (duration / 1000);
     double mph = metersPerSecond * 2.237;
-    return mph;
+    return (float) mph;
   }
 
 }

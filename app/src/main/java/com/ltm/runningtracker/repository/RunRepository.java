@@ -3,7 +3,9 @@ package com.ltm.runningtracker.repository;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 import android.database.Cursor;
-import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
+import android.net.Uri;
+import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
 public class RunRepository {
 
@@ -12,34 +14,10 @@ public class RunRepository {
 
   //TODO Fetch runs from content provider and populate list
 
-  public Cursor getAllRuns() {
+  public Cursor getRuns(WeatherClassifier weatherClassifier) {
+    Uri uri = Uri.withAppendedPath(DroidProviderContract.RUNS_URI, "/" + weatherClassifier.toString());
     return getApplicationContext().getContentResolver()
-        .query(ContentProviderContract.RUNS_URI, null, null, null, null, null);
-  }
-
-  public Cursor getFreezingRuns() {
-    return getApplicationContext().getContentResolver()
-        .query(ContentProviderContract.FREEZING_RUNS_URI, null, null, null, null, null);
-  }
-
-  public Cursor getColdRuns() {
-    return getApplicationContext().getContentResolver()
-        .query(ContentProviderContract.COLD_RUNS_URI, null, null, null, null, null);
-  }
-
-  public Cursor getMildRuns() {
-    return getApplicationContext().getContentResolver()
-        .query(ContentProviderContract.MILD_RUNS_URI, null, null, null, null, null);
-  }
-
-  public Cursor getWarmRuns() {
-    return getApplicationContext().getContentResolver()
-        .query(ContentProviderContract.WARM_RUNS_URI, null, null, null, null, null);
-  }
-
-  public Cursor getHotRuns() {
-    return getApplicationContext().getContentResolver()
-        .query(ContentProviderContract.HOT_RUNS_URI, null, null, null, null, null);
+        .query(uri, null, null, null, null, null);
   }
 
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 public class WeatherParser {
 
   public enum WeatherClassifier {
-    FREEZING("Freezing", 0), COLD("Cold", 1), MILD("Mild", 2), WARM("Warm", 3), HOT("Hot", 4);
+    FREEZING("freezing", 0), COLD("cold", 1), MILD("mild", 2), WARM("warm", 3), HOT("hot", 4);
 
     private String weatherDefinition;
     private int value;

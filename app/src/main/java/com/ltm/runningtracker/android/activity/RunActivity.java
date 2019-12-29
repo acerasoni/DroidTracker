@@ -2,8 +2,7 @@ package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
-import static com.ltm.runningtracker.android.contentprovider.ContentProviderContract.URI_MATCHER;
-import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.URI_MATCHER;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -23,8 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.RunActivityViewModel;
-import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
-import com.ltm.runningtracker.exception.WeatherNotAvailableException;
+import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.util.RunCoordinates;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -39,6 +38,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +58,8 @@ public class RunActivity extends AppCompatActivity implements
   private boolean isInTrackingMode;
   private MapView mapView;
   private Button toggleRunButton;
-  private double totalDistance, startLat, startLon, endLat, endLon;
+  private double totalDistance;
+  private float  startLat, startLon, endLat, endLon;
   private long startTime;
   private RunActivityViewModel runActivityViewModel;
   private Location currentLocation;
@@ -81,7 +82,7 @@ public class RunActivity extends AppCompatActivity implements
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
     getContentResolver().registerContentObserver(
-        ContentProviderContract.ALL_URI, true, new ChangeObserver(new Handler()));
+        DroidProviderContract.ALL_URI, true, new ChangeObserver(new Handler()));
   }
 
   public void toggleRun(View v) {
@@ -107,8 +108,8 @@ public class RunActivity extends AppCompatActivity implements
 
   public void onRunStart() {
     startTime = Calendar.getInstance().getTime().getTime();
-    startLat = runActivityViewModel.getLocation().getValue().getLatitude();
-    startLon = runActivityViewModel.getLocation().getValue().getLongitude();
+    startLat = (float) runActivityViewModel.getLocation().getValue().getLatitude();
+    startLon = (float) runActivityViewModel.getLocation().getValue().getLongitude();
     currentLocation = runActivityViewModel.getLocation().getValue();
 
     runActivityViewModel.getLocation().observe(this, location -> {
@@ -135,8 +136,8 @@ public class RunActivity extends AppCompatActivity implements
         //  throw new WeatherNotAvailableException("Weather unavailable");
         }
 
-        endLat = runActivityViewModel.getLocation().getValue().getLatitude();
-        endLon = runActivityViewModel.getLocation().getValue().getLongitude();
+        endLat = (float) runActivityViewModel.getLocation().getValue().getLatitude();
+        endLon = (float) runActivityViewModel.getLocation().getValue().getLongitude();
 
         long durationTime = Calendar.getInstance().getTime().getTime() - startTime;
         @SuppressLint("DefaultLocale") String duration = String.format("%02d min, %02d sec",
@@ -145,20 +146,13 @@ public class RunActivity extends AppCompatActivity implements
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationTime))
         );
 
-        double averageSpeed = getLocationRepository()
-            .calculateAverageSpeed(totalDistance, durationTime);
-
-        contentValues.put("weather", temperature);
-        contentValues.put("duration", duration);
-        contentValues.put("startLat", startLat);
-        contentValues.put("startLon", startLon);
-        contentValues.put("endLat", endLat);
-        contentValues.put("endLon", endLon);
+          byte[] runCoordinates = RunCoordinates.toByteArray(new RunCoordinates(startLat, startLon, endLat, endLon));
+          contentValues.put("runCoordinates", runCoordinates);
+        contentValues.put("temperature", temperature);
+        contentValues.put("duration", durationTime);
         contentValues.put("totalDistance", totalDistance);
-        contentValues.put("averageSpeed", averageSpeed);
 
-        Uri uri = getContentResolver().insert(ContentProviderContract.RUNS_URI, contentValues);
-        Log.d("URI", uri.toString());
+        Uri uri = getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
         return null;
       }
 

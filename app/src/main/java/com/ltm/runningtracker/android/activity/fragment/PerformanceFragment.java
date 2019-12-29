@@ -2,8 +2,6 @@ package com.ltm.runningtracker.android.activity.fragment;
 
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -15,15 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.contentprovider.ContentProviderContract;
+import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 
 public abstract class PerformanceFragment extends Fragment {
 
   // Protected because must be accessed by other fragments
   protected final String RUN_DISPLAYED_DATA[] = new String[]{
-      ContentProviderContract.DATE,
-      ContentProviderContract.WEATHER,
-      ContentProviderContract.DURATION
+      DroidProviderContract.DATE,
+      DroidProviderContract.WEATHER,
+      DroidProviderContract.DURATION
   };
 
   protected final int[] COLUMNS_RESULT_IDS = new int[]{
