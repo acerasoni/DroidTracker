@@ -11,29 +11,32 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.IInterface;
-import android.os.RemoteCallbackList;
 import android.util.Log;
 import androidx.annotation.Nullable;
+import com.ltm.runningtracker.repository.LocationRepository;
 import com.survivingwithandroid.weather.lib.WeatherClient;
-import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class WeatherUpdateService extends Service {
+public class WeatherService extends Service {
 
   // Worker thread
   private ScheduledExecutorService scheduledExecutorService;
   private WeatherClient weatherClient;
+
+  // Because weather is dependent on location and will read from the repo, it must be synchronized
   private Object lock;
 
   @Override
   public void onCreate() {
     super.onCreate();
+
+    Log.d("Weather Service: ", "onCreate");
     weatherClient = buildWeatherClient();
+    lock = LocationRepository.getLock();
 
-    lock = getLocationRepository().lock;
-
+    // Weather update worker thread
     // Reasons for this:
     // 1. Need to wait for location service to fetch at least one valid location
     // 2. Updating temperature and location must not happen concurrently as this could
@@ -41,18 +44,23 @@ public class WeatherUpdateService extends Service {
     Runnable requestWeatherTask = () -> {
       try {
         synchronized (lock) {
-          if (getLocationRepository().getLocation() == null) {
+          if (getLocationRepository().getLocationMutableLiveData() == null) {
+            // This means location has not been fetched yet. Lock will wait until notified
+            // by location service - meaning at least one location was successfully retrieved.
             lock.wait();
           }
+          // Weather repository listeners for changes in weather (passed as a listener), hence
+          // no need to directly post value to repo
           weatherClient
               .getCurrentCondition(buildWeatherRequest(), getWeatherRepository());
         }
       } catch (InterruptedException e) {
-        Log.e("WeatherUpdateService: ", "StartUp thread interrupted.");
+        Log.e("WeatherService: ", "StartUp thread interrupted.");
       }
 
     };
 
+    // Begin execution of worker thread
     scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     scheduledExecutorService
         .scheduleAtFixedRate(requestWeatherTask, 0, getPropertyManager().getMinTime(),

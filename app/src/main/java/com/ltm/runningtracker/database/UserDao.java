@@ -17,9 +17,15 @@ public interface UserDao {
   @Query("DELETE FROM user")
   int delete();
 
+  @Query("UPDATE user SET name=:name")
+  void updateName(String name);
+
+  @Query("UPDATE user SET weight=:weight")
+  void updateWeight(int weight);
+
+  @Query("UPDATE user SET height=:height")
+  void updateHeight(int height);
+
   @Insert
   long insert(User user);
-
-  @Update
-  int update(User user);
 }

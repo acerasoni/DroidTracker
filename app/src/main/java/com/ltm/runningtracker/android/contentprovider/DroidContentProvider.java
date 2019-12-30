@@ -126,19 +126,16 @@ public class DroidContentProvider extends ContentProvider {
    * This method updates records in the database. As runs are immutable, we will only ever need to
    * update the user, hence URI matching is not required.
    *
-   * Another advantage of caching the user is that we can use it to update the DB without having to
-   * pass individual values in the ContentValues;
-   *
-   * @return record _id
    */
   @Override
   public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s,
       @Nullable String[] strings) {
+    userDao.updateName(contentValues.getAsString("name"));
+    userDao.updateWeight(contentValues.getAsInteger("weight"));
+    userDao.updateHeight(contentValues.getAsInteger("height"));
 
-    // Notify cache user has changed
-    getContext().getContentResolver().notifyChange(uri, null);
-
-    return userDao.update(getUserRepository().getUser());
+    // Number of rows updated
+    return 1;
   }
 
 

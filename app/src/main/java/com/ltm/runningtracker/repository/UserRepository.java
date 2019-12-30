@@ -66,9 +66,14 @@ public class UserRepository {
     user.getValue().weight = weight;
     user.getValue().height = height;
 
+    ContentValues contentValues = new ContentValues();
+    contentValues.put("name", name);
+    contentValues.put("weight", weight);
+    contentValues.put("height", height);
+
     // Asynchronously update DB
     AsyncTask.execute(
-        () -> getApplicationContext().getContentResolver().update(USER_URI, null, null, null));
+        () -> getApplicationContext().getContentResolver().update(USER_URI, contentValues, null, null));
   }
 
   public void fetchUser() {

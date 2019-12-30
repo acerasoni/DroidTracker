@@ -8,7 +8,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.service.WeatherUpdateService;
+import com.ltm.runningtracker.android.service.WeatherService;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
@@ -25,7 +25,6 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
 
   public WeatherRepository() {
     weatherMutableLiveData = new MutableLiveData<>();
-    getAppContext().startService(new Intent(getAppContext(), WeatherUpdateService.class));
   }
 
   public LiveData<Weather> getLiveDataWeather() { return weatherMutableLiveData;}
@@ -37,6 +36,7 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
   public String getTemperature() {
     return Float.toString(weatherMutableLiveData.getValue().temperature.getTemp());
   }
+
   @Override
   public void onWeatherRetrieved(CurrentWeather weather) {
     setWeather(weather.weather);
@@ -53,7 +53,7 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
   }
 
   public void onDestroy() {
-    getAppContext().stopService(new Intent(getAppContext(), WeatherUpdateService.class));
+    getAppContext().stopService(new Intent(getAppContext(), WeatherService.class));
   }
 
   // Weather request builder method

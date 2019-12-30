@@ -1,31 +1,19 @@
 package com.ltm.runningtracker.repository;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
-import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 
-import android.app.PendingIntent;
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import android.location.Location;
-import androidx.room.Ignore;
-import com.ltm.runningtracker.android.service.WeatherUpdateService;
 import com.ltm.runningtracker.exception.InvalidLatitudeOrLongitudeException;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
-import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
-import com.survivingwithandroid.weather.lib.model.Weather;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -33,63 +21,56 @@ import java.util.Locale;
 public class LocationRepository implements LocationEngineCallback {
 
   private static Geocoder geocoder = new Geocoder(getAppContext(), Locale.getDefault());
-  ;
-  private MutableLiveData<Location> location;
-  private MutableLiveData<String> county;
+
+  private MutableLiveData<Location> locationMutableLiveData;
+  private MutableLiveData<String> stringMutableLiveData;
+
+  // Static because there should be only one instance of this to allow synchronized
+  // read/write of locationMutableLiveData
+  private static Object lock = new Object();
+
+  // Must be stored in repo because it is used by both the locationMutableLiveData service and passed
+  // to mapbox API in the run activity
   private LocationEngine locationEngine;
 
-  public Object lock;
-
   public LocationRepository() {
-    lock = new Object();
-
-    location = new MutableLiveData<>();
-    county = new MutableLiveData<>();
+    locationMutableLiveData = new MutableLiveData<>();
+    stringMutableLiveData = new MutableLiveData<>();
     locationEngine = LocationEngineProvider.getBestLocationEngine(getAppContext());
-
-    try {
-      LocationEngineRequest locationEngineRequest = new LocationEngineRequest.Builder(
-          getPropertyManager().getMinTime()).build();
-      locationEngine.requestLocationUpdates(locationEngineRequest, this, null);
-    } catch (SecurityException e) {
-      Log.d("Security exception: ", e.toString());
-    }
-
   }
 
-  private void setLocation(Location location) {
-    // If this is the first time we set location, we can notify the temperature update service to start
-    // fetching temperature updates
-    synchronized (lock) {
-      this.location.setValue(location);
-      lock.notify();
-    }
+  @Override
+  public void onSuccess(Object result) {
+    Location lastLocation = ((LocationEngineResult) result).getLastLocation();
+    Log.d("Locationrep: ", "onLocationRetrieved " + lastLocation.toString());
+    setLocation(lastLocation);
   }
 
-  private void setCounty(String county) {
-    this.county.setValue(county);
+  @Override
+  public void onFailure(@NonNull Exception exception) {
+    Log.d("Location Repository: ", exception.getMessage());
   }
 
-  // Expose location as livedata object to make it immutable from outside the class
-  // Only the location engine change the value of location
+  // Expose locationMutableLiveData as livedata object to make it immutable from outside the class
+  // Only the locationMutableLiveData engine change the value of locationMutableLiveData
   public LiveData<Location> getLocationLiveData() {
-    return location;
+    return locationMutableLiveData;
   }
 
   public LiveData<String> getCountyLiveData() {
-    return county;
+    return stringMutableLiveData;
   }
 
-  public Location getLocation() {
-    return location.getValue();
+  public Location getLocationMutableLiveData() {
+    return locationMutableLiveData.getValue();
   }
 
   public double getLatitude() {
-    return location.getValue().getLatitude();
+    return locationMutableLiveData.getValue().getLatitude();
   }
 
   public double getLongitude() {
-    return location.getValue().getLongitude();
+    return locationMutableLiveData.getValue().getLongitude();
   }
 
   public LocationEngine getLocationEngine() {
@@ -97,20 +78,29 @@ public class LocationRepository implements LocationEngineCallback {
     return locationEngine;
   }
 
-  @Override
-  public void onSuccess(Object result) {
-    Location lastLocation = ((LocationEngineResult) result).getLastLocation();
-    setLocation(lastLocation);
-
-    String county = getCounty(lastLocation);
-    if (county != null) {
-      setCounty(county);
-    }
+  /**
+   * @param distance in metres
+   * @param duration in milliseconds
+   * @return mph
+   */
+  public static float calculatePace(double distance, double duration) {
+    float metersPerSecond = (float) distance / (float) (duration / 1000);
+    float kmPerHour = metersPerSecond * 3.6f;
+    return kmPerHour;
   }
 
-  @Override
-  public void onFailure(@NonNull Exception exception) {
+  private void setLocation(Location location) {
+    // If this is the first time we set locationMutableLiveData, we can notify the temperature update service to start
+    // fetching temperature updates
+    synchronized (lock) {
+      this.locationMutableLiveData.setValue(location);
 
+      String county = getCounty(location);
+      if (county != null) {
+        this.stringMutableLiveData.setValue(county);
+      }
+      lock.notify();
+    }
   }
 
   /**
@@ -135,35 +125,12 @@ public class LocationRepository implements LocationEngineCallback {
           "Invalid values for Latitude = " + location.getLatitude() +
               ", Longitude = " + location.getLongitude());
     } catch (NullPointerException nullPointerException) {
-      Log.e("Location Repository ", "Could not fetch location", nullPointerException);
+      Log.e("Location Repository ", "Could not fetch locationMutableLiveData", nullPointerException);
     }
     return city;
   }
 
-  public static double calculateDistance(double startLat, double startLon, double endLat,
-      double endLon) {
-    Location a = new Location("Location A");
-    Location b = new Location("Location B");
-
-    a.setLatitude(startLat);
-    a.setLongitude(startLon);
-
-    b.setLatitude(endLat);
-    b.setLongitude(endLon);
-
-    return (double) a.distanceTo(b);
+  public static Object getLock() {
+    return lock;
   }
-
-  /**
-   *
-   * @param distance in metres
-   * @param duration in milliseconds
-   * @return mph
-   */
-  public static float calculatePace(double distance, double duration) {
-    double metersPerSecond = distance / (duration / 1000);
-    double mph = metersPerSecond * 2.237;
-    return (float) mph;
-  }
-
 }
