@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,13 +22,13 @@ public class ColdPerformanceFragment extends PerformanceFragment {
 
   @Override
   public void onPopulateList() {
-    // Must do the following sequentially to ensure correct behaviour
-    // - fetch cursor from database asynchronously
-    // - Swap data adaptor's cursor with new one on UI thread
-    // - Notify data adapter on UI thread
     AsyncTask.execute(() -> {
-      Cursor c = getRunRepository().getRuns(WeatherClassifier.COLD);
+      Cursor c = getRunRepository().getRunsAsync(getContext(), WeatherClassifier.COLD);
       getActivity().runOnUiThread(() -> {
+        // Must do the following sequentially to ensure correct behaviour
+        // - fetch cursor from database asynchronously
+        //  - Swap data adaptor's cursor with new one on UI thread
+        // - Notify data adapter on UI thread
         dataAdapter.swapCursor(c);
         dataAdapter.notifyDataSetChanged();
         listView.setAdapter(dataAdapter);

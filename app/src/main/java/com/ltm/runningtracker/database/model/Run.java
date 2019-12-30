@@ -36,19 +36,17 @@ public class Run {
   @ColumnInfo(name = "location")
   public String location;
 
-  // Store as milliseconds since 1970
   @ColumnInfo(name = "date")
   public String date;
+
+  @ColumnInfo(name = "runType")
+  public int runType;
 
   @ColumnInfo(name = "distance")
   public double distance;
 
-  // Store as milliseconds
   @ColumnInfo(name = "duration")
   public String duration;
-
-  @ColumnInfo(name = "runType")
-  public int runType;
 
   @ColumnInfo(name = "weatherType")
   public int weatherType;
@@ -60,7 +58,7 @@ public class Run {
   public RunCoordinates runCoordinates;
 
   // Pace is always < Float.MAX_VALUE, can store as float
-  @ColumnInfo(name = "average_speed")
+  @ColumnInfo(name = "pace")
   public float pace;
 
   // Builder pattern usually wants class constructor to be empty and private. However, this collides with Room

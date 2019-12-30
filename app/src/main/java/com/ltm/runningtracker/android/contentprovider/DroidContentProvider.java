@@ -1,11 +1,13 @@
 package com.ltm.runningtracker.android.contentprovider;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.COLD_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.FREEZING_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.HOT_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.MILD_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.RUNS;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.RUN_BY_ID;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.URI_MATCHER;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.USER;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.WARM_RUNS;
@@ -48,6 +50,8 @@ public class DroidContentProvider extends ContentProvider {
     switch (URI_MATCHER.match(uri)) {
       case RUNS:
         return runDao.getAll();
+      case RUN_BY_ID:
+        return runDao.getById(Integer.parseInt(uri.getLastPathSegment()));
       case FREEZING_RUNS:
       case COLD_RUNS:
       case MILD_RUNS:
@@ -67,46 +71,55 @@ public class DroidContentProvider extends ContentProvider {
   @Nullable
   @Override
   public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-    long id = Integer.MIN_VALUE;
+    Uri var = null;
 
     switch (URI_MATCHER.match(uri)) {
       case RUNS:
-        id = runDao.insert(getParsedRunBuilder(contentValues).build());
+        long runId = runDao.insert(getParsedRunBuilder(contentValues).build());
+        var = ContentUris.withAppendedId(uri, runId);
         break;
       case USER:
         User user = getParsedUserBuilder(contentValues).build();
         // Cache
         getUserRepository().setUserAsync(user);
-        id = userDao.insert(user);
+        long userId = userDao.insert(user);
+        var = ContentUris.withAppendedId(uri, userId);
         break;
     }
 
-    Uri nu = ContentUris.withAppendedId(uri, id);
-    Log.d("DroidContentProvider ", "onInsert: " + nu.toString());
-    getContext().getContentResolver().notifyChange(nu, null);
+    Log.d("DroidContentProvider ", "onInsert: " + var.toString());
 
-    return nu;
+    // Notify change
+    getContext().getContentResolver().notifyChange(var, null);
+
+    return var;
   }
 
   @Override
   public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-    int id = Integer.MIN_VALUE;
+    int numRowsDeleted = Integer.MIN_VALUE;
 
     switch (URI_MATCHER.match(uri)) {
+      case RUNS:
+        numRowsDeleted = runDao.delete();
+        break;
       case FREEZING_RUNS:
       case COLD_RUNS:
       case MILD_RUNS:
       case WARM_RUNS:
       case HOT_RUNS:
-        id = runDao.deleteByWeather(
+        numRowsDeleted = runDao.deleteByWeather(
             WeatherClassifier.valueOf(uri.getLastPathSegment().toUpperCase()).getValue());
         break;
       case USER:
-        id = userDao.delete();
+        numRowsDeleted = userDao.delete();
         break;
     }
 
-    return id;
+    // Notify change
+    getContext().getContentResolver().notifyChange(uri, null);
+
+    return numRowsDeleted;
   }
 
   /**
@@ -121,6 +134,10 @@ public class DroidContentProvider extends ContentProvider {
   @Override
   public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s,
       @Nullable String[] strings) {
+
+    // Notify cache user has changed
+    getContext().getContentResolver().notifyChange(uri, null);
+
     return userDao.update(getUserRepository().getUser());
   }
 

@@ -33,6 +33,8 @@ public class WeatherParser {
       return value;
     }
 
+    public static int getNum() { return WeatherClassifier.values().length; }
+
     @Override
     public String toString() {
       return weatherDefinition;

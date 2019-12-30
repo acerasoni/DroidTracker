@@ -11,10 +11,15 @@ public class FreezingPerformanceFragment extends PerformanceFragment {
   @Override
   protected void onPopulateList() {
     AsyncTask.execute(() -> {
-      Cursor c = getRunRepository().getRuns(WeatherClassifier.FREEZING);
+      Cursor c = getRunRepository().getRunsAsync(getContext(), WeatherClassifier.FREEZING);
       getActivity().runOnUiThread(() -> {
+        // Must do the following sequentially to ensure correct behaviour
+        // - fetch cursor from database asynchronously
+        //  - Swap data adaptor's cursor with new one on UI thread
+        // - Notify data adapter on UI thread
         dataAdapter.swapCursor(c);
         dataAdapter.notifyDataSetChanged();
+        listView.setAdapter(dataAdapter);
       });
     });
   }

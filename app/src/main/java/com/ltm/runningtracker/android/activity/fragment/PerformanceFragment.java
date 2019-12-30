@@ -3,9 +3,14 @@ package com.ltm.runningtracker.android.activity.fragment;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
@@ -18,7 +23,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
+import com.ltm.runningtracker.android.activity.PerformanceActivity;
+import com.ltm.runningtracker.android.activity.viewmodel.MainScreenActivityViewModel;
+import com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,18 +57,14 @@ public abstract class PerformanceFragment extends Fragment {
 
   protected SimpleCursorAdapter dataAdapter;
   protected ListView listView;
+  protected PerformanceViewModel performanceViewModel;
+  protected View listLayout;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-  }
+    performanceViewModel = ViewModelProviders.of(this).get(PerformanceViewModel.class);
 
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
-    View view = inflater.inflate(R.layout.performance_fragment, container, false);
-    listView = view.findViewById(R.id.runList);
     dataAdapter = new SimpleCursorAdapter(
         getActivity(),
         R.layout.run_list_item,
@@ -67,11 +73,42 @@ public abstract class PerformanceFragment extends Fragment {
         RUN_DISPLAYED_DATA,
         COLUMNS_RESULT_IDS,
         0);
+  }
+
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    Log.d("Create View", "Called");
+    // Inflate the layout for this fragment
+    View view = inflater.inflate(R.layout.performance_fragment, container, false);
+    listView = view.findViewById(R.id.runList);
     onPopulateList();
+
+    Class thisClass = this.getClass();
+
+    // Start details activity when item is clicked
+    listView.setOnItemClickListener(new OnItemClickListener() {
+
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), BrowseRunDetailsActivity.class);
+        Bundle bundle = new Bundle();
+
+        // Get ID of run
+        ViewGroup viewGroup = (ViewGroup) view;
+        Integer runId = Integer.parseInt(((TextView) (viewGroup.getChildAt(0))).getText().toString());
+        bundle.putInt("runId", runId);
+
+        // Determine from which fragment so we can fetch the cursor from the right cache index
+        bundle.putInt("fromFragment", PerformanceActivity.FRAGMENT_TO_ID.get(thisClass));
+
+        intent.putExtras(bundle);
+        startActivity(intent);
+      }
+    });
+
     return view;
   }
 
   protected abstract void onPopulateList();
-
 
 }

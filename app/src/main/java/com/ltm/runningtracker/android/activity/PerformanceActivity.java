@@ -1,7 +1,11 @@
 package com.ltm.runningtracker.android.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,6 +19,8 @@ import com.ltm.runningtracker.android.activity.fragment.FreezingPerformanceFragm
 import com.ltm.runningtracker.android.activity.fragment.HotPerformanceFragment;
 import com.ltm.runningtracker.android.activity.fragment.MildPerformanceFragment;
 import com.ltm.runningtracker.android.activity.fragment.WarmPerformanceFragment;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Graph 1 = Running pace (average speed) Graph 2 = Total distance Graph 3 = Total time
@@ -23,6 +29,16 @@ public class PerformanceActivity extends AppCompatActivity {
 
   private TabLayout tabLayout;
   private ViewPager viewPager;
+
+  public static final Map<Class, Integer> FRAGMENT_TO_ID = new HashMap<Class, Integer>(){
+    {
+      put(FreezingPerformanceFragment.class, 0);
+      put(ColdPerformanceFragment.class, 1);
+      put(MildPerformanceFragment.class, 2);
+      put(WarmPerformanceFragment.class, 3);
+      put(HotPerformanceFragment.class, 4);
+    }
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +70,19 @@ public class PerformanceActivity extends AppCompatActivity {
       switch (position) {
         case 0:
           fragment = new FreezingPerformanceFragment();
-        break;
+          break;
         case 1:
           fragment = new ColdPerformanceFragment();
-        break;
+          break;
         case 2:
           fragment = new MildPerformanceFragment();
-        break;
+          break;
         case 3:
           fragment = new WarmPerformanceFragment();
-        break;
+          break;
         case 4:
           fragment = new HotPerformanceFragment();
-        break;
+          break;
       }
 
       return fragment;

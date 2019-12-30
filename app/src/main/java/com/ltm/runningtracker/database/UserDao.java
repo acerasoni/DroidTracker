@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.database;
 
 import android.database.Cursor;
+import android.net.Uri;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
