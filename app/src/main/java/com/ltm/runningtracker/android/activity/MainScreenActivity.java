@@ -60,14 +60,17 @@ public class MainScreenActivity extends AppCompatActivity {
     getUserRepository();
     getWeatherRepository();
     getRunRepository();
-    setupButtons();
 
     // Start weather and location service
+    // No need to bind because no communication is required - just observing objects
+    // Acts as a callback
     Intent locationIntent = new Intent(this, LocationService.class);
     startService(locationIntent);
 
     Intent weatherIntent = new Intent(this, WeatherService.class);
     startService(weatherIntent);
+
+    setupButtons();
 
     // observe location object
     mainActivityViewModel.getCounty().observe(this, county -> {

@@ -61,7 +61,7 @@ public class LocationRepository implements LocationEngineCallback {
     return stringMutableLiveData;
   }
 
-  public Location getLocationMutableLiveData() {
+  public Location getLocation() {
     return locationMutableLiveData.getValue();
   }
 

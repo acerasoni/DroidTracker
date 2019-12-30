@@ -44,7 +44,7 @@ public class WeatherService extends Service {
     Runnable requestWeatherTask = () -> {
       try {
         synchronized (lock) {
-          if (getLocationRepository().getLocationMutableLiveData() == null) {
+          if (getLocationRepository().getLocation() == null) {
             // This means location has not been fetched yet. Lock will wait until notified
             // by location service - meaning at least one location was successfully retrieved.
             lock.wait();

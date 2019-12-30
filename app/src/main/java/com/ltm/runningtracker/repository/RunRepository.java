@@ -13,10 +13,16 @@ import java.util.List;
 
 public class RunRepository {
 
+  // Associated with retrieving runs
   // Cursors associated with current run list returned by DB
   // Acts as short-living cache, as it is overritten by subsequent DB queries
   // Enum provides us with index of run types
   private List<MutableLiveData<Cursor>> runCursors;
+
+  // Associated with the running activity.
+  // Cache distance and time. Service progressively updates these. Are observed by RunActivity's UI.
+  private MutableLiveData<Long> distance;
+  private MutableLiveData<Long> duration;
 
   public RunRepository() {
     // Cache empty
@@ -28,6 +34,25 @@ public class RunRepository {
         }
       }
     };
+
+    distance = new MutableLiveData<>();
+    duration = new MutableLiveData<>();
+  }
+
+  public void setDistance(long distance) {
+    this.distance.setValue(distance);
+  }
+
+  public void setDuration(long duration) {
+    this.duration.setValue(duration);
+  }
+
+  public MutableLiveData<Long> getDurationLiveData() {
+    return duration;
+  }
+
+  public MutableLiveData<Long> getDistanceLiveData() {
+    return distance;
   }
 
   // Called if cache exists

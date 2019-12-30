@@ -1,29 +1,25 @@
 package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
-import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.URI_MATCHER;
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.database.ContentObserver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.location.Location;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
+import android.os.IBinder;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.RunActivityViewModel;
-import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
-import com.ltm.runningtracker.util.RunCoordinates;
+import com.ltm.runningtracker.android.service.LocationService;
+import com.ltm.runningtracker.android.service.LocationService.LocationServiceBinder;
+import com.ltm.runningtracker.repository.LocationRepository;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -38,10 +34,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/location/LocationComponentOptionsActivity.java
@@ -50,120 +43,33 @@ public class RunActivity extends AppCompatActivity implements
     OnMapReadyCallback, OnLocationClickListener, PermissionsListener,
     OnCameraTrackingChangedListener {
 
-  private PermissionsManager permissionsManager;
+  // Service-related
+  Boolean isRunning = null;
+  LocationService mService;
+  boolean mBound = false;
 
-  private static boolean isRunning = false;
+  // Mapbox-related
   private MapboxMap mapboxMap;
   private LocationComponent locationComponent;
   private boolean isInTrackingMode;
+  private PermissionsManager permissionsManager;
+
+  // Views
+  private RunActivityViewModel runActivityViewModel;
+  private TextView countyView, distanceView, temperatureView, durationView;
   private MapView mapView;
   private Button toggleRunButton;
-  private double totalDistance;
-  private float startLat, startLon, endLat, endLon;
-  private long startTime;
-  private RunActivityViewModel runActivityViewModel;
-  private Location currentLocation;
-  private ContentValues contentValues;
-  private String temperature;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_run);
 
-    totalDistance = 0;
-    runActivityViewModel = ViewModelProviders.of(this).get(RunActivityViewModel.class);
-    contentValues = new ContentValues();
-    toggleRunButton = findViewById(R.id.toggleRunButton);
-    toggleRunButton.setText("Start run");
+    initialiseViews();
+    setupMaxbox(savedInstanceState);
 
-    Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-    mapView = findViewById(R.id.mapView);
-    mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(this);
-    getContentResolver().registerContentObserver(
-        DroidProviderContract.ALL_URI, true, new ChangeObserver(new Handler()));
-  }
-
-  public void toggleRun(View v) {
-    if (!isInTrackingMode) {
-      isInTrackingMode = true;
-      locationComponent.setCameraMode(CameraMode.TRACKING);
-      locationComponent.zoomWhileTracking(16f);
-      Toast.makeText(RunActivity.this, "Run started",
-          Toast.LENGTH_SHORT).show();
-    }
-
-    if (!isRunning) {
-      toggleRunButton.setText("End run");
-      onRunStart();
-      isRunning = true;
-    } else {
-      onRunEnd();
-      isRunning = false;
-    }
-  }
-
-  public void onRunStart() {
-    startTime = Calendar.getInstance().getTime().getTime();
-    startLat = (float) runActivityViewModel.getLocation().getValue().getLatitude();
-    startLon = (float) runActivityViewModel.getLocation().getValue().getLongitude();
-    currentLocation = runActivityViewModel.getLocation().getValue();
-
-    runActivityViewModel.getLocation().observe(this, location -> {
-      // Dynamically increases the distance covered rather than calculating distance between point A and point B
-      totalDistance += location.distanceTo(currentLocation);
-      currentLocation = location;
-      Log.d("Current distance", "" + totalDistance);
-    });
-  }
-
-  public void onRunEnd() {
-
-    /**
-     * https://github.com/probelalkhan/android-room-database-example/blob/master/app/src/main/java/net/simplifiedcoding/mytodo/AddTaskActivity.java
-     */
-    class SaveRun extends AsyncTask<Void, Void, Void> {
-
-      @Override
-      protected Void doInBackground(Void... voids) {
-        try {
-          temperature = getWeatherRepository().getTemperature();
-        } catch (NullPointerException e) {
-          temperature = "Unavailable";
-          //  throw new WeatherNotAvailableException("Weather unavailable");
-        }
-
-        endLat = (float) runActivityViewModel.getLocation().getValue().getLatitude();
-        endLon = (float) runActivityViewModel.getLocation().getValue().getLongitude();
-
-        long durationTime = Calendar.getInstance().getTime().getTime() - startTime;
-        byte[] runCoordinates = RunCoordinates
-            .toByteArray(new RunCoordinates(startLat, startLon, endLat, endLon));
-        contentValues.put("runCoordinates", runCoordinates);
-        contentValues.put("temperature", temperature);
-        contentValues.put("duration", durationTime);
-        contentValues.put("distance", totalDistance);
-        contentValues.put("date", System. currentTimeMillis());
-        getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
-        return null;
-      }
-
-      @Override
-      protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        finish();
-        if (temperature.equals("Unavailable")) {
-          Toast.makeText(getApplicationContext(), "Weather unavailable - run saved",
-              Toast.LENGTH_LONG).show();
-        } else {
-          Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
-        }
-      }
-    }
-
-    new SaveRun().execute();
-
+    // Bind required because, as opposed to MainScreenActivity, this activity needs to communicate with it
+    bindService(new Intent(this, LocationService.class), connection, Context.BIND_AUTO_CREATE);
   }
 
   @Override
@@ -312,28 +218,100 @@ public class RunActivity extends AppCompatActivity implements
     mapView.onLowMemory();
   }
 
-  class ChangeObserver extends ContentObserver {
+  /**
+   * Defines callbacks for service binding, passed to bindService()
+   */
+  private ServiceConnection connection = new ServiceConnection() {
 
-    public ChangeObserver(Handler handler) {
-      super(handler);
+    @Override
+    public void onServiceConnected(ComponentName className,
+        IBinder service) {
+      // We've bound to LocalService, cast the IBinder and get LocalService instance
+      LocationServiceBinder binder = (LocationServiceBinder) service;
+      mService = binder.getService();
+
+      // Determine if user is running
+      isRunning = binder.isUserRunning();
+
+      // Tell the UI to update its state
+      if(isRunning) setObservers();
+
+      setButtonText(isRunning);
+
+      toggleRunButton.setOnClickListener(v -> {
+        isRunning = binder.toggleRun();
+        if(isRunning) setObservers();
+        setButtonText(isRunning);
+        if (!isInTrackingMode) {
+          isInTrackingMode = true;
+          locationComponent.setCameraMode(CameraMode.TRACKING);
+          locationComponent.zoomWhileTracking(16f);
+          Toast.makeText(RunActivity.this, determineText(isRunning),
+              Toast.LENGTH_SHORT).show();
+        }
+      });
+
+      mBound = true;
     }
 
     @Override
-    public void onChange(boolean selfChange) {
-      this.onChange(selfChange, null);
+    public void onServiceDisconnected(ComponentName arg0) {
+      mBound = false;
     }
+  };
 
-    // When data in the database changes
-    @Override
-    public void onChange(boolean selfChange, Uri uri) {
-      switch (URI_MATCHER.match(uri)) {
-        case 0:
+  private void setupMaxbox(Bundle savedInstanceState) {
+    Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+    mapView = findViewById(R.id.mapView);
+    mapView.onCreate(savedInstanceState);
+    mapView.getMapAsync(this);
+  }
 
-          break;
-        case 1:
-          break;
-      }
+  private void initialiseViews() {
+    runActivityViewModel = ViewModelProviders.of(this).get(RunActivityViewModel.class);
+    countyView = findViewById(R.id.countyView);
+    durationView = findViewById(R.id.timeView);
+    temperatureView = findViewById(R.id.temperatureView);
+    distanceView = findViewById(R.id.distanceView);
+    toggleRunButton = findViewById(R.id.toggleRunButton);
+
+    // Non run-related info can be observed straight away
+    runActivityViewModel.getLocation().observe(this, location -> {
+      countyView.setText(LocationRepository.getCounty(location));
+    });
+
+    // Non run-related info can be observed straight away
+    runActivityViewModel.getWeather().observe(this, weather -> {
+      temperatureView.setText(Float.toString(weather.temperature.getTemp()));
+    });
+
+    distanceView.setText("N/A");
+    durationView.setText("N/A");
+
+    toggleRunButton.setText("Fetching location...");
+  }
+
+  private String determineText(boolean isRunning) {
+    return isRunning ? "Run ended" : "Run started";
+  }
+
+  private void setButtonText(boolean isRunning) {
+    if (isRunning) {
+      toggleRunButton.setText("End run");
+    } else {
+      toggleRunButton.setText("Start run");
     }
   }
 
+  private void setObservers() {
+    // Non run-related info can be observed straight away
+    runActivityViewModel.getDistance().observe(this, distance -> {
+      distanceView.setText(Long.toString(distance));
+    });
+
+    // Non run-related info can be observed straight away
+    runActivityViewModel.getDuration().observe(this, duration -> {
+      durationView.setText(Long.toString(duration));
+    });
+  }
 }
