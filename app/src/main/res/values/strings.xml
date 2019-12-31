@@ -16,6 +16,14 @@
   <string name="title_activity_weather_performance">WeatherPerformanceActivity</string>
   <string name="title_activity_edit_bmi">EditBmiActivity</string>
 
+  <string-array name="activity_types">
+    <item>Untagged</item>
+    <item>Walk</item>
+    <item>Jog</item>
+    <item>Run</item>
+    <item>Sprint</item>
+  </string-array>
+
   <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

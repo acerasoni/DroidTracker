@@ -29,6 +29,9 @@ public interface RunDao {
     @Query("DELETE FROM run WHERE weatherType=:type")
     int deleteByWeather(int type);
 
+    @Query("UPDATE run SET runType=:type WHERE _id=:id")
+    void updateRunType(int id, String type);
+
     @Insert
     long insert(Run run);
 

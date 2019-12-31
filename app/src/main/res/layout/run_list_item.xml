@@ -4,17 +4,17 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="horizontal"
-  android:weightSum="5">
+  android:weightSum="6">
 
   <TextView
     android:id="@+id/id"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
     android:onClick="onClickRun" />
   <TextView
     android:id="@+id/location"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="2"
     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -23,16 +23,16 @@
 
   <TextView
     android:id="@+id/date"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_weight="1"
+    android:layout_weight="2"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:textColor="@color/colorPrimaryDark"
     android:textSize="12sp" />
 
   <TextView
-    android:id="@+id/duration"
-    android:layout_width="wrap_content"
+    android:id="@+id/type"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
     android:textAppearance="?android:attr/textAppearanceLarge"

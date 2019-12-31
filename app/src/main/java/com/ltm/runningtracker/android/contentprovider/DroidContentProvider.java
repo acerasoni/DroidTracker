@@ -15,17 +15,21 @@ import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.WAR
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Ignore;
+import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
+import com.ltm.runningtracker.util.RunTypeParser;
+import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
 public class DroidContentProvider extends ContentProvider {
@@ -125,14 +129,21 @@ public class DroidContentProvider extends ContentProvider {
   /**
    * This method updates records in the database. As runs are immutable, we will only ever need to
    * update the user, hence URI matching is not required.
-   *
    */
   @Override
   public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s,
       @Nullable String[] strings) {
-    userDao.updateName(contentValues.getAsString("name"));
-    userDao.updateWeight(contentValues.getAsInteger("weight"));
-    userDao.updateHeight(contentValues.getAsInteger("height"));
+    switch (URI_MATCHER.match(uri)) {
+      case USER:
+        userDao.updateName(contentValues.getAsString("name"));
+        userDao.updateWeight(contentValues.getAsInteger("weight"));
+        userDao.updateHeight(contentValues.getAsInteger("height"));
+        break;
+      case RUN_BY_ID:
+        String type = contentValues.getAsString("type");
+        runDao.updateRunType(Integer.parseInt(uri.getLastPathSegment()),
+           type);
+    }
 
     // Number of rows updated
     return 1;
@@ -169,19 +180,24 @@ public class DroidContentProvider extends ContentProvider {
       builder = builder.withRunCoordinates(contentValues.getAsByteArray("runCoordinates"));
     }
 
+    int runTypeId;
+
     if (contentValues.containsKey("runType")) {
-      builder = builder.withRunType(contentValues.getAsInteger("runType"));
+      runTypeId = contentValues.getAsInteger("runType");
+    } else {
+      runTypeId = 0;
     }
 
-    return builder;
+    String runType = BrowseRunDetailsActivity
+        .capitalizeFirstLetter(RunTypeClassifier.valueOf(runTypeId).toString());
+
+    return builder.withRunType(runType);
   }
 
   @Ignore
   private User.Builder getParsedUserBuilder(ContentValues contentValues) {
-    User.Builder builder = new User.Builder(contentValues.getAsString("name"),
-        contentValues.getAsInteger("weight"),
-        contentValues.getAsInteger("height")).withWalkingPace(Float.MIN_VALUE)
-        .withJoggingPace(Float.MIN_VALUE).withRunningPace(Float.MIN_VALUE).withSprintingPace(Float.MIN_VALUE);
+    User.Builder builder = new User.Builder(contentValues.getAsString("name")).withWeight(contentValues.getAsInteger("weight"))
+        .withHeight(contentValues.getAsInteger("height"));
 
     return builder;
   }

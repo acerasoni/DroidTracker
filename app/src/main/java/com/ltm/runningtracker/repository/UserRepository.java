@@ -95,13 +95,9 @@ public class UserRepository {
     String name = c.getString(1);
     int weight = c.getInt(2);
     int height = c.getInt(3);
-    float walkingPace = c.getFloat(4);
-    float joggingPace = c.getFloat(5);
-    float runningPace = c.getFloat(6);
-    float sprintingPace = c.getFloat(7);
 
-    return new User.Builder(name, weight, height).withWalkingPace(walkingPace)
-        .withJoggingPace(joggingPace).withRunningPace(runningPace).withSprintingPace(sprintingPace).build();
+    return new User.Builder(name).withHeight(weight)
+        .withHeight(height).build();
   }
 
 

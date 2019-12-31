@@ -1,9 +1,18 @@
 package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
+import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.RUNS;
+import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.JOG_VALUE;
+import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.RUN_VALUE;
+import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.SPRINT_VALUE;
+import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.WALK;
+import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.WALK_VALUE;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +29,7 @@ public class UserProfileActivity extends AppCompatActivity {
   TextView walkingPaceField, joggingPaceField, runningPaceField, sprintingPaceField, bmiField;
   boolean creatingUser;
   private int weight = -1, height = -1;
+  private Float walkingPace, joggingPace, runningPace, sprintingPace;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +52,74 @@ public class UserProfileActivity extends AppCompatActivity {
 
     if (!creatingUser) {
       populateViews();
+      AsyncTask.execute(
+          () -> calculatePaces());
     } else {
       populatePaces();
     }
+  }
+
+  public void calculatePaces() {
+    Cursor c = getContentResolver().query(RUNS_URI, null, null, null, null);
+    if (c.moveToFirst()) {
+      do {
+        switch (RunTypeClassifier.valueOf(c.getString(3).toUpperCase())) {
+          case WALK:
+            if (walkingPace == null) {
+              walkingPace = c.getFloat(9);
+            }
+            walkingPace = calculateAverage(walkingPace, c.getFloat(9));
+            break;
+          case JOG:
+            if (joggingPace == null) {
+              joggingPace = c.getFloat(9);
+            }
+            joggingPace = calculateAverage(joggingPace, c.getFloat(9));
+            break;
+          case RUN:
+            if (runningPace == null) {
+              runningPace = c.getFloat(9);
+            }
+            runningPace = calculateAverage(runningPace, c.getFloat(9));
+            break;
+          case SPRINT:
+            if (sprintingPace == null) {
+              sprintingPace = c.getFloat(9);
+            }
+            sprintingPace = calculateAverage(sprintingPace, c.getFloat(9));
+            break;
+
+        }
+      } while (c.moveToNext());
+    }
+
+    StringBuilder sb;
+
+    if (walkingPace == null) {
+      walkingPaceField.setText("Unavailable");
+    } else {
+      sb = new StringBuilder(String.format("%.2f", walkingPace)).append(" km/h");
+      walkingPaceField.setText(sb.toString());
+    }
+    if (joggingPace == null) {
+      joggingPaceField.setText("Unavailable");
+    } else {
+      sb = new StringBuilder(String.format("%.2f", joggingPace)).append(" km/h");
+      joggingPaceField.setText(sb.toString());
+    }
+    if (runningPace == null) {
+      runningPaceField.setText("Unavailable");
+    } else {
+      sb = new StringBuilder(String.format("%.2f", runningPace)).append(" km/h");
+      runningPaceField.setText(sb.toString());
+    }
+    if (sprintingPace == null) {
+      sprintingPaceField.setText("Unavailable");
+    } else {
+      sb = new StringBuilder(String.format("%.2f", sprintingPace)).append(" km/h");
+      sprintingPaceField.setText(sb.toString());
+    }
+
   }
 
   public void populatePaces() {
@@ -58,10 +133,6 @@ public class UserProfileActivity extends AppCompatActivity {
     nameField.setText(user.name);
     weightField.setText(Integer.toString(user.weight));
     heightField.setText(Integer.toString(user.height));
-    walkingPaceField.setText(parsePace(user.walkingPace, RunTypeClassifier.WALK));
-    joggingPaceField.setText(parsePace(user.joggingPace, RunTypeClassifier.JOG));
-    runningPaceField.setText(parsePace(user.runningPace, RunTypeClassifier.RUN));
-    sprintingPaceField.setText(parsePace(user.sprintingPace, RunTypeClassifier.SPRINT));
     bmiField.setText(Float.toString(bmi));
   }
 
@@ -73,9 +144,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
     if (creatingUser) {
       getUserRepository()
-          .createUser(name.trim(), Integer.parseInt(weight.trim()), Integer.parseInt(height.trim()));
+          .createUser(name.trim(), Integer.parseInt(weight.trim()),
+              Integer.parseInt(height.trim()));
     } else {
-      getUserRepository().updateUser(name.trim(), Integer.parseInt(weight.trim()), Integer.parseInt(height.trim()));
+      getUserRepository().updateUser(name.trim(), Integer.parseInt(weight.trim()),
+          Integer.parseInt(height.trim()));
     }
     Intent returnIntent = new Intent();
     setResult(Activity.RESULT_OK, returnIntent);
@@ -95,7 +168,7 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   private void setupBmiListeners() {
-        weightField.setOnFocusChangeListener((v, hasFocus) -> {
+    weightField.setOnFocusChangeListener((v, hasFocus) -> {
       if (!hasFocus) {
         String text = weightField.getText().toString();
         if (text != null && !text.equals("")) {
@@ -110,9 +183,9 @@ public class UserProfileActivity extends AppCompatActivity {
     heightField.setOnFocusChangeListener((v, hasFocus) -> {
       if (!hasFocus) {
         String text = heightField.getText().toString();
-        if(text != null && !text.equals("")){
+        if (text != null && !text.equals("")) {
           height = Integer.parseInt(text);
-          if(weight > 0) {
+          if (weight > 0) {
             bmiField.setText(Float.toString(calculateBMI(weight, height)));
           }
         }
@@ -121,14 +194,8 @@ public class UserProfileActivity extends AppCompatActivity {
     });
   }
 
-  private String parsePace(float pace, RunTypeClassifier runTypeClassifier) {
-    if(pace != Float.MIN_VALUE) {
-      return Float.toString(pace);
-    } else {
-      StringBuilder sb = new StringBuilder("Data unavailable for ");
-      sb.append(runTypeClassifier.toString());
-      return sb.toString();
-    }
+  private Float calculateAverage(float a, float b) {
+    return (a + b) / 2;
   }
 
 }

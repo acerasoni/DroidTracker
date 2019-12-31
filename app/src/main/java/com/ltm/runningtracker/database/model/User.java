@@ -25,20 +25,6 @@ public class User {
   @ColumnInfo(name = "height")
   public int height;
 
-  // Values of Float.MIN_VALUE for paces mean no runs of that type were recorded hence no data available
-  // to compute pace
-  @ColumnInfo(name = "walkingPace")
-  public float walkingPace;
-
-  @ColumnInfo(name = "joggingPace")
-  public float joggingPace;
-
-  @ColumnInfo(name = "runningPace")
-  public float runningPace;
-
-  @ColumnInfo(name = "sprintingPace")
-  public float sprintingPace;
-
   public User() {
   }
 
@@ -52,40 +38,21 @@ public class User {
     private String name;
     private int weight;
     private int height;
-    private float walkingPace;
-    private float joggingPace;
-    private float runningPace;
-    private float sprintingPace;
 
     /**
      * Minimum required information
      */
-    public Builder(String name, int weight, int height) {
+    public Builder(String name) {
       this.name = name;
+    }
+
+    public User.Builder withWeight(int weight) {
       this.weight = weight;
+      return this;
+    }
+
+    public User.Builder withHeight(int height) {
       this.height = height;
-    }
-
-    /**
-     * Fails if serialization of coordinate fails
-     */
-    public User.Builder withWalkingPace(float walkingPace) {
-      this.walkingPace = walkingPace;
-      return this;
-    }
-
-    public User.Builder withJoggingPace(float joggingPace) {
-      this.joggingPace = joggingPace;
-      return this;
-    }
-
-    public User.Builder withRunningPace(float runningPace) {
-      this.runningPace = runningPace;
-      return this;
-    }
-
-    public User.Builder withSprintingPace(float sprintingPace) {
-      this.sprintingPace = sprintingPace;
       return this;
     }
 
@@ -94,10 +61,6 @@ public class User {
       user.name = this.name;
       user.weight = this.weight;
       user.height = this.height;
-      user.walkingPace = this.walkingPace;
-      user.joggingPace = this.joggingPace;
-      user.runningPace = this.runningPace;
-      user.sprintingPace = this.sprintingPace;
 
       return user;
     }

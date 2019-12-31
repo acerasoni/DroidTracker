@@ -12,6 +12,7 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,10 +52,9 @@ public class RunActivity extends AppCompatActivity implements
   IntentFilter runUpdateFilter;
   Boolean isRunning = null;
   LocationService mService;
-  boolean mBound = false;
+  boolean mBound;
   RunUpdateReceiver runUpdateReceiver;
-
-
+  Context context = this;
 
   // Mapbox-related
   private MapboxMap mapboxMap;
@@ -81,9 +81,6 @@ public class RunActivity extends AppCompatActivity implements
 
     initialiseViews();
     setupMaxbox(savedInstanceState);
-
-    // Bind required because, as opposed to MainScreenActivity, this activity needs to communicate with it
-    bindService(new Intent(this, LocationService.class), connection, Context.BIND_AUTO_CREATE);
   }
 
   @Override
@@ -190,11 +187,6 @@ public class RunActivity extends AppCompatActivity implements
     }
   }
 
-  @SuppressWarnings({"MissingPermission"})
-  protected void onStart() {
-    super.onStart();
-    mapView.onStart();
-  }
 
   @Override
   protected void onResume() {
@@ -222,10 +214,25 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   @Override
+  protected void onStart() {
+    Intent intent = new Intent(this, LocationService.class);
+
+    // Bind required because, as opposed to MainScreenActivity, this activity needs to communicate with it
+    bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+    mapView.onStart();
+    super.onStart();
+  }
+
+  @Override
   protected void onDestroy() {
-    super.onDestroy();
-    unregisterReceiver(runUpdateReceiver);
+
+    if (mBound) {
+      unregisterReceiver(runUpdateReceiver);
+      unbindService(connection);
+    }
     mapView.onDestroy();
+    super.onDestroy();
   }
 
   @Override
@@ -242,13 +249,19 @@ public class RunActivity extends AppCompatActivity implements
     @Override
     public void onServiceConnected(ComponentName className,
         IBinder service) {
+      Log.d("Bound", "b");
       // We've bound to LocalService, cast the IBinder and get LocalService instance
       LocationServiceBinder binder = (LocationServiceBinder) service;
       mService = binder.getService();
 
       // Determine if user is running
       isRunning = binder.isUserRunning();
-
+      if(isRunning) {
+        distanceView.setText(binder.getDistance() + " metres");
+        durationView.setText("Fetching time...");
+      } else {
+        durationView.setText("Begin run to display progress");
+      }
       setButtonText(isRunning);
 
       toggleRunButton.setOnClickListener(v -> {
@@ -301,7 +314,7 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   private String determineText(boolean isRunning) {
-    return isRunning ? "Run ended" : "Run started";
+    return isRunning ? "Run started" : "Run ended";
   }
 
   private void setButtonText(boolean isRunning) {
@@ -318,18 +331,18 @@ public class RunActivity extends AppCompatActivity implements
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
-      if(action.equals("com.ltm.runningtracker.TIME_UPDATE")) {
+      if (action.equals("com.ltm.runningtracker.TIME_UPDATE")) {
         int time = intent.getIntExtra("time", -1);
         durationView.setText(String.format("%02d min, %02d sec",
             TimeUnit.SECONDS.toMinutes(time),
             TimeUnit.SECONDS.toSeconds(time) -
                 TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
         ));
-      } else if(action.equals("com.ltm.runningtracker.DISTANCE_UPDATE")) {
+      } else if (action.equals("com.ltm.runningtracker.DISTANCE_UPDATE")) {
         double distance = intent.getDoubleExtra("distance", -1L);
         int formattedDistance = (int) distance;
         distanceView.setText(formattedDistance + " metres");
-      } else if(action.equals("com.ltm.runningtracker.RUN_ENDED")) {
+      } else if (action.equals("com.ltm.runningtracker.RUN_ENDED")) {
         finish();
       }
     }

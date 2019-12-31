@@ -7,7 +7,12 @@ import java.util.Map;
 public class RunTypeParser {
 
   public enum RunTypeClassifier {
-    WALK("walk", 0), JOG("jog", 1), RUN("run", 2), SPRINT("sprint", 3);
+    UNTAGGED("untagged", 0), WALK("walk", 1), JOG("jog", 2), RUN("run", 3), SPRINT("sprint", 4);
+
+    public static final String WALK_VALUE = "walk";
+    public static final String JOG_VALUE = "jog";
+    public static final String RUN_VALUE= "run";
+    public static final String SPRINT_VALUE = "sprint";
 
     private String runTypeDefinition;
     private int value;

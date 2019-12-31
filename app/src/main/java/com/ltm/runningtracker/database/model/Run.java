@@ -40,7 +40,7 @@ public class Run {
   public String date;
 
   @ColumnInfo(name = "runType")
-  public int runType;
+  public String runType;
 
   @ColumnInfo(name = "distance")
   public double distance;
@@ -78,7 +78,7 @@ public class Run {
     private String duration;
     private float pace;
     private RunCoordinates runCoordinates;
-    private int runType;
+    private String runType;
     private float temperature;
     private int weatherType;
 
@@ -110,7 +110,7 @@ public class Run {
       return this;
     }
 
-    public Builder withRunType(int runType) {
+    public Builder withRunType(String runType) {
       this.runType = runType;
       return this;
     }

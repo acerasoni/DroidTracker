@@ -4,10 +4,16 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -15,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
@@ -22,19 +30,32 @@ import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
  * The purpose of this activity is to browse details relating to a specific run, and tag the
  * associated diet Details shown are start location, end location ... //TODO finish
  */
-public class BrowseRunDetailsActivity extends AppCompatActivity {
+public class BrowseRunDetailsActivity extends AppCompatActivity implements OnItemSelectedListener {
 
-  private TextView activityView, locationView, dateView, typeView,
+  private TextView activityView, locationView, dateView,
       weatherView, temperatureView, distanceView, durationView, paceView;
+  private Spinner spinner;
 
+  private boolean hasChanged = false;
   private int runId;
   private int fromFragment;
-  private boolean isSet;
+  private float pace;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_browse_run_details);
+
+    spinner = findViewById(R.id.activityList);
+
+    // Create an ArrayAdapter using the string array and a default spinner layout
+    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        R.array.activity_types, R.layout.spinner_item);
+    // Specify the layout to use when the list of choices appears
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    // Apply the adapter to the spinner
+    spinner.setAdapter(adapter);
+    spinner.setOnItemSelectedListener(this);
 
     runId = getIntent().getIntExtra("runId",
         -1);
@@ -55,13 +76,42 @@ public class BrowseRunDetailsActivity extends AppCompatActivity {
       }
     }
 
-    // If for some reason cache is empty query DB asynchronously
+    // If cache is empty query DB asynchronously
     AsyncTask.execute(() -> fetchDataAsync());
   }
 
-  private void fetchDataSync(Cursor c, int id) {
-    isSet = true;
+  public void onSave(View v) {
+    if (hasChanged) {
+      setResult(RESULT_OK);
+    } else {
+      setResult(RESULT_CANCELED);
+    }
 
+    finish();
+  }
+
+  public void onItemSelected(AdapterView<?> parent, View view,
+      int pos, long id) {
+
+    //UPDATE DB
+    Uri uri = Uri
+        .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + runId);
+    ContentValues contentValues = new ContentValues();
+    String newType = capitalizeFirstLetter(RunTypeClassifier.valueOf(pos).toString());
+    contentValues.put("type", newType);
+      AsyncTask.execute(() -> {
+      getContentResolver().update(uri, contentValues, null, null);
+    });
+
+    // Will cause listView in previous activity has to refresh its UI state
+    hasChanged = true;
+  }
+
+  public void onNothingSelected(AdapterView<?> parent) {
+    // Another interface callback
+  }
+
+  private void fetchDataSync(Cursor c, int id) {
     c.moveToPosition(id);
     updateUI(c);
   }
@@ -88,8 +138,9 @@ public class BrowseRunDetailsActivity extends AppCompatActivity {
       dateView = findViewById(R.id.dateView);
       dateView.setText(c.getString(2));
 
-      typeView = findViewById(R.id.typeView);
-      typeView.setText(capitalizeFirstLetter(RunTypeClassifier.valueOf(c.getInt(3)).toString()));
+      String runType = c.getString(3).toUpperCase();
+
+      spinner.setSelection(RunTypeClassifier.valueOf(runType).getValue());
 
       sb = new StringBuilder(Integer.toString((int) c.getFloat(4))).append(" metres");
       distanceView = findViewById(R.id.distanceView);
@@ -105,14 +156,16 @@ public class BrowseRunDetailsActivity extends AppCompatActivity {
       temperatureView = findViewById(R.id.temperatureView);
       temperatureView.setText(sb.toString());
 
-      sb = new StringBuilder(Integer.toString((int) c.getFloat(9))).append(" km/h");
+      float pace = c.getFloat(9);
+      String paceString = String.format("%.2f", pace);
+      sb = new StringBuilder(paceString).append(" km/h");
       paceView = findViewById(R.id.paceView);
       paceView.setText(sb.toString());
     });
 
   }
 
-  private String capitalizeFirstLetter(String original) {
+  public static String capitalizeFirstLetter(String original) {
     if (original == null || original.length() == 0) {
       return original;
     }

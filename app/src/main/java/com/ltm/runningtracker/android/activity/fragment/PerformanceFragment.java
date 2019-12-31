@@ -1,5 +1,7 @@
 package com.ltm.runningtracker.android.activity.fragment;
 
+import static android.app.Activity.RESULT_OK;
+import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 import android.annotation.SuppressLint;
@@ -40,19 +42,21 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class PerformanceFragment extends Fragment {
 
+  public static final int BROWSE_RUN_REQUEST_CODE = 0;
+
   // Protected because must be accessed by other fragments
   protected final String RUN_DISPLAYED_DATA[] = new String[]{
       DroidProviderContract.ID,
       DroidProviderContract.DATE,
       DroidProviderContract.LOCATION,
-      DroidProviderContract.DURATION
+      DroidProviderContract.TYPE
   };
 
   protected final int[] COLUMNS_RESULT_IDS = new int[]{
       R.id.id,
       R.id.date,
       R.id.location,
-      R.id.duration,
+      R.id.type,
   };
 
   protected SimpleCursorAdapter dataAdapter;
@@ -102,11 +106,22 @@ public abstract class PerformanceFragment extends Fragment {
         bundle.putInt("fromFragment", PerformanceActivity.FRAGMENT_TO_ID.get(thisClass));
 
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, BROWSE_RUN_REQUEST_CODE);
       }
     });
 
     return view;
+  }
+
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == BROWSE_RUN_REQUEST_CODE) {
+      if (resultCode == RESULT_OK) {
+        // Type was changed, refresh cache and update UI
+        onPopulateList();
+      } else {
+        // Nothing changed, no need to re-populate
+      }
+    }
   }
 
   protected abstract void onPopulateList();

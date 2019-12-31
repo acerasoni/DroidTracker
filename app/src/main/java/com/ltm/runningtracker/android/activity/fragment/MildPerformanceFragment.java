@@ -16,7 +16,7 @@ public class MildPerformanceFragment extends PerformanceFragment {
         // Must do the following sequentially to ensure correct behaviour
         // - fetch cursor from database asynchronously
         //  - Swap data adaptor's cursor with new one on UI thread
-         // - Notify data adapter on UI thread
+        // - Notify data adapter on UI thread
               dataAdapter.swapCursor(c);
               dataAdapter.notifyDataSetChanged();
               listView.setAdapter(dataAdapter);

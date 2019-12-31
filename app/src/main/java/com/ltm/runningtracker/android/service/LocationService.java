@@ -4,25 +4,30 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getLocationReposi
 import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
+import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
+import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.android.activity.RunActivity;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.mapbox.android.core.location.LocationEngineRequest;
-import java.util.Calendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +48,7 @@ public class LocationService extends LifecycleService {
 
   // Time
   private int time;
-  ScheduledExecutorService scheduledExecutorService;
+  ScheduledExecutorService timeScheduledExecutorService;
 
   private ContentValues contentValues;
 
@@ -54,6 +59,7 @@ public class LocationService extends LifecycleService {
     isUserRunning = false;
     contentValues = new ContentValues();
 
+    startService(new Intent(this, WeatherService.class));
     startLocationThread();
   }
 
@@ -81,7 +87,13 @@ public class LocationService extends LifecycleService {
   public boolean onUnbind(Intent intent) {
     // TODO Auto-generated method stub
     Log.d("g53mdp", "service onUnbind");
-    return super.onUnbind(intent);
+
+    if(!isUserRunning) {
+      stopService(new Intent(this, WeatherService.class));
+      stopSelf();
+    }
+    return true;
+
   }
 
   @Override
@@ -117,18 +129,28 @@ public class LocationService extends LifecycleService {
 
     public boolean toggleRun() {
       if (isUserRunning) {
+        stopForeground(true);
         onRunEnd();
+        isUserRunning = false;
       } else {
+        startForeground(1, generateNotification());
         onRunStart();
+        isUserRunning = true;
       }
 
-      isUserRunning = !isUserRunning;
       return isUserRunning;
+    }
+
+    public int getDistance() {
+      return (int) distance;
     }
 
   }
 
   public void onRunStart() {
+
+    // Convert to foreground
+
     // Time elapsed since run started
     time = 0;
     distance = 0;
@@ -151,8 +173,8 @@ public class LocationService extends LifecycleService {
     };
 
     // Begin execution of worker thread
-    scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    scheduledExecutorService
+    timeScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    timeScheduledExecutorService
         .scheduleAtFixedRate(timeUpdateTask, 0, 1,
             TimeUnit.SECONDS);
 
@@ -175,8 +197,11 @@ public class LocationService extends LifecycleService {
   }
 
   public void onRunEnd() {
+
+    // Reconvert to background
+
     // Stop time updates
-    scheduledExecutorService.shutdownNow();
+    timeScheduledExecutorService.shutdownNow();
 
     // Stop distance updates
     getLocationRepository().getLocationLiveData().removeObservers
@@ -219,7 +244,6 @@ public class LocationService extends LifecycleService {
 
     // Save run
     new SaveRun().execute();
-
   }
 
   private void startLocationThread() {
@@ -235,6 +259,39 @@ public class LocationService extends LifecycleService {
     } catch (SecurityException e) {
       Log.d("Security exception: ", e.toString());
     }
+  }
+
+  private Notification generateNotification() {
+    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    // Create the NotificationChannel, but only on API 26+ because
+    // the NotificationChannel class is new and not in the support library
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      CharSequence name = "channel name";
+      String description = "channel description";
+      int importance = NotificationManager.IMPORTANCE_DEFAULT;
+      NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
+      channel.setDescription(description);
+      // Register the channel with the system; you can't change the importance
+      // or other notification behaviors after this
+      notificationManager.createNotificationChannel(channel);
+    }
+
+    Intent intent = new Intent(this, RunActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+    Intent actionIntent = new Intent(this, RunActivity.class);
+    PendingIntent pendingActionIntent = PendingIntent.getService(this, 0, actionIntent, 0);
+
+    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "CHANNEL_ID")
+        .setSmallIcon(R.drawable.ic_launcher_background)
+        .setContentTitle("Running service")
+        .setContentText("Return to map")
+        .setContentIntent(pendingIntent)
+        .addAction(R.drawable.ic_launcher_foreground, "Message Service", pendingActionIntent)
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+    return mBuilder.build();
   }
 
 }

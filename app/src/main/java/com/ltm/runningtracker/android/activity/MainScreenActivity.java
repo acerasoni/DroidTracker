@@ -10,12 +10,15 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherReposit
 import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +44,9 @@ public class MainScreenActivity extends AppCompatActivity {
   private Button runButton, performanceButton, settingsButton, userProfileButton;
   private boolean isLocationAndWeatherAvailable;
   private boolean isRunEnabled = false;
+  private ServiceConnection serviceConnection;
+  private boolean mBound;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +72,19 @@ public class MainScreenActivity extends AppCompatActivity {
     // Acts as a callback
     Intent locationIntent = new Intent(this, LocationService.class);
     startService(locationIntent);
+    serviceConnection = new ServiceConnection() {
+      @Override
+      public void onServiceConnected(ComponentName name, IBinder service) {
+        mBound = true;
+      }
 
-    Intent weatherIntent = new Intent(this, WeatherService.class);
-    startService(weatherIntent);
+      @Override
+      public void onServiceDisconnected(ComponentName name) {
+        mBound = false;
+      }
+    };
+
+    bindService(locationIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
     setupButtons();
 
@@ -82,11 +98,19 @@ public class MainScreenActivity extends AppCompatActivity {
       weatherTextField.setText(weather.temperature.getTemp() + " °C");
       // Location and weather now available
       isLocationAndWeatherAvailable = true;
-      if(getUserRepository().doesUserExist()) {
+      if (getUserRepository().doesUserExist()) {
         enableRun();
         isRunEnabled = true;
       }
     });
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    if (mBound) {
+      unbindService(serviceConnection);
+    }
   }
 
   private void setupButtons() {
@@ -140,12 +164,13 @@ public class MainScreenActivity extends AppCompatActivity {
   }
 
   private void enableButtons() {
-    if(isLocationAndWeatherAvailable) {
+    if (isLocationAndWeatherAvailable) {
       enableRun();
       isRunEnabled = true;
     } else {
-      View.OnClickListener runListener = v -> Toast.makeText(getApplicationContext(), "Please wait - fetching location",
-          Toast.LENGTH_LONG).show();
+      View.OnClickListener runListener = v -> Toast
+          .makeText(getApplicationContext(), "Please wait - fetching location",
+              Toast.LENGTH_LONG).show();
       runButton.setOnClickListener(runListener);
     }
 
