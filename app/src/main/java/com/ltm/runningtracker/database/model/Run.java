@@ -86,16 +86,17 @@ public class Run {
      * Minimum required information
      */
     @SuppressLint("DefaultLocale")
-    public Builder(long date, double distance, long duration) {
+    public Builder(long date, double distance, int duration) {
       Date obj = new Date(date);
       DateFormat dateFormatter = new SimpleDateFormat("d MMM yyyy");
       this.date = dateFormatter.format(obj);
+
       this.distance = distance;
       this.pace = LocationRepository.calculatePace(distance, duration);
       this.duration = String.format("%02d min, %02d sec",
-          TimeUnit.MILLISECONDS.toMinutes(duration),
-          TimeUnit.MILLISECONDS.toSeconds(duration) -
-              TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+          TimeUnit.SECONDS.toMinutes(duration),
+          TimeUnit.SECONDS.toSeconds(duration) -
+              TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(duration))
       );
 
       this.location = getLocationRepository().getCountyLiveData().getValue();

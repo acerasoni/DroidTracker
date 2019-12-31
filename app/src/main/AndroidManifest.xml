@@ -75,6 +75,7 @@
       android:authorities="com.ltm.runningtracker.android.contentprovider.DroidContentProvider"
       android:enabled="true"
       android:exported="false" />
+
   </application>
 
 </manifest>

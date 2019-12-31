@@ -2,9 +2,12 @@ package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -35,6 +38,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/location/LocationComponentOptionsActivity.java
@@ -44,9 +48,13 @@ public class RunActivity extends AppCompatActivity implements
     OnCameraTrackingChangedListener {
 
   // Service-related
+  IntentFilter runUpdateFilter;
   Boolean isRunning = null;
   LocationService mService;
   boolean mBound = false;
+  RunUpdateReceiver runUpdateReceiver;
+
+
 
   // Mapbox-related
   private MapboxMap mapboxMap;
@@ -64,6 +72,12 @@ public class RunActivity extends AppCompatActivity implements
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_run);
+
+    runUpdateReceiver = new RunUpdateReceiver();
+    runUpdateFilter = new IntentFilter();
+    runUpdateFilter.addAction("com.ltm.runningtracker.DISTANCE_UPDATE");
+    runUpdateFilter.addAction("com.ltm.runningtracker.TIME_UPDATE");
+    runUpdateFilter.addAction("com.ltm.runningtracker.RUN_ENDED");
 
     initialiseViews();
     setupMaxbox(savedInstanceState);
@@ -185,6 +199,7 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   protected void onResume() {
     super.onResume();
+    registerReceiver(runUpdateReceiver, runUpdateFilter);
     mapView.onResume();
   }
 
@@ -209,6 +224,7 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    unregisterReceiver(runUpdateReceiver);
     mapView.onDestroy();
   }
 
@@ -233,14 +249,10 @@ public class RunActivity extends AppCompatActivity implements
       // Determine if user is running
       isRunning = binder.isUserRunning();
 
-      // Tell the UI to update its state
-      if(isRunning) setObservers();
-
       setButtonText(isRunning);
 
       toggleRunButton.setOnClickListener(v -> {
         isRunning = binder.toggleRun();
-        if(isRunning) setObservers();
         setButtonText(isRunning);
         if (!isInTrackingMode) {
           isInTrackingMode = true;
@@ -282,11 +294,8 @@ public class RunActivity extends AppCompatActivity implements
 
     // Non run-related info can be observed straight away
     runActivityViewModel.getWeather().observe(this, weather -> {
-      temperatureView.setText(Float.toString(weather.temperature.getTemp()));
+      temperatureView.setText(weather.temperature.getTemp() + "°C");
     });
-
-    distanceView.setText("N/A");
-    durationView.setText("N/A");
 
     toggleRunButton.setText("Fetching location...");
   }
@@ -303,15 +312,27 @@ public class RunActivity extends AppCompatActivity implements
     }
   }
 
-  private void setObservers() {
-    // Non run-related info can be observed straight away
-    runActivityViewModel.getDistance().observe(this, distance -> {
-      distanceView.setText(Long.toString(distance));
-    });
+  private class RunUpdateReceiver extends BroadcastReceiver {
 
-    // Non run-related info can be observed straight away
-    runActivityViewModel.getDuration().observe(this, duration -> {
-      durationView.setText(Long.toString(duration));
-    });
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      String action = intent.getAction();
+      if(action.equals("com.ltm.runningtracker.TIME_UPDATE")) {
+        int time = intent.getIntExtra("time", -1);
+        durationView.setText(String.format("%02d min, %02d sec",
+            TimeUnit.SECONDS.toMinutes(time),
+            TimeUnit.SECONDS.toSeconds(time) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
+        ));
+      } else if(action.equals("com.ltm.runningtracker.DISTANCE_UPDATE")) {
+        double distance = intent.getDoubleExtra("distance", -1L);
+        int formattedDistance = (int) distance;
+        distanceView.setText(formattedDistance + " metres");
+      } else if(action.equals("com.ltm.runningtracker.RUN_ENDED")) {
+        finish();
+      }
+    }
   }
+
 }

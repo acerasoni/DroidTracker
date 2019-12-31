@@ -10,34 +10,48 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleService;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import java.util.Calendar;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class LocationService extends Service {
+public class LocationService extends LifecycleService {
 
   // Binder given to clients
   private final IBinder binder = new LocationServiceBinder();
   private boolean isUserRunning;
 
-  private double totalDistance;
+  // Location variables
   private float startLat, startLon, endLat, endLon;
-  private long startTime;
+  private double distance;
   private Location currentLocation;
-  private ContentValues contentValues;
+
+  // Weather
   private String temperature;
+
+  // Time
+  private int time;
+  ScheduledExecutorService scheduledExecutorService;
+
+  private ContentValues contentValues;
+
 
   @Override
   public void onCreate() {
     super.onCreate();
     isUserRunning = false;
-    totalDistance = 0;
     contentValues = new ContentValues();
 
     startLocationThread();
@@ -52,6 +66,7 @@ public class LocationService extends Service {
   @Nullable
   @Override
   public IBinder onBind(Intent intent) {
+    super.onBind(intent);
     return binder;
   }
 
@@ -72,6 +87,7 @@ public class LocationService extends Service {
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     // TODO Auto-generated method stub
+    super.onStartCommand(intent, flags, startId);
     Log.d("g53mdp", "service onStartCommand");
     return Service.START_STICKY;
   }
@@ -100,8 +116,8 @@ public class LocationService extends Service {
     }
 
     public boolean toggleRun() {
-      if(isUserRunning) {
-
+      if (isUserRunning) {
+        onRunEnd();
       } else {
         onRunStart();
       }
@@ -113,20 +129,58 @@ public class LocationService extends Service {
   }
 
   public void onRunStart() {
-    startTime = Calendar.getInstance().getTime().getTime();
+    // Time elapsed since run started
+    time = 0;
+    distance = 0;
     startLat = (float) getLocationRepository().getLocation().getLatitude();
     startLon = (float) getLocationRepository().getLocation().getLongitude();
-    currentLocation = runActivityViewModel.getLocation().getValue();
 
-    runActivityViewModel.getLocation().observe(this, location -> {
-      // Dynamically increases the distance covered rather than calculating distance between point A and point B
-      totalDistance += location.distanceTo(currentLocation);
-      currentLocation = location;
-      Log.d("Current distance", "" + totalDistance);
-    });
+    currentLocation = getLocationRepository().getLocation();
+
+    // Start time update thread
+    Runnable timeUpdateTask = () -> {
+      time++;
+      Intent intent = new Intent();
+      Bundle bundle = new Bundle();
+      bundle.putInt("time", time);
+      intent.putExtras(bundle);
+
+      intent.setAction("com.ltm.runningtracker.TIME_UPDATE");
+      sendBroadcast(intent);
+
+    };
+
+    // Begin execution of worker thread
+    scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    scheduledExecutorService
+        .scheduleAtFixedRate(timeUpdateTask, 0, 1,
+            TimeUnit.SECONDS);
+
+    // Observe the location repo for changes
+    getLocationRepository().getLocationLiveData()
+        .observe(this, location -> {
+          // Dynamically increases the distance covered rather than calculating distance between point A and point B
+          distance += location.distanceTo(currentLocation);
+
+          Intent intent = new Intent();
+          Bundle bundle = new Bundle();
+          bundle.putDouble("distance", distance);
+          intent.putExtras(bundle);
+
+          intent.setAction("com.ltm.runningtracker.DISTANCE_UPDATE");
+          sendBroadcast(intent);
+
+          currentLocation = location;
+        });
   }
 
   public void onRunEnd() {
+    // Stop time updates
+    scheduledExecutorService.shutdownNow();
+
+    // Stop distance updates
+    getLocationRepository().getLocationLiveData().removeObservers
+        (this);
 
     /**
      * https://github.com/probelalkhan/android-room-database-example/blob/master/app/src/main/java/net/simplifiedcoding/mytodo/AddTaskActivity.java
@@ -135,23 +189,17 @@ public class LocationService extends Service {
 
       @Override
       protected Void doInBackground(Void... voids) {
-        try {
-          temperature = getWeatherRepository().getTemperature();
-        } catch (NullPointerException e) {
-          temperature = "Unavailable";
-          //  throw new WeatherNotAvailableException("Weather unavailable");
-        }
+        temperature = getWeatherRepository().getTemperature();
 
-        endLat = (float) runActivityViewModel.getLocation().getValue().getLatitude();
-        endLon = (float) runActivityViewModel.getLocation().getValue().getLongitude();
-
-        long durationTime = Calendar.getInstance().getTime().getTime() - startTime;
+        endLat = (float) getLocationRepository().getLocation().getLatitude();
+        endLon = (float) getLocationRepository().getLocation().getLongitude();
         byte[] runCoordinates = RunCoordinates
             .toByteArray(new RunCoordinates(startLat, startLon, endLat, endLon));
+
         contentValues.put("runCoordinates", runCoordinates);
         contentValues.put("temperature", temperature);
-        contentValues.put("duration", durationTime);
-        contentValues.put("distance", totalDistance);
+        contentValues.put("duration", time);
+        contentValues.put("distance", distance);
         contentValues.put("date", System.currentTimeMillis());
         getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
         return null;
@@ -160,16 +208,16 @@ public class LocationService extends Service {
       @Override
       protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        finish();
-        if (temperature.equals("Unavailable")) {
-          Toast.makeText(getApplicationContext(), "Weather unavailable - run saved",
-              Toast.LENGTH_LONG).show();
-        } else {
           Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
-        }
+
+          // Asynchronously tell activity that run has been saved
+        Intent intent = new Intent();
+        intent.setAction("com.ltm.runningtracker.RUN_ENDED");
+        sendBroadcast(intent);
       }
     }
 
+    // Save run
     new SaveRun().execute();
 
   }
@@ -182,7 +230,8 @@ public class LocationService extends Service {
           getPropertyManager().getMinTime()).build();
       // Similar to weather service, we pass the location repository as listener and allow it
       // to update itself when callback occurs
-      getLocationRepository().getLocationEngine().requestLocationUpdates(locationEngineRequest, getLocationRepository(), null);
+      getLocationRepository().getLocationEngine()
+          .requestLocationUpdates(locationEngineRequest, getLocationRepository(), null);
     } catch (SecurityException e) {
       Log.d("Security exception: ", e.toString());
     }

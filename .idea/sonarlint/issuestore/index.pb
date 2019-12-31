@@ -11,8 +11,6 @@ w
 Gapp/src/main/java/com/ltm/runningtracker/repository/UserRepository.java,5\f\5f55bb7dbc559620370fd52c6c72600ab899030f
 {
 Kapp/src/main/java/com/ltm/runningtracker/repository/LocationRepository.java,5\1\51243929cf872cce970e6fad6145eabde393215b
-Ç
-Rapp/src/main/java/com/ltm/runningtracker/android/service/WeatherUpdateService.java,0\9\09c2d62e985b2618e68907d39b41f27e443f88b8
 ç
 ]app/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/PerformanceViewModel.java,d\0\d03291298b52af975e6fd66acc79b60cc6280f5e
 w
@@ -91,3 +89,7 @@ Aapp/src/main/java/com/ltm/runningtracker/util/RunCoordinates.java,b\3\b3fad246
 Uapp/src/main/java/com/ltm/runningtracker/android/contentprovider/DroidUriMatcher.java,0\7\07791c55209b02ff71b083f106c37aa479a4c074
 p
 @app/src/main/java/com/ltm/runningtracker/util/RunTypeParser.java,7\d\7df0ceb80ae45634d154a3dc02bd0cb4fc3f9650
+|
+Lapp/src/main/java/com/ltm/runningtracker/android/service/WeatherService.java,5\6\56bcea2b80abd77027f962731fd354e3257c9d69
+}
+Mapp/src/main/java/com/ltm/runningtracker/android/service/LocationService.java,f\f\fffc83ae48dfa4a714d8a56a7726c48217d4a560

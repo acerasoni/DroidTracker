@@ -85,7 +85,7 @@ public class LocationRepository implements LocationEngineCallback {
    */
   public static float calculatePace(double distance, double duration) {
     float metersPerSecond = (float) distance / (float) (duration / 1000);
-    float kmPerHour = metersPerSecond * 3.6f;
+    float kmPerHour = (metersPerSecond * 3.6f) / 1000;
     return kmPerHour;
   }
 

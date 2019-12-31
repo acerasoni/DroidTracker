@@ -89,14 +89,14 @@ public class BrowseRunDetailsActivity extends AppCompatActivity {
       dateView.setText(c.getString(2));
 
       typeView = findViewById(R.id.typeView);
-      typeView.setText(capitalizeFirstLetter(RunTypeClassifier.valueOf(c.getInt(5)).toString()));
+      typeView.setText(capitalizeFirstLetter(RunTypeClassifier.valueOf(c.getInt(3)).toString()));
 
-      sb = new StringBuilder(String.format("%.2f", c.getDouble(3))).append(" metres");
+      sb = new StringBuilder(Integer.toString((int) c.getFloat(4))).append(" metres");
       distanceView = findViewById(R.id.distanceView);
       distanceView.setText(sb.toString());
 
       durationView = findViewById(R.id.durationView);
-      durationView.setText(c.getString(4));
+      durationView.setText(c.getString(5));
 
       weatherView = findViewById(R.id.weatherView);
       weatherView.setText(capitalizeFirstLetter(WeatherClassifier.valueOf(c.getInt(6)).toString()));
@@ -105,7 +105,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity {
       temperatureView = findViewById(R.id.temperatureView);
       temperatureView.setText(sb.toString());
 
-      sb = new StringBuilder(String.format("%.2f", c.getFloat(9))).append(" km/h");
+      sb = new StringBuilder(Integer.toString((int) c.getFloat(9))).append(" km/h");
       paceView = findViewById(R.id.paceView);
       paceView.setText(sb.toString());
     });

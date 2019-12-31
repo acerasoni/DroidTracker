@@ -160,7 +160,7 @@ public class DroidContentProvider extends ContentProvider {
   @Ignore
   private Run.Builder getParsedRunBuilder(ContentValues contentValues) {
     Run.Builder builder = new Run.Builder(contentValues.getAsLong("date"),
-        contentValues.getAsDouble("distance"), contentValues.getAsLong("duration"));
+        contentValues.getAsDouble("distance"), contentValues.getAsInteger("duration"));
 
     if (contentValues.containsKey("temperature")) {
       builder = builder.withTemperature(contentValues.getAsFloat("temperature"));
