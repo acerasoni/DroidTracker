@@ -1,13 +1,7 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
-
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -20,7 +14,6 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
-import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 

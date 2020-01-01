@@ -23,10 +23,6 @@ public class UserRepository {
     fetchUser();
   }
 
-  public boolean doesUserExist() {
-    return user.getValue() != null;
-  }
-
   public LiveData<User> getUserLiveData() {
     return user;
   }

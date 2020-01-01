@@ -14,32 +14,37 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
 public class SettingsActivity extends AppCompatActivity {
 
-  Button userButton;
-  Button runsButton;
-  Button freezingButton;
-  Button coldButton;
-  Button mildButton;
-  Button warmButton;
-  Button hotButton;
+  private Button userButton;
+  private Button runsButton;
+  private Button freezingButton;
+  private Button coldButton;
+  private Button mildButton;
+  private Button warmButton;
+  private Button hotButton;
+
+  private ActivityViewModel settingsActivityViewModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_settings);
     initialiseViews();
+    settingsActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     AsyncTask.execute(this::setupButtons);
   }
 
   public void setupButtons() {
     // If user exists, setup run buttons
-    if (getUserRepository().doesUserExist()) {
+    if (settingsActivityViewModel.doesUserExist()) {
       enableUserButton();
       enableRunButtonsIfAppropriate();
     } else {

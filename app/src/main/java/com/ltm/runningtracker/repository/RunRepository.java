@@ -49,27 +49,6 @@ public class RunRepository {
     return shortLivingCache;
   }
 
-  public boolean doRunsExist(Context context) {
-    Cursor c;
-
-    // Check cache
-    for (MutableLiveData m : runCursors) {
-      // Iterate all cached cursors to check there aren't any cached runs
-      c = ((Cursor) m.getValue());
-      if (c != null && c.moveToFirst()) {
-        return true;
-      }
-    }
-
-    // Check DB
-    // Necessary as run cursors are cached only when looking at performance
-    c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
-    if (c != null && c.moveToFirst()) {
-      return true;
-    }
-
-    return false;
-  }
 
   public boolean doRunsExistByWeather(Context context, WeatherClassifier weatherClassifier) {
     Cursor c = getRunsSync(weatherClassifier);

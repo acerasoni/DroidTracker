@@ -107,7 +107,7 @@ public abstract class PerformanceFragment extends Fragment {
       if (resultCode == RESULT_OK) {
         AsyncTask.execute(() -> {
           // If no runs available, finish, because nothing more to browse
-          if (!getRunRepository().doRunsExist(getActivity())) {
+          if (!performanceViewModel.doRunsExist(getActivity())) {
             Objects.requireNonNull(getActivity()).finish();
           } else {
             // Type was changed or run deleted, refresh cache and update UI

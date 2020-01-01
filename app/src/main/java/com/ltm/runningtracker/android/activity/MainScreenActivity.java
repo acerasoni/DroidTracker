@@ -1,11 +1,5 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
-import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
-
 import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -64,11 +58,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
   private void setup() {
     // Initialise repositories
-    getPropertyManager();
-    getLocationRepository();
-    getUserRepository();
-    getWeatherRepository();
-    getRunRepository();
+    mainActivityViewModel.initRepos();
 
     // Start weather and location service
     // No need to bind because no communication is required - just observing objects
@@ -97,7 +87,7 @@ public class MainScreenActivity extends AppCompatActivity {
       weatherTextField.setText(weather.temperature.getTemp() + " °C");
       // Location and weather now available
       isLocationAndWeatherAvailable = true;
-      if (getUserRepository().doesUserExist()) {
+      if (mainActivityViewModel.doesUserExist()) {
         enableRun();
       }
     });
@@ -206,7 +196,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
   private void setupPerformance() {
     AsyncTask.execute(() -> {
-      if (getRunRepository().doRunsExist(this)) {
+      if (mainActivityViewModel.doRunsExist(this)) {
         enablePerformance();
       } else {
         View.OnClickListener runListener = v -> Toast

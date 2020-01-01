@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.android.activity.viewmodel;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
@@ -21,9 +22,7 @@ import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 import com.survivingwithandroid.weather.lib.model.Weather;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ActivityViewModel extends ViewModel {
 
@@ -41,6 +40,32 @@ public class ActivityViewModel extends ViewModel {
     countyLiveData = getLocationRepository().getCountyLiveData();
     shortLivingCache = getRunRepository().getShortLivingCache();
     runCursors = getRunRepository().getRunCursorsLiveData();
+  }
+
+  public boolean doRunsExist(Context context) {
+      Cursor c;
+
+      // Check cache
+      for (LiveData m : runCursors) {
+        // Iterate all cached cursors to check there aren't any cached runs
+        c = ((Cursor) m.getValue());
+        if (c != null && c.moveToFirst()) {
+          return true;
+        }
+      }
+
+      // Check DB
+      // Necessary as run cursors are cached only when looking at performance
+      c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
+      if (c != null && c.moveToFirst()) {
+        return true;
+      }
+
+      return false;
+  }
+
+  public boolean doesUserExist() {
+    return userLiveData.getValue() != null;
   }
 
   public LiveData<Location> getLocation() {
@@ -67,8 +92,12 @@ public class ActivityViewModel extends ViewModel {
     return runCursors.get(weatherClassifier.getValue());
   }
 
-  public boolean doesUserExist() {
-    return getUserRepository().doesUserExist();
+  public void initRepos() {
+    getPropertyManager();
+    getLocationRepository();
+    getUserRepository();
+    getWeatherRepository();
+    getRunRepository();
   }
 
   // Given an id, check cached cursor for weather type or DB
