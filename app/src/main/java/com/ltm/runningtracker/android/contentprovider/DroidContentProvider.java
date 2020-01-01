@@ -107,6 +107,9 @@ public class DroidContentProvider extends ContentProvider {
       case RUNS:
         numRowsDeleted = runDao.delete();
         break;
+      case RUN_BY_ID:
+        numRowsDeleted = runDao.deleteById(Integer.parseInt(uri.getLastPathSegment()));
+        break;
       case FREEZING_RUNS:
       case COLD_RUNS:
       case MILD_RUNS:
@@ -117,6 +120,7 @@ public class DroidContentProvider extends ContentProvider {
         break;
       case USER:
         numRowsDeleted = userDao.delete();
+        numRowsDeleted += runDao.delete();
         break;
     }
 

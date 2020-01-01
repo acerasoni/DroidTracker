@@ -1,5 +1,7 @@
 package com.ltm.runningtracker.repository;
 
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -55,6 +57,51 @@ public class RunRepository {
     return distance;
   }
 
+  public boolean doRunsExist(Context context) {
+    Cursor c;
+
+    // Check cache
+    for (MutableLiveData m : runCursors) {
+      // Iterate all cached cursors to check there aren't any cached runs
+      c = ((Cursor) m.getValue());
+      if (c != null && c.moveToFirst()) {
+        return true;
+      }
+    }
+
+    // Check DB
+    // Necessary as run cursors are cached only when looking at performance
+    c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
+    if (c != null && c.moveToFirst()) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public boolean doRunsExistByWeather(Context context, WeatherClassifier weatherClassifier) {
+    Cursor c = getRunsSync(weatherClassifier);
+
+    if (c != null && c.moveToFirst()) {
+      return true;
+    } else {
+      c = getRunsAsync(context, weatherClassifier);
+      if (c != null && c.moveToFirst()) {
+        return true;
+      } else return false;
+    }
+  }
+
+  public void flushCacheByWeather(WeatherClassifier weatherClassifier) {
+    runCursors.get(weatherClassifier.getValue()).postValue(null);
+  }
+
+  public void flushCache() {
+    for (MutableLiveData m : runCursors) {
+      m.postValue(null);
+    }
+  }
+
   // Called if cache exists
   public Cursor getRunsSync(WeatherClassifier weatherClassifier) {
     return runCursors.get(weatherClassifier.getValue()).getValue();
@@ -64,7 +111,7 @@ public class RunRepository {
   public Cursor getRunsAsync(Context context, WeatherClassifier weatherClassifier) {
     // ping the DB
     Uri uri = Uri
-        .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + weatherClassifier.toString());
+        .withAppendedPath(RUNS_URI, "/" + weatherClassifier.toString());
 
     Cursor c;
     // Post value rather than set value -> this method is called asynchronously from fragments

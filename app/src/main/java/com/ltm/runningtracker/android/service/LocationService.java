@@ -59,6 +59,8 @@ public class LocationService extends LifecycleService {
     isUserRunning = false;
     contentValues = new ContentValues();
 
+    // Can make weather a started service, no need to bind as it's closely coupled to the lifecycle
+    // of the location service
     startService(new Intent(this, WeatherService.class));
     startLocationThread();
   }
@@ -88,7 +90,9 @@ public class LocationService extends LifecycleService {
     // TODO Auto-generated method stub
     Log.d("g53mdp", "service onUnbind");
 
+    // Determine is run is ongoing
     if(!isUserRunning) {
+      // Explicitly stop weather service
       stopService(new Intent(this, WeatherService.class));
       stopSelf();
     }

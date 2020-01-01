@@ -17,6 +17,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Button;
@@ -37,6 +38,8 @@ public class MainScreenActivity extends AppCompatActivity {
 
   public static final int USER_CREATION_REQUEST = 1;
   public static final int USER_MODIFICATION_REQUEST = 2;
+  public static final int SETTINGS_MODIFICATION_REQUEST = 3;
+  public static final int RUN_ACTIVITY_REQUEST = 4;
 
   private Context context = this;
   private MainScreenActivityViewModel mainActivityViewModel;
@@ -86,8 +89,6 @@ public class MainScreenActivity extends AppCompatActivity {
 
     bindService(locationIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-    setupButtons();
-
     // observe location object
     mainActivityViewModel.getCounty().observe(this, county -> {
       locationTextField.setText(county);
@@ -114,13 +115,15 @@ public class MainScreenActivity extends AppCompatActivity {
   }
 
   private void setupButtons() {
+    // If user does not exist in cache
     if (!mainActivityViewModel.doesUserExist()) {
-      mainActivityViewModel.getUser().observe(this, user -> {
-        enableButtons();
-      });
-      // If user does not exist, observe the object (as the database is pinged asynchronously)
-      // In other words, disable buttons temporarily, but re-enable them if user is ever fetched from the db
       disableButtons();
+
+      //If it is fetched at a later stage from DB, enable
+      mainActivityViewModel.getUser().observe(this, user -> {
+        if(user != null) enableButtons();
+        else disableButtons();
+      });
     } else {
       enableButtons();
     }
@@ -129,15 +132,32 @@ public class MainScreenActivity extends AppCompatActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == 1) {
-      if (resultCode == Activity.RESULT_OK) {
-        enableButtons();
-      }
-      if (resultCode == Activity.RESULT_CANCELED) {
-        disableButtons();
-      }
+    switch (requestCode) {
+      case USER_CREATION_REQUEST:
+        if (resultCode == Activity.RESULT_OK) {
+          Toast.makeText(this, "User created", Toast.LENGTH_LONG).show();
+        }
+        break;
+      case SETTINGS_MODIFICATION_REQUEST:
+        if (resultCode == Activity.RESULT_OK) {
+          Toast.makeText(this, "User deleted", Toast.LENGTH_LONG).show();
+        }
+        break;
+      case RUN_ACTIVITY_REQUEST:
+        if (resultCode == Activity.RESULT_OK) {
+          enablePerformance();
+        }
+        break;
     }
-  }//onActivityResult
+
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    setupButtons();
+    setupPerformance();
+  }
 
   @Override
   public void onRequestPermissionsResult(int requestCode,
@@ -152,7 +172,6 @@ public class MainScreenActivity extends AppCompatActivity {
     };
     runButton.setOnClickListener(sharedListener);
     performanceButton.setOnClickListener(sharedListener);
-    settingsButton.setOnClickListener(sharedListener);
     // If user has not been setup before, we request activity for result
     userProfileButton.setOnClickListener(
         v -> startActivityForResult(new Intent(context, UserProfileActivity.class),
@@ -160,28 +179,12 @@ public class MainScreenActivity extends AppCompatActivity {
 
     runButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
     performanceButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-    settingsButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
   }
 
   private void enableButtons() {
-    if (isLocationAndWeatherAvailable) {
-      enableRun();
-      isRunEnabled = true;
-    } else {
-      View.OnClickListener runListener = v -> Toast
-          .makeText(getApplicationContext(), "Please wait - fetching location",
-              Toast.LENGTH_LONG).show();
-      runButton.setOnClickListener(runListener);
-    }
+    setupRun();
+    setupPerformance();
 
-    performanceButton.getBackground().clearColorFilter();
-    settingsButton.getBackground().clearColorFilter();
-
-    performanceButton.setOnClickListener(
-        v -> startActivity(new Intent(context, PerformanceActivity.class)));
-    settingsButton.setOnClickListener(v -> {
-      startActivity(new Intent(context, SettingsActivity.class));
-    });
     userProfileButton
         .setOnClickListener(v -> {
           Intent intent = new Intent(context, UserProfileActivity.class);
@@ -190,9 +193,43 @@ public class MainScreenActivity extends AppCompatActivity {
         });
   }
 
+  private void setupRun() {
+    if (isLocationAndWeatherAvailable) {
+      enableRun();
+      isRunEnabled = true;
+    } else {
+      View.OnClickListener runListener = v -> Toast
+          .makeText(getApplicationContext(), "Please wait - fetching location",
+              Toast.LENGTH_LONG).show();
+      runButton.setOnClickListener(runListener);
+      performanceButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+    }
+  }
+
+  private void setupPerformance() {
+    AsyncTask.execute(() -> {
+      if (getRunRepository().doRunsExist(this)) {
+        enablePerformance();
+      } else {
+        View.OnClickListener runListener = v -> Toast
+            .makeText(getApplicationContext(), "Go for a run first",
+                Toast.LENGTH_LONG).show();
+        performanceButton.setOnClickListener(runListener);
+        performanceButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+      }
+    });
+  }
+
   private void enableRun() {
     runButton.getBackground().clearColorFilter();
-    runButton.setOnClickListener(v -> startActivity(new Intent(context, RunActivity.class)));
+    runButton.setOnClickListener(
+        v -> startActivityForResult(new Intent(context, RunActivity.class), RUN_ACTIVITY_REQUEST));
+  }
+
+  private void enablePerformance() {
+    performanceButton.getBackground().clearColorFilter();
+    performanceButton.setOnClickListener(
+        v -> startActivity(new Intent(context, PerformanceActivity.class)));
   }
 
   private void initialiseViews() {
@@ -205,6 +242,10 @@ public class MainScreenActivity extends AppCompatActivity {
 
     weatherTextField.setText("Fetching temperature...");
     locationTextField.setText("Fetching location...");
+    settingsButton.setOnClickListener(v -> {
+      startActivityForResult(new Intent(context, SettingsActivity.class),
+          SETTINGS_MODIFICATION_REQUEST);
+    });
   }
 
   public void requestPermission() {

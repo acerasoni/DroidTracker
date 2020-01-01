@@ -123,7 +123,11 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   public void populatePaces() {
-
+    String s = "Unavailable";
+    walkingPaceField.setText(s);
+    joggingPaceField.setText(s);
+    runningPaceField.setText(s);
+    sprintingPaceField.setText(s);
   }
 
   public void populateViews() {

@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,7 +81,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     AsyncTask.execute(() -> fetchDataAsync());
   }
 
-  public void onSave(View v) {
+  public void onSave(@Nullable View v) {
     if (hasChanged) {
       setResult(RESULT_OK);
     } else {
@@ -89,6 +90,17 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
     finish();
   }
+
+  public void onDelete(View v) {
+    Uri uri = Uri
+        .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + runId);
+    AsyncTask.execute(() -> {
+      getContentResolver().delete(uri, null, null);
+    });
+
+    onSave(null);
+  }
+
 
   public void onItemSelected(AdapterView<?> parent, View view,
       int pos, long id) {
@@ -99,7 +111,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     ContentValues contentValues = new ContentValues();
     String newType = capitalizeFirstLetter(RunTypeClassifier.valueOf(pos).toString());
     contentValues.put("type", newType);
-      AsyncTask.execute(() -> {
+    AsyncTask.execute(() -> {
       getContentResolver().update(uri, contentValues, null, null);
     });
 

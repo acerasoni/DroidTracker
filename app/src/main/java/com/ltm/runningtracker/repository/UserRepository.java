@@ -46,6 +46,9 @@ public class UserRepository {
     this.user.setValue(user);
   }
 
+  public void flushCache() {
+    user.postValue(null);
+  }
 
   /**
    * This method is called from the UI thread. It will call the db asynchronously which will create
@@ -73,7 +76,8 @@ public class UserRepository {
 
     // Asynchronously update DB
     AsyncTask.execute(
-        () -> getApplicationContext().getContentResolver().update(USER_URI, contentValues, null, null));
+        () -> getApplicationContext().getContentResolver()
+            .update(USER_URI, contentValues, null, null));
   }
 
   public void fetchUser() {
@@ -96,7 +100,7 @@ public class UserRepository {
     int weight = c.getInt(2);
     int height = c.getInt(3);
 
-    return new User.Builder(name).withHeight(weight)
+    return new User.Builder(name).withWeight(weight)
         .withHeight(height).build();
   }
 

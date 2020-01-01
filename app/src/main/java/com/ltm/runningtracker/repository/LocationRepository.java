@@ -115,7 +115,11 @@ public class LocationRepository implements LocationEngineCallback {
           location.getLongitude(),
           // In this sample, get just a single address.
           1);
-      city = address.get(0).getSubAdminArea();
+      if (address == null || address.size() == 0) {
+        city = "No man's land.";
+      } else {
+        city = address.get(0).getSubAdminArea();
+      }
     } catch (IOException ioException) {
       // Catch network or other I/O problems.
       Log.e("Location Repository ", "IOException occurred while fetching address", ioException);
@@ -125,7 +129,8 @@ public class LocationRepository implements LocationEngineCallback {
           "Invalid values for Latitude = " + location.getLatitude() +
               ", Longitude = " + location.getLongitude());
     } catch (NullPointerException nullPointerException) {
-      Log.e("Location Repository ", "Could not fetch locationMutableLiveData", nullPointerException);
+      Log.e("Location Repository ", "Could not fetch locationMutableLiveData",
+          nullPointerException);
     }
     return city;
   }

@@ -116,7 +116,7 @@ public abstract class PerformanceFragment extends Fragment {
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == BROWSE_RUN_REQUEST_CODE) {
       if (resultCode == RESULT_OK) {
-        // Type was changed, refresh cache and update UI
+        // Type was changed or run deleted, refresh cache and update UI
         onPopulateList();
       } else {
         // Nothing changed, no need to re-populate

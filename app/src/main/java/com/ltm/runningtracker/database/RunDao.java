@@ -26,6 +26,9 @@ public interface RunDao {
     @Query("DELETE FROM run")
     int delete();
 
+    @Query("DELETE FROM run WHERE _id=:id")
+    int deleteById(int id);
+
     @Query("DELETE FROM run WHERE weatherType=:type")
     int deleteByWeather(int type);
 

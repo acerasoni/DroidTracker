@@ -54,7 +54,7 @@ public class RunActivity extends AppCompatActivity implements
   LocationService mService;
   boolean mBound;
   RunUpdateReceiver runUpdateReceiver;
-  Context context = this;
+  Context activity = this;
 
   // Mapbox-related
   private MapboxMap mapboxMap;
@@ -217,7 +217,7 @@ public class RunActivity extends AppCompatActivity implements
   protected void onStart() {
     Intent intent = new Intent(this, LocationService.class);
 
-    // Bind required because, as opposed to MainScreenActivity, this activity needs to communicate with it
+    // Bind to location service
     bindService(intent, connection, Context.BIND_AUTO_CREATE);
 
     mapView.onStart();
@@ -226,7 +226,6 @@ public class RunActivity extends AppCompatActivity implements
 
   @Override
   protected void onDestroy() {
-
     if (mBound) {
       unregisterReceiver(runUpdateReceiver);
       unbindService(connection);
@@ -343,7 +342,9 @@ public class RunActivity extends AppCompatActivity implements
         int formattedDistance = (int) distance;
         distanceView.setText(formattedDistance + " metres");
       } else if (action.equals("com.ltm.runningtracker.RUN_ENDED")) {
-        finish();
+        AppCompatActivity a = (AppCompatActivity) activity;
+        a.setResult(RESULT_OK);
+        a.finish();
       }
     }
   }
