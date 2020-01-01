@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
@@ -57,16 +56,16 @@ public class SettingsActivity extends AppCompatActivity {
     userButton.setOnClickListener(v -> {
       userButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
       userButton.setOnClickListener(null);
-      AsyncTask.execute(() -> {
-        getContentResolver().delete(USER_URI, null, null);
-        getRunRepository().flushCache();
-        getUserRepository().flushCache();
+      settingsActivityViewModel.deleteUser(this);
+
+      // Observe user. When change occurs (aka it gets deleted), finish
+      settingsActivityViewModel.getUser().observe(this, user -> {
         setResult(RESULT_OK);
         finish();
       });
-
     });
   }
+
 
   private void enableRunButtonsIfAppropriate() {
     boolean doRunsExist, doFreezing, doCold, doMild, doWarm, doHot;

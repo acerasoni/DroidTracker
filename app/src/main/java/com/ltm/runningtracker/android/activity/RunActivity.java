@@ -1,6 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.repository.LocationRepository.getCounty;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -23,7 +23,6 @@ import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.service.LocationService;
 import com.ltm.runningtracker.android.service.LocationService.LocationServiceBinder;
-import com.ltm.runningtracker.repository.LocationRepository;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -54,7 +53,6 @@ public class RunActivity extends AppCompatActivity implements
   private ActivityViewModel runActivityViewModel;
   private IntentFilter runUpdateFilter;
   private Boolean isRunning = null;
-  private LocationService mService;
   boolean mBound;
   private RunUpdateReceiver runUpdateReceiver;
   Context activity = this;
@@ -78,12 +76,7 @@ public class RunActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_run);
 
-    runUpdateReceiver = new RunUpdateReceiver();
-    runUpdateFilter = new IntentFilter();
-    runUpdateFilter.addAction("com.ltm.runningtracker.DISTANCE_UPDATE");
-    runUpdateFilter.addAction("com.ltm.runningtracker.TIME_UPDATE");
-    runUpdateFilter.addAction("com.ltm.runningtracker.RUN_ENDED");
-
+    initialiseBroadcastReceiver();
     initialiseViews();
     setupMaxbox(savedInstanceState);
   }
@@ -114,7 +107,7 @@ public class RunActivity extends AppCompatActivity implements
           LocationComponentActivationOptions.builder(this, loadedMapStyle)
               .locationComponentOptions(customLocationComponentOptions)
               // utilising the repository's location engine, hence no redundancy
-              .locationEngine(getLocationRepository().getLocationEngine())
+              .locationEngine(runActivityViewModel.getLocationEngine())
               .build();
 
       // Activate with options
@@ -245,7 +238,6 @@ public class RunActivity extends AppCompatActivity implements
       Log.d("Bound", "b");
       // We've bound to LocalService, cast the IBinder and get LocalService instance
       LocationServiceBinder binder = (LocationServiceBinder) service;
-      mService = binder.getService();
 
       // Determine if user is running
       isRunning = binder.isUserRunning();
@@ -307,7 +299,7 @@ public class RunActivity extends AppCompatActivity implements
 
     // Non run-related info can be observed straight away
     runActivityViewModel.getLocation().observe(this, location -> {
-      countyView.setText(LocationRepository.getCounty(location));
+      countyView.setText(getCounty(location));
     });
 
     // Non run-related info can be observed straight away
@@ -316,6 +308,15 @@ public class RunActivity extends AppCompatActivity implements
     });
 
     toggleRunButton.setText("Fetching location...");
+  }
+
+  private void initialiseBroadcastReceiver() {
+    runUpdateReceiver = new RunUpdateReceiver();
+
+    runUpdateFilter = new IntentFilter();
+    runUpdateFilter.addAction("com.ltm.runningtracker.DISTANCE_UPDATE");
+    runUpdateFilter.addAction("com.ltm.runningtracker.TIME_UPDATE");
+    runUpdateFilter.addAction("com.ltm.runningtracker.RUN_ENDED");
   }
 
   private class RunUpdateReceiver extends BroadcastReceiver {

@@ -6,6 +6,7 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -21,6 +22,7 @@ import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import com.mapbox.android.core.location.LocationEngine;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import java.util.List;
 
@@ -92,12 +94,24 @@ public class ActivityViewModel extends ViewModel {
     return runCursors.get(weatherClassifier.getValue());
   }
 
+  public LocationEngine getLocationEngine() {
+    return getLocationRepository().getLocationEngine();
+  }
+
   public void initRepos() {
     getPropertyManager();
     getLocationRepository();
     getUserRepository();
     getWeatherRepository();
     getRunRepository();
+  }
+
+  public void deleteUser(Context context) {
+    AsyncTask.execute(() -> {
+      context.getContentResolver().delete(USER_URI, null, null);
+      getRunRepository().flushCache();
+      getUserRepository().flushCache();
+    });
   }
 
   // Given an id, check cached cursor for weather type or DB
