@@ -5,6 +5,7 @@ import static com.ltm.runningtracker.android.contentprovider.DroidProviderContra
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 import java.util.ArrayList;
@@ -17,11 +18,7 @@ public class RunRepository {
   // Acts as short-living cache, as it is overritten by subsequent DB queries
   // Enum provides us with index of run types
   private List<MutableLiveData<Cursor>> runCursors;
-
-  // Associated with the running activity.
-  // Cache distance and time. Service progressively updates these. Are observed by RunActivity's UI.
-  private MutableLiveData<Long> distance;
-  private MutableLiveData<Long> duration;
+  private MutableLiveData<Cursor> shortLivingCache;
 
   public RunRepository() {
     // Cache empty
@@ -34,16 +31,22 @@ public class RunRepository {
       }
     };
 
-    distance = new MutableLiveData<>();
-    duration = new MutableLiveData<>();
+    shortLivingCache = new MutableLiveData<>();
   }
 
-  public MutableLiveData<Long> getDurationLiveData() {
-    return duration;
+  public List<LiveData<Cursor>> getRunCursorsLiveData() {
+    // Cast to list of LiveData cursors
+    List<LiveData<Cursor>> list = new ArrayList<>(runCursors.size());
+    list.add(runCursors.get(0));
+    list.add(runCursors.get(1));
+    list.add(runCursors.get(2));
+    list.add(runCursors.get(3));
+    list.add(runCursors.get(4));
+    return list;
   }
 
-  public MutableLiveData<Long> getDistanceLiveData() {
-    return distance;
+  public LiveData<Cursor> getShortLivingCache() {
+    return shortLivingCache;
   }
 
   public boolean doRunsExist(Context context) {
@@ -77,17 +80,26 @@ public class RunRepository {
       c = getRunsAsync(context, weatherClassifier);
       if (c != null && c.moveToFirst()) {
         return true;
-      } else return false;
+      } else {
+        return false;
+      }
     }
+  }
+
+  public void populateShortLivingCache(Cursor c) {
+    shortLivingCache.postValue(c);
   }
 
   public void flushCacheByWeather(WeatherClassifier weatherClassifier) {
     runCursors.get(weatherClassifier.getValue()).postValue(null);
+    if (shortLivingCache != null) {
+      shortLivingCache.postValue(null);
+    }
   }
 
   public void flushCache() {
-    for (MutableLiveData m : runCursors) {
-      m.postValue(null);
+    for (WeatherClassifier wc : WeatherClassifier.values()) {
+      flushCacheByWeather(wc);
     }
   }
 

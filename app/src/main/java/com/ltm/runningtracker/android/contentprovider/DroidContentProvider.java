@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Ignore;
 import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
+import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
@@ -196,7 +197,7 @@ public class DroidContentProvider extends ContentProvider {
       runTypeId = 0;
     }
 
-    String runType = BrowseRunDetailsActivity
+    String runType = ActivityViewModel
         .capitalizeFirstLetter(RunTypeClassifier.valueOf(runTypeId).toString());
 
     return builder.withRunType(runType);
