@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -45,25 +46,25 @@ public class ActivityViewModel extends ViewModel {
   }
 
   public boolean doRunsExist(Context context) {
-      Cursor c;
+    Cursor c;
 
-      // Check cache
-      for (LiveData m : runCursors) {
-        // Iterate all cached cursors to check there aren't any cached runs
-        c = ((Cursor) m.getValue());
-        if (c != null && c.moveToFirst()) {
-          return true;
-        }
-      }
-
-      // Check DB
-      // Necessary as run cursors are cached only when looking at performance
-      c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
+    // Check cache
+    for (LiveData m : runCursors) {
+      // Iterate all cached cursors to check there aren't any cached runs
+      c = ((Cursor) m.getValue());
       if (c != null && c.moveToFirst()) {
         return true;
       }
+    }
 
-      return false;
+    // Check DB
+    // Necessary as run cursors are cached only when looking at performance
+    c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
+    if (c != null && c.moveToFirst()) {
+      return true;
+    }
+
+    return false;
   }
 
   public boolean doesUserExist() {
@@ -112,6 +113,16 @@ public class ActivityViewModel extends ViewModel {
       getRunRepository().flushCache();
       getUserRepository().flushCache();
     });
+  }
+
+  public void determineIfRunsExist(Context context, Boolean doRunsExist, Boolean doFreezing,
+      Boolean doCold, Boolean doMild, Boolean doWarm, Boolean doHot) {
+    doFreezing = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.FREEZING);
+    doCold = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.COLD);
+    doMild = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.MILD);
+    doWarm = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.WARM);
+    doHot = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.HOT);
+    doRunsExist = doFreezing || doCold || doMild || doWarm || doHot;
   }
 
   // Given an id, check cached cursor for weather type or DB
@@ -170,9 +181,6 @@ public class ActivityViewModel extends ViewModel {
 
   /**
    * No need to update cache as the column has changed but row stayed the same
-   * @param id
-   * @param pos
-   * @param context
    */
   public void updateTypeOfRun(int id, int pos, Context context) {
     //UPDATE DB
@@ -190,6 +198,17 @@ public class ActivityViewModel extends ViewModel {
       return original;
     }
     return original.substring(0, 1).toUpperCase() + original.substring(1);
+  }
+
+  public void deleteAllRunsByType(Uri uri, Context context, WeatherClassifier weatherClassifier) {
+    // Update cache
+    getRunRepository().flushCacheByWeather(weatherClassifier);
+
+    AsyncTask.execute(() -> {
+      // Update DB
+      context.getContentResolver().delete(uri, null, null);
+      ((AppCompatActivity) context).finish();
+    });
   }
 
 }

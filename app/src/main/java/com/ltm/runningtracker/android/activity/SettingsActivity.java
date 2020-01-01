@@ -68,15 +68,16 @@ public class SettingsActivity extends AppCompatActivity {
 
 
   private void enableRunButtonsIfAppropriate() {
-    boolean doRunsExist, doFreezing, doCold, doMild, doWarm, doHot;
+    Boolean doRunsExist = false;
+    Boolean doFreezing = false;
+    Boolean doCold = false;
+    Boolean doMild = false;
+    Boolean doWarm = false;
+    Boolean doHot = false;
 
-    doFreezing = getRunRepository().doRunsExistByWeather(this, WeatherClassifier.FREEZING);
-    doCold = getRunRepository().doRunsExistByWeather(this, WeatherClassifier.COLD);
-    doMild = getRunRepository().doRunsExistByWeather(this, WeatherClassifier.MILD);
-    doWarm = getRunRepository().doRunsExistByWeather(this, WeatherClassifier.WARM);
-    doHot = getRunRepository().doRunsExistByWeather(this, WeatherClassifier.HOT);
+    settingsActivityViewModel
+        .determineIfRunsExist(this, doRunsExist, doFreezing, doCold, doMild, doWarm, doHot);
 
-    doRunsExist = doFreezing || doCold || doMild || doWarm || doHot;
     if (doRunsExist) {
       enableRunsButton();
     } else {
@@ -100,15 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
         button.setOnClickListener(null);
-
-        // Update cache
-        getRunRepository().flushCacheByWeather(weatherClassifier);
-
-        AsyncTask.execute(() -> {
-          // Update DB
-          getContentResolver().delete(uri, null, null);
-          finish();
-        });
+        settingsActivityViewModel.deleteAllRunsByType(uri, this, weatherClassifier);
       });
     } else {
       button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
