@@ -4,9 +4,9 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
@@ -80,6 +80,7 @@ public class UserRepository {
             .update(USER_URI, contentValues, null, null));
   }
 
+  @SuppressLint("Recycle")
   public void fetchUser() {
     AsyncTask.execute(() -> {
       final Cursor[] c = new Cursor[1];

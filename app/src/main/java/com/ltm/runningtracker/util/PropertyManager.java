@@ -3,6 +3,7 @@ package com.ltm.runningtracker.util;
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 
 import android.content.res.AssetManager;
+import android.util.Log;
 import com.ltm.runningtracker.R;
 import java.io.InputStream;
 import java.util.Properties;
@@ -24,11 +25,6 @@ public class PropertyManager {
         R.string.min_time)));
   }
 
-  public int getMinDistance() {
-    return Integer
-        .parseInt(getProperty(getAppContext().getString(R.string.min_distance)));
-  }
-
   private String getProperty(String propertyKey) {
     return properties.getProperty(propertyKey);
   }
@@ -38,9 +34,8 @@ public class PropertyManager {
       AssetManager assetManager = getAppContext().getAssets();
       InputStream inputStream = assetManager.open(file);
       properties.load(inputStream);
-
     } catch (Exception e) {
-      System.out.print(e.getMessage());
+      Log.e("Exception in fetching properties. ", e.getMessage());
     }
 
     return properties;

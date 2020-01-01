@@ -29,16 +29,16 @@ import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import java.util.Objects;
 
 public class DroidContentProvider extends ContentProvider {
 
-  private AppDatabase appDatabase;
   private RunDao runDao;
   private UserDao userDao;
 
   @Override
   public boolean onCreate() {
-    appDatabase = AppDatabase.getInstance(getContext());
+    AppDatabase appDatabase = AppDatabase.getInstance(getContext());
     this.runDao = appDatabase.runDao();
     this.userDao = appDatabase.userDao();
     return true;
@@ -53,14 +53,14 @@ public class DroidContentProvider extends ContentProvider {
       case RUNS:
         return runDao.getAll();
       case RUN_BY_ID:
-        return runDao.getById(Integer.parseInt(uri.getLastPathSegment()));
+        return runDao.getById(Integer.parseInt(Objects.requireNonNull(uri.getLastPathSegment())));
       case FREEZING_RUNS:
       case COLD_RUNS:
       case MILD_RUNS:
       case WARM_RUNS:
       case HOT_RUNS:
         c = runDao.getByWeather(
-            WeatherClassifier.valueOf(uri.getLastPathSegment().toUpperCase()).getValue());
+            WeatherClassifier.valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase()).getValue());
         break;
       case USER:
         c = userDao.getUser();
@@ -73,26 +73,28 @@ public class DroidContentProvider extends ContentProvider {
   @Nullable
   @Override
   public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-    Uri var = null;
+    Uri var;
 
     switch (URI_MATCHER.match(uri)) {
       case RUNS:
-        long runId = runDao.insert(getParsedRunBuilder(contentValues).build());
+        long runId = runDao.insert(getParsedRunBuilder(Objects.requireNonNull(contentValues)).build());
         var = ContentUris.withAppendedId(uri, runId);
         break;
       case USER:
-        User user = getParsedUserBuilder(contentValues).build();
+        User user = getParsedUserBuilder(Objects.requireNonNull(contentValues)).build();
         // Cache
         getUserRepository().setUserAsync(user);
         long userId = userDao.insert(user);
         var = ContentUris.withAppendedId(uri, userId);
         break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + URI_MATCHER.match(uri));
     }
 
     Log.d("DroidContentProvider ", "onInsert: " + var.toString());
 
     // Notify change
-    getContext().getContentResolver().notifyChange(var, null);
+    Objects.requireNonNull(getContext()).getContentResolver().notifyChange(var, null);
 
     return var;
   }
@@ -106,7 +108,8 @@ public class DroidContentProvider extends ContentProvider {
         numRowsDeleted = runDao.delete();
         break;
       case RUN_BY_ID:
-        numRowsDeleted = runDao.deleteById(Integer.parseInt(uri.getLastPathSegment()));
+        numRowsDeleted = runDao.deleteById(Integer.parseInt(
+            Objects.requireNonNull(uri.getLastPathSegment())));
         break;
       case FREEZING_RUNS:
       case COLD_RUNS:
@@ -114,7 +117,7 @@ public class DroidContentProvider extends ContentProvider {
       case WARM_RUNS:
       case HOT_RUNS:
         numRowsDeleted = runDao.deleteByWeather(
-            WeatherClassifier.valueOf(uri.getLastPathSegment().toUpperCase()).getValue());
+            WeatherClassifier.valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase()).getValue());
         break;
       case USER:
         numRowsDeleted = userDao.delete();
@@ -123,7 +126,7 @@ public class DroidContentProvider extends ContentProvider {
     }
 
     // Notify change
-    getContext().getContentResolver().notifyChange(uri, null);
+    Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
 
     return numRowsDeleted;
   }
@@ -145,6 +148,9 @@ public class DroidContentProvider extends ContentProvider {
         String type = contentValues.getAsString("type");
         runDao.updateRunType(Integer.parseInt(uri.getLastPathSegment()),
            type);
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + URI_MATCHER.match(uri));
     }
 
     // Number of rows updated
@@ -198,10 +204,8 @@ public class DroidContentProvider extends ContentProvider {
 
   @Ignore
   private User.Builder getParsedUserBuilder(ContentValues contentValues) {
-    User.Builder builder = new User.Builder(contentValues.getAsString("name")).withWeight(contentValues.getAsInteger("weight"))
+    return new User.Builder(contentValues.getAsString("name")).withWeight(contentValues.getAsInteger("weight"))
         .withHeight(contentValues.getAsInteger("height"));
-
-    return builder;
   }
 
 }

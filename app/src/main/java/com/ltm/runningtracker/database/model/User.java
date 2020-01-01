@@ -1,14 +1,8 @@
 package com.ltm.runningtracker.database.model;
 
-import android.util.Log;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import com.ltm.runningtracker.database.model.Run.Builder;
-import com.ltm.runningtracker.repository.LocationRepository;
-import com.ltm.runningtracker.util.RunCoordinates;
-import java.io.IOException;
 
 @Entity
 public class User {

@@ -5,10 +5,7 @@ import static com.ltm.runningtracker.android.contentprovider.DroidProviderContra
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +36,6 @@ public class RunRepository {
 
     distance = new MutableLiveData<>();
     duration = new MutableLiveData<>();
-  }
-
-  public void setDistance(long distance) {
-    this.distance.setValue(distance);
-  }
-
-  public void setDuration(long duration) {
-    this.duration.setValue(duration);
   }
 
   public MutableLiveData<Long> getDurationLiveData() {

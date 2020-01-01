@@ -2,6 +2,7 @@ package com.ltm.runningtracker.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class WeatherParser {
 
@@ -12,7 +13,7 @@ public class WeatherParser {
     private int value;
     private static Map map = new HashMap<>();
 
-    private WeatherClassifier(String brand, int value) {
+    WeatherClassifier(String brand, int value) {
       this.weatherDefinition = brand;
       this.value = value;
     }
@@ -33,17 +34,11 @@ public class WeatherParser {
 
     public static int getNum() { return WeatherClassifier.values().length; }
 
+    @NotNull
     @Override
     public String toString() {
       return weatherDefinition;
     }
-  }
-
-  public static String parseTemperatureToString(String temperature) {
-    if (temperature.equals("Unavailable")) {
-      return "Unavailable";
-    }
-    return parseTemperatureToClassifier(Float.parseFloat(temperature)).toString();
   }
 
   /**
@@ -51,23 +46,13 @@ public class WeatherParser {
    * Between 20°C and 35°C Hot = Above 35°C
    */
   public static WeatherClassifier parseTemperatureToClassifier(float temperature) {
-    if (temperature < 35f) {
-      if (temperature < 20f) {
-        if (temperature < 10f) {
-          if (temperature < 5f) {
-            return WeatherClassifier.FREEZING;
-          } else {
-            return WeatherClassifier.COLD;
-          }
-        } else {
-          return WeatherClassifier.MILD;
-        }
-      } else {
-        return WeatherClassifier.WARM;
-      }
-    } else {
-      return WeatherClassifier.HOT;
-    }
+    if(temperature >= 35f) return WeatherClassifier.HOT;
+    if(temperature < 35f && temperature >= 20f) return WeatherClassifier.WARM;
+    if(temperature < 20f && temperature >= 10f) return WeatherClassifier.MILD;
+    if(temperature < 10f && temperature >= 5f) return WeatherClassifier.COLD;
+    if(temperature < 5f) return WeatherClassifier.FREEZING;
+
+    return null;
   }
 
 }

@@ -17,6 +17,7 @@ import com.mapbox.android.core.location.LocationEngineResult;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class LocationRepository implements LocationEngineCallback {
 
@@ -27,7 +28,7 @@ public class LocationRepository implements LocationEngineCallback {
 
   // Static because there should be only one instance of this to allow synchronized
   // read/write of locationMutableLiveData
-  private static Object lock = new Object();
+  private static final Object lock = new Object();
 
   // Must be stored in repo because it is used by both the locationMutableLiveData service and passed
   // to mapbox API in the run activity
@@ -42,13 +43,14 @@ public class LocationRepository implements LocationEngineCallback {
   @Override
   public void onSuccess(Object result) {
     Location lastLocation = ((LocationEngineResult) result).getLastLocation();
-    Log.d("Locationrep: ", "onLocationRetrieved " + lastLocation.toString());
+    Log.d("Locationrep: ",
+        "onLocationRetrieved " + Objects.requireNonNull(lastLocation).toString());
     setLocation(lastLocation);
   }
 
   @Override
   public void onFailure(@NonNull Exception exception) {
-    Log.d("Location Repository: ", exception.getMessage());
+    Log.d("Location Repository: ", Objects.requireNonNull(exception.getMessage()));
   }
 
   // Expose locationMutableLiveData as livedata object to make it immutable from outside the class
@@ -66,11 +68,11 @@ public class LocationRepository implements LocationEngineCallback {
   }
 
   public double getLatitude() {
-    return locationMutableLiveData.getValue().getLatitude();
+    return Objects.requireNonNull(locationMutableLiveData.getValue()).getLatitude();
   }
 
   public double getLongitude() {
-    return locationMutableLiveData.getValue().getLongitude();
+    return Objects.requireNonNull(locationMutableLiveData.getValue()).getLongitude();
   }
 
   public LocationEngine getLocationEngine() {
@@ -81,12 +83,11 @@ public class LocationRepository implements LocationEngineCallback {
   /**
    * @param distance in metres
    * @param duration in milliseconds
-   * @return mph
+   * @return km/h
    */
   public static float calculatePace(double distance, double duration) {
     float metersPerSecond = (float) distance / (float) (duration / 1000);
-    float kmPerHour = (metersPerSecond * 3.6f) / 1000;
-    return kmPerHour;
+    return (metersPerSecond * 3.6f) / 1000;
   }
 
   private void setLocation(Location location) {
@@ -115,7 +116,7 @@ public class LocationRepository implements LocationEngineCallback {
           location.getLongitude(),
           // In this sample, get just a single address.
           1);
-      if (address == null || address.size() == 0) {
+      if ((address == null) || (address.size() == 0)) {
         city = "No man's land.";
       } else {
         city = address.get(0).getSubAdminArea();

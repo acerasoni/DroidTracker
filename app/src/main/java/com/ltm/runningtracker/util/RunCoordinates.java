@@ -26,38 +26,6 @@ public class RunCoordinates implements Serializable {
     this.endLon = endLon;
   }
 
-  public float getStartLat() {
-    return startLat;
-  }
-
-  public void setStartLat(float startLat) {
-    this.startLat = startLat;
-  }
-
-  public float getStartLon() {
-    return startLon;
-  }
-
-  public void setStartLon(float startLon) {
-    this.startLon = startLon;
-  }
-
-  public float getEndLat() {
-    return endLat;
-  }
-
-  public void setEndLat(float endLat) {
-    this.endLat = endLat;
-  }
-
-  public float getEndLon() {
-    return endLon;
-  }
-
-  public void setEndLon(float endLon) {
-    this.endLon = endLon;
-  }
-
   /**
    * Used by Room DB as TypeConverter and in RunActivity to serialize coordinates to be passed in
    * ContentValue object.

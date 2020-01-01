@@ -18,6 +18,7 @@ import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
+import java.util.Objects;
 
 public class WeatherRepository implements WeatherClient.WeatherEventListener {
 
@@ -27,14 +28,17 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
     weatherMutableLiveData = new MutableLiveData<>();
   }
 
-  public LiveData<Weather> getLiveDataWeather() { return weatherMutableLiveData;}
+  public LiveData<Weather> getLiveDataWeather() {
+    return weatherMutableLiveData;
+  }
 
   private void setWeather(Weather weather) {
     weatherMutableLiveData.setValue(weather);
   }
 
   public String getTemperature() {
-    return Float.toString(weatherMutableLiveData.getValue().temperature.getTemp());
+    return Float
+        .toString(Objects.requireNonNull(weatherMutableLiveData.getValue()).temperature.getTemp());
   }
 
   @Override
@@ -50,10 +54,6 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
   @Override
   public void onConnectionError(Throwable t) {
 
-  }
-
-  public void onDestroy() {
-    getAppContext().stopService(new Intent(getAppContext(), WeatherService.class));
   }
 
   // Weather request builder method
@@ -80,4 +80,5 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
     }
     return null;
   }
+
 }

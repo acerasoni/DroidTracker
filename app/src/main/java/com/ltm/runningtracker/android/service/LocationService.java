@@ -31,6 +31,7 @@ import com.mapbox.android.core.location.LocationEngineRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 public class LocationService extends LifecycleService {
 
@@ -80,14 +81,12 @@ public class LocationService extends LifecycleService {
 
   @Override
   public void onRebind(Intent intent) {
-    // TODO Auto-generated method stub
     Log.d("Weather Service", "onUnbind");
     super.onRebind(intent);
   }
 
   @Override
   public boolean onUnbind(Intent intent) {
-    // TODO Auto-generated method stub
     Log.d("g53mdp", "service onUnbind");
 
     // Determine is run is ongoing
@@ -101,8 +100,7 @@ public class LocationService extends LifecycleService {
   }
 
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    // TODO Auto-generated method stub
+  public int onStartCommand(@NotNull Intent intent, int flags, int startId) {
     super.onStartCommand(intent, flags, startId);
     Log.d("g53mdp", "service onStartCommand");
     return Service.START_STICKY;

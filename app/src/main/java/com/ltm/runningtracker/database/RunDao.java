@@ -1,15 +1,10 @@
 package com.ltm.runningtracker.database;
 
 import android.database.Cursor;
-import android.net.Uri;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 import com.ltm.runningtracker.database.model.Run;
-import java.io.IOException;
-import java.util.List;
 
 @Dao
 public interface RunDao {
@@ -23,6 +18,12 @@ public interface RunDao {
     @Query("SELECT * FROM run WHERE weatherType=:type")
     Cursor getByWeather(int type);
 
+    @Insert
+    long insert(Run run);
+
+    @Query("UPDATE run SET runType=:type WHERE _id=:id")
+    void updateRunType(int id, String type);
+
     @Query("DELETE FROM run")
     int delete();
 
@@ -32,10 +33,7 @@ public interface RunDao {
     @Query("DELETE FROM run WHERE weatherType=:type")
     int deleteByWeather(int type);
 
-    @Query("UPDATE run SET runType=:type WHERE _id=:id")
-    void updateRunType(int id, String type);
 
-    @Insert
-    long insert(Run run);
+
 
 }

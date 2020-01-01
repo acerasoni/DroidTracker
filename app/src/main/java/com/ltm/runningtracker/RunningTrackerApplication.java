@@ -24,9 +24,6 @@ public class RunningTrackerApplication extends Application {
   private static WeatherRepository weatherRepository;
   private static RunRepository runRepository;
 
-  // Content provider
-  private static DroidContentProvider droidContentProvider;
-
   public void onCreate() {
     super.onCreate();
     context = getApplicationContext();
@@ -72,13 +69,6 @@ public class RunningTrackerApplication extends Application {
       runRepository = new RunRepository();
     }
     return runRepository;
-  }
-
-  public static synchronized DroidContentProvider getDroidContentProvider() {
-    if (droidContentProvider == null) {
-      droidContentProvider = new DroidContentProvider();
-    }
-    return droidContentProvider;
   }
 
 }

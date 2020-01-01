@@ -82,21 +82,18 @@ public class WeatherService extends Service {
 
   @Override
   public void onRebind(Intent intent) {
-    // TODO Auto-generated method stub
     Log.d("Weather Service", "onUnbind");
     super.onRebind(intent);
   }
 
   @Override
   public boolean onUnbind(Intent intent) {
-    // TODO Auto-generated method stub
     Log.d("g53mdp", "service onUnbind");
     return super.onUnbind(intent);
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    // TODO Auto-generated method stub
     Log.d("g53mdp", "service onStartCommand");
     return Service.START_STICKY;
   }

@@ -1,25 +1,17 @@
 package com.ltm.runningtracker.database.model;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
-import static com.ltm.runningtracker.util.WeatherParser.parseTemperatureToString;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.WeatherParser;
-import java.io.IOException;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -88,7 +80,7 @@ public class Run {
     @SuppressLint("DefaultLocale")
     public Builder(long date, double distance, int duration) {
       Date obj = new Date(date);
-      DateFormat dateFormatter = new SimpleDateFormat("d MMM yyyy");
+      @SuppressLint("SimpleDateFormat") DateFormat dateFormatter = new SimpleDateFormat("d MMM yyyy");
       this.date = dateFormatter.format(obj);
 
       this.distance = distance;
