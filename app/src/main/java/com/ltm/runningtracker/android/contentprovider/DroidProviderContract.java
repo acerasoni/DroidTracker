@@ -17,5 +17,6 @@ public class DroidProviderContract {
   public static final String LOCATION = "location";
   public static final String DATE = "date";
   public static final String TYPE = "runType";
+  public static final String PACE = "pace";
 
 }

@@ -36,7 +36,8 @@ public abstract class PerformanceFragment extends Fragment {
       DroidProviderContract.ID,
       DroidProviderContract.DATE,
       DroidProviderContract.LOCATION,
-      DroidProviderContract.TYPE
+      DroidProviderContract.TYPE,
+      DroidProviderContract.PACE
   };
 
   protected final int[] COLUMNS_RESULT_IDS = new int[]{
@@ -44,6 +45,7 @@ public abstract class PerformanceFragment extends Fragment {
       R.id.date,
       R.id.location,
       R.id.type,
+      R.id.pace
   };
 
   protected SimpleCursorAdapter dataAdapter;
@@ -83,7 +85,9 @@ public abstract class PerformanceFragment extends Fragment {
 
       // Get ID of run
       ViewGroup viewGroup = (ViewGroup) view1;
-      Integer runId = Integer.parseInt(((TextView) (viewGroup.getChildAt(0))).getText().toString());
+      TextView idView = viewGroup.findViewById(R.id.id);
+
+      int runId = Integer.parseInt(idView.getText().toString());
       bundle.putInt("runId", runId);
 
       // Determine from which fragment so we can fetch the cursor from the right cache index

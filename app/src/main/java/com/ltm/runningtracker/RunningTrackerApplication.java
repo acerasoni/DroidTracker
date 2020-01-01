@@ -2,7 +2,6 @@ package com.ltm.runningtracker;
 
 import android.app.Application;
 import android.content.Context;
-import com.ltm.runningtracker.android.contentprovider.DroidContentProvider;
 import com.ltm.runningtracker.repository.RunRepository;
 import com.ltm.runningtracker.util.PropertyManager;
 import com.ltm.runningtracker.repository.LocationRepository;

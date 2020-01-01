@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.repository;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
+import static java.lang.String.format;
 
 import android.location.Address;
 import android.location.Geocoder;
@@ -87,7 +88,8 @@ public class LocationRepository implements LocationEngineCallback {
    */
   public static float calculatePace(double distance, double duration) {
     float metersPerSecond = (float) distance / (float) (duration / 1000);
-    return (metersPerSecond * 3.6f) / 1000;
+    float kmPerHour = (metersPerSecond * 3.6f) / 1000;
+    return Float.parseFloat(format("%.2f",kmPerHour));
   }
 
   private void setLocation(Location location) {

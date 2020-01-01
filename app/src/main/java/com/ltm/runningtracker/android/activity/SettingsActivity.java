@@ -103,7 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
         AsyncTask.execute(() -> {
           // Update DB
           getContentResolver().delete(uri, null, null);
-          setupButtons();
+          finish();
         });
       });
     } else {
@@ -123,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
       AsyncTask.execute(() -> {
         // DELETE DB
         getContentResolver().delete(RUNS_URI, null, null);
-        setupButtons();
+        finish();
       });
     });
   }
