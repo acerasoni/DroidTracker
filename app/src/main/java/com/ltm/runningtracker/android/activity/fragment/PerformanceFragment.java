@@ -2,13 +2,13 @@ package com.ltm.runningtracker.android.activity.fragment;
 
 import static android.app.Activity.RESULT_OK;
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -23,8 +23,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
 import com.ltm.runningtracker.android.activity.PerformanceActivity;
-import com.ltm.runningtracker.android.activity.viewmodel.PerformanceViewModel;
+import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
 public abstract class PerformanceFragment extends Fragment {
@@ -50,12 +51,13 @@ public abstract class PerformanceFragment extends Fragment {
 
   protected SimpleCursorAdapter dataAdapter;
   protected ListView listView;
-  protected PerformanceViewModel performanceViewModel;
+  protected ActivityViewModel performanceViewModel;
+  protected WeatherClassifier weatherClassifierOfFragment;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    performanceViewModel = ViewModelProviders.of(this).get(PerformanceViewModel.class);
+    performanceViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     dataAdapter = new SimpleCursorAdapter(
         getActivity(),
@@ -74,7 +76,7 @@ public abstract class PerformanceFragment extends Fragment {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.performance_fragment, container, false);
     listView = view.findViewById(R.id.runList);
-    onPopulateList();
+    onPopulateList(weatherClassifierOfFragment);
 
     Class thisClass = this.getClass();
 
@@ -109,13 +111,26 @@ public abstract class PerformanceFragment extends Fragment {
             Objects.requireNonNull(getActivity()).finish();
           } else {
             // Type was changed or run deleted, refresh cache and update UI
-            onPopulateList();
+            onPopulateList(weatherClassifierOfFragment);
           }
         });
       }
     }
   }
 
-  protected abstract void onPopulateList();
+  protected void onPopulateList(WeatherClassifier weatherClassifier) {
+    AsyncTask.execute(() -> {
+      Cursor c = getRunRepository().getRunsAsync(Objects.requireNonNull(getContext()), weatherClassifier);
+      Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+        // Must do the following sequentially to ensure correct behaviour
+        // - fetch cursor from database asynchronously
+        //  - Swap data adaptor's cursor with new one on UI thread
+        // - Notify data adapter on UI thread
+        dataAdapter.swapCursor(c);
+        dataAdapter.notifyDataSetChanged();
+        listView.setAdapter(dataAdapter);
+      });
+    });
+  };
 
 }

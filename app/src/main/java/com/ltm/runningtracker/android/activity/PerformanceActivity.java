@@ -1,6 +1,5 @@
 package com.ltm.runningtracker.android.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -9,11 +8,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.activity.fragment.ColdPerformanceFragment;
-import com.ltm.runningtracker.android.activity.fragment.FreezingPerformanceFragment;
-import com.ltm.runningtracker.android.activity.fragment.HotPerformanceFragment;
-import com.ltm.runningtracker.android.activity.fragment.MildPerformanceFragment;
-import com.ltm.runningtracker.android.activity.fragment.WarmPerformanceFragment;
+import com.ltm.runningtracker.android.activity.fragment.impl.ColdPerformanceFragment;
+import com.ltm.runningtracker.android.activity.fragment.impl.FreezingPerformanceFragment;
+import com.ltm.runningtracker.android.activity.fragment.impl.HotPerformanceFragment;
+import com.ltm.runningtracker.android.activity.fragment.impl.MildPerformanceFragment;
+import com.ltm.runningtracker.android.activity.fragment.impl.WarmPerformanceFragment;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;

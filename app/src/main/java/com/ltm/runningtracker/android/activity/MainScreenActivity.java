@@ -27,7 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.activity.viewmodel.MainScreenActivityViewModel;
+import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.service.LocationService;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,22 +38,24 @@ public class MainScreenActivity extends AppCompatActivity {
   public static final int SETTINGS_MODIFICATION_REQUEST = 3;
   public static final int RUN_ACTIVITY_REQUEST = 4;
 
-  private Context context = this;
-  private MainScreenActivityViewModel mainActivityViewModel;
   private TextView weatherTextField, locationTextField;
   private Button runButton;
   private Button performanceButton;
   private Button userProfileButton;
-  private boolean isLocationAndWeatherAvailable;
+
   private ServiceConnection serviceConnection;
+  private Context context = this;
+  private ActivityViewModel mainActivityViewModel;
+
   private boolean mBound;
+  private boolean isLocationAndWeatherAvailable;
 
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main_screen);
-    mainActivityViewModel = ViewModelProviders.of(this).get(MainScreenActivityViewModel.class);
+    mainActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     initialiseViews();
     requestPermission();

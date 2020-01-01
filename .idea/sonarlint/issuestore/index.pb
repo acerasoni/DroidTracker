@@ -21,8 +21,6 @@ z
 Japp/src/main/java/com/ltm/runningtracker/android/activity/RunActivity.java,3\b\3b3b7137fad39167f509e94409e18c21d6d69d06
 r
 Bapp/src/main/java/com/ltm/runningtracker/util/PropertyManager.java,2\2\2226a1445e9a7af3ec364f8144bd560229401f77
-|
-Lapp/src/main/java/com/ltm/runningtracker/exception/RunNotFoundException.java,5\7\57fabee48e9b08c4e7d1f6464d70387a3b0900a4
 v
 Fapp/src/main/java/com/ltm/runningtracker/repository/RunRepository.java,4\a\4a16df7b857147f956d7eed319d7ebe98fa62a2b
 r
@@ -33,16 +31,10 @@ m
 =app/src/main/java/com/ltm/runningtracker/database/RunDao.java,7\1\71b6865c57f8a83159bb3bc6051a76006370f2f7
 á
 Wapp/src/main/java/com/ltm/runningtracker/android/activity/BrowseRunDetailsActivity.java,2\6\26737a0e4e293a913f8d5d8cf0619381ac4f21bf
-Ñ
-Tapp/src/main/java/com/ltm/runningtracker/exception/WeatherNotAvailableException.java,2\d\2d4f919e254b7efbecb0eaf390eacf99be70eb07
 n
 >app/src/main/java/com/ltm/runningtracker/database/UserDao.java,f\0\f05b649ae39d2e46f5e42c6f6056e5c5b1dc07c8
 Å
 Qapp/src/main/java/com/ltm/runningtracker/android/activity/MainScreenActivity.java,3\2\326a3462861b0ece081e2ddeb4fcbf5d0368e28d
-
-Oapp/src/main/java/com/ltm/runningtracker/weather/CustomWeatherProviderType.java,a\2\a2a1e7e596ca53d902d1c5b7bf29c992293fcf61
-{
-Kapp/src/main/java/com/ltm/runningtracker/weather/CustomWeatherProvider.java,3\e\3eeb9fcc4a2f24806e0e6e11b55cbd11fa7eb2c5
 ã
 [app/src/main/java/com/ltm/runningtracker/exception/InvalidLatitudeOrLongitudeException.java,8\a\8a631e076f24eddc9121f89052d1c7adbb2c39cc
 ä
@@ -61,8 +53,6 @@ A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
-~
-Napp/src/main/java/com/ltm/runningtracker/android/activity/EditBmiActivity.java,8\e\8e505f88c4264d709b057aedc8dd17bf5601a31c
 q
 Aapp/src/main/java/com/ltm/runningtracker/database/model/User.java,0\4\04b11772b8274dcb483bc158a954c74a2215bbd9
 p

@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.activity.viewmodel.RunActivityViewModel;
+import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.service.LocationService;
 import com.ltm.runningtracker.android.service.LocationService.LocationServiceBinder;
 import com.ltm.runningtracker.repository.LocationRepository;
@@ -51,22 +51,25 @@ public class RunActivity extends AppCompatActivity implements
     OnCameraTrackingChangedListener {
 
   // Service-related
-  IntentFilter runUpdateFilter;
-  Boolean isRunning = null;
-  LocationService mService;
+  private ActivityViewModel runActivityViewModel;
+  private IntentFilter runUpdateFilter;
+  private Boolean isRunning = null;
+  private LocationService mService;
   boolean mBound;
-  RunUpdateReceiver runUpdateReceiver;
+  private RunUpdateReceiver runUpdateReceiver;
   Context activity = this;
 
   // Mapbox-related
   private MapboxMap mapboxMap;
   private LocationComponent locationComponent;
-  private boolean isInTrackingMode;
   private PermissionsManager permissionsManager;
+  private boolean isInTrackingMode;
 
   // Views
-  private RunActivityViewModel runActivityViewModel;
-  private TextView countyView, distanceView, temperatureView, durationView;
+  private TextView countyView;
+  private TextView distanceView;
+  private TextView temperatureView;
+  private TextView durationView;
   private MapView mapView;
   private Button toggleRunButton;
 
@@ -183,7 +186,6 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   protected void onResume() {
     super.onResume();
-    registerReceiver(runUpdateReceiver, runUpdateFilter);
     mapView.onResume();
   }
 
@@ -211,7 +213,7 @@ public class RunActivity extends AppCompatActivity implements
 
     // Bind to location service
     bindService(intent, connection, Context.BIND_AUTO_CREATE);
-
+    registerReceiver(runUpdateReceiver, runUpdateFilter);
     mapView.onStart();
     super.onStart();
   }
@@ -296,7 +298,7 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   private void initialiseViews() {
-    runActivityViewModel = ViewModelProviders.of(this).get(RunActivityViewModel.class);
+    runActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
     countyView = findViewById(R.id.countyView);
     durationView = findViewById(R.id.timeView);
     temperatureView = findViewById(R.id.temperatureView);
