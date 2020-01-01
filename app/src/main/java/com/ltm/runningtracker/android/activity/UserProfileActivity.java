@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 
@@ -37,14 +39,14 @@ public class UserProfileActivity extends AppCompatActivity {
   private Float runningPace;
   private Float sprintingPace;
 
+  private ActivityViewModel userProfileActivityViewModel;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user_profile);
 
-
     initialiseViews();
-
     setupBmiListeners();
 
     creatingUser =
@@ -136,7 +138,7 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   public void populateViews() {
-    User user = getUserRepository().getUser();
+    User user = userProfileActivityViewModel.getUser().getValue();
     float bmi = calculateBMI(user.weight, user.height);
 
     nameField.setText(user.name);
@@ -150,14 +152,8 @@ public class UserProfileActivity extends AppCompatActivity {
     String height = heightField.getText().toString();
     String weight = weightField.getText().toString();
 
-    if (creatingUser) {
-      getUserRepository()
-          .createUser(name.trim(), Integer.parseInt(weight.trim()),
-              Integer.parseInt(height.trim()));
-    } else {
-      getUserRepository().updateUser(name.trim(), Integer.parseInt(weight.trim()),
-          Integer.parseInt(height.trim()));
-    }
+    userProfileActivityViewModel.onSaveFromProfile(creatingUser, name, weight, height);
+
     Intent returnIntent = new Intent();
     setResult(Activity.RESULT_OK, returnIntent);
     finish();
@@ -207,6 +203,8 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   private void initialiseViews() {
+    userProfileActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
+
     nameField = findViewById(R.id.nameField);
     weightField = findViewById(R.id.weightField);
     heightField = findViewById(R.id.heightField);

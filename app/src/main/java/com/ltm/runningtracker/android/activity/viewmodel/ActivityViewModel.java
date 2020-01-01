@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.database.model.User;
@@ -125,12 +124,23 @@ public class ActivityViewModel extends ViewModel {
     doRunsExist = doFreezing || doCold || doMild || doWarm || doHot;
   }
 
+  public Cursor requestRunByWeather(WeatherClassifier weatherClassifier, Context context) {
+    Cursor c = getRunRepository().getRunsSync(weatherClassifier);
+
+    if (c != null && c.moveToFirst()) {
+      return c;
+    } else {
+
+      return null;
+    }
+  }
+
   // Given an id, check cached cursor for weather type or DB
   // Return cursor moved to the correct position
-  public Cursor requestRun(int id, WeatherClassifier weatherClassifier, Context context) {
+  public Cursor requestRunById(int id, WeatherClassifier weatherClassifier, Context context) {
     // Check if cached has the row we need
     // Start by getting all runs associated with the weather
-    Cursor c = getRunRepository().getRunsSync(weatherClassifier);
+    Cursor c = requestRunByWeather(weatherClassifier, context);
     if (c != null) {
       // Search for our ID in cursor
       c.moveToFirst();
@@ -144,13 +154,17 @@ public class ActivityViewModel extends ViewModel {
     }
 
     // If cache is empty query DB asynchronously
-    AsyncTask.execute(() -> fetchDataAsync(id, context));
+    AsyncTask.execute(() -> fetchRunAsyncById(id, context));
 
     return null;
   }
 
+  public Cursor fetchRunAsyncByWeather(WeatherClassifier weatherClassifier, Context context) {
+    return getRunRepository().getRunsAsync(context, weatherClassifier);
+  }
+
   @SuppressLint("DefaultLocale")
-  private void fetchDataAsync(int id, Context context) {
+  private void fetchRunAsyncById(int id, Context context) {
     Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + id);
     Cursor c = context.getContentResolver().query(customUri, null, null, null, null);
 
@@ -209,6 +223,17 @@ public class ActivityViewModel extends ViewModel {
       context.getContentResolver().delete(uri, null, null);
       ((AppCompatActivity) context).finish();
     });
+  }
+
+  public void onSaveFromProfile(boolean creatingUser, String name, String weight, String height) {
+    if (creatingUser) {
+      getUserRepository()
+          .createUser(name.trim(), Integer.parseInt(weight.trim()),
+              Integer.parseInt(height.trim()));
+    } else {
+      getUserRepository().updateUser(name.trim(), Integer.parseInt(weight.trim()),
+          Integer.parseInt(height.trim()));
+    }
   }
 
 }

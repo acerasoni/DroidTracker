@@ -59,7 +59,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     });
 
     browseDetailsActivityViewModel
-        .requestRun(runId, wc, this);
+        .requestRunById(runId, wc, this);
   }
 
   public void onSave(@Nullable View v) {

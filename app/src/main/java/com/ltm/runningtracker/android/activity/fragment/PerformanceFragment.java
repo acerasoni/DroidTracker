@@ -1,8 +1,6 @@
 package com.ltm.runningtracker.android.activity.fragment;
 
 import static android.app.Activity.RESULT_OK;
-import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -120,7 +118,7 @@ public abstract class PerformanceFragment extends Fragment {
 
   protected void onPopulateList(WeatherClassifier weatherClassifier) {
     AsyncTask.execute(() -> {
-      Cursor c = getRunRepository().getRunsAsync(Objects.requireNonNull(getContext()), weatherClassifier);
+      Cursor c = performanceViewModel.fetchRunAsyncByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
       Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
         // Must do the following sequentially to ensure correct behaviour
         // - fetch cursor from database asynchronously
