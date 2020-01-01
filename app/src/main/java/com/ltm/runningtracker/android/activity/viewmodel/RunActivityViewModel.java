@@ -31,6 +31,4 @@ public class RunActivityViewModel extends ViewModel {
 
   public LiveData<Long> getDistance() { return distanceLiveData; }
 
-  public LiveData<Long> getDuration() { return durationLiveData; }
-
 }

@@ -15,7 +15,6 @@ import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.WAR
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -28,7 +27,6 @@ import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
-import com.ltm.runningtracker.util.RunTypeParser;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 

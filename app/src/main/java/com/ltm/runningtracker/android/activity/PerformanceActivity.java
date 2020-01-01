@@ -1,18 +1,13 @@
 package com.ltm.runningtracker.android.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
-import com.jjoe64.graphview.GraphView;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.fragment.ColdPerformanceFragment;
 import com.ltm.runningtracker.android.activity.fragment.FreezingPerformanceFragment;
@@ -21,52 +16,43 @@ import com.ltm.runningtracker.android.activity.fragment.MildPerformanceFragment;
 import com.ltm.runningtracker.android.activity.fragment.WarmPerformanceFragment;
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Graph 1 = Running pace (average speed) Graph 2 = Total distance Graph 3 = Total time
- */
 public class PerformanceActivity extends AppCompatActivity {
 
-  private TabLayout tabLayout;
-  private ViewPager viewPager;
+  public static final Map<Class, Integer> FRAGMENT_TO_ID;
 
-  public static final Map<Class, Integer> FRAGMENT_TO_ID = new HashMap<Class, Integer>(){
-    {
-      put(FreezingPerformanceFragment.class, 0);
-      put(ColdPerformanceFragment.class, 1);
-      put(MildPerformanceFragment.class, 2);
-      put(WarmPerformanceFragment.class, 3);
-      put(HotPerformanceFragment.class, 4);
-    }
-  };
+  static {
+    FRAGMENT_TO_ID = new HashMap<Class, Integer>() {
+      {
+        put(FreezingPerformanceFragment.class, 0);
+        put(ColdPerformanceFragment.class, 1);
+        put(MildPerformanceFragment.class, 2);
+        put(WarmPerformanceFragment.class, 3);
+        put(HotPerformanceFragment.class, 4);
+      }
+    };
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_performance);
 
-    SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(this,
-        getSupportFragmentManager());
-
-    viewPager = findViewById(R.id.viewPager);
-    viewPager.setAdapter(adapter);
-    tabLayout = findViewById(R.id.tabLayout);
-    tabLayout.setupWithViewPager(viewPager);
+    initialiseViews();
   }
 
   class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private Context mContext;
-
-    public SimpleFragmentPagerAdapter(Context context, FragmentManager fm) {
+    SimpleFragmentPagerAdapter(FragmentManager fm) {
       super(fm);
-      mContext = context;
     }
 
     // This determines the fragment for each tab
+    @NotNull
     @Override
     public Fragment getItem(int position) {
-      Fragment fragment = null;
+      Fragment fragment;
       switch (position) {
         case 0:
           fragment = new FreezingPerformanceFragment();
@@ -83,6 +69,8 @@ public class PerformanceActivity extends AppCompatActivity {
         case 4:
           fragment = new HotPerformanceFragment();
           break;
+        default:
+          throw new IllegalStateException("Unexpected value: " + position);
       }
 
       return fragment;
@@ -113,7 +101,14 @@ public class PerformanceActivity extends AppCompatActivity {
           return null;
       }
     }
-
   }
 
+  public void initialiseViews() {
+    SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(
+        getSupportFragmentManager());
+    ViewPager viewPager = findViewById(R.id.viewPager);
+    viewPager.setAdapter(adapter);
+    TabLayout tabLayout = findViewById(R.id.tabLayout);
+    tabLayout.setupWithViewPager(viewPager);
+  }
 }

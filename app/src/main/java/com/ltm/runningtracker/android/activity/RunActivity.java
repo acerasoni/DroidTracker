@@ -39,7 +39,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/location/LocationComponentOptionsActivity.java
@@ -86,12 +88,7 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   public void onMapReady(@NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    mapboxMap.setStyle(Style.LIGHT, new Style.OnStyleLoaded() {
-      @Override
-      public void onStyleLoaded(@NonNull Style style) {
-        enableLocationComponent(style);
-      }
-    });
+    mapboxMap.setStyle(Style.LIGHT, style -> enableLocationComponent(style));
   }
 
   @SuppressWarnings({"MissingPermission"})
@@ -175,12 +172,7 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   public void onPermissionResult(boolean granted) {
     if (granted) {
-      mapboxMap.getStyle(new Style.OnStyleLoaded() {
-        @Override
-        public void onStyleLoaded(@NonNull Style style) {
-          enableLocationComponent(style);
-        }
-      });
+      mapboxMap.getStyle(style -> enableLocationComponent(style));
     } else {
       Toast.makeText(this, "User permission not granted", Toast.LENGTH_LONG).show();
       finish();
@@ -208,7 +200,7 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   @Override
-  protected void onSaveInstanceState(Bundle outState) {
+  protected void onSaveInstanceState(@NotNull Bundle outState) {
     super.onSaveInstanceState(outState);
     mapView.onSaveInstanceState(outState);
   }
@@ -255,11 +247,11 @@ public class RunActivity extends AppCompatActivity implements
 
       // Determine if user is running
       isRunning = binder.isUserRunning();
-      if(isRunning) {
+      if (!isRunning) {
+        durationView.setText("Begin run to display progress");
+      } else {
         distanceView.setText(binder.getDistance() + " metres");
         durationView.setText("Fetching time...");
-      } else {
-        durationView.setText("Begin run to display progress");
       }
       setButtonText(isRunning);
 
@@ -281,6 +273,18 @@ public class RunActivity extends AppCompatActivity implements
     @Override
     public void onServiceDisconnected(ComponentName arg0) {
       mBound = false;
+    }
+
+    private String determineText(boolean isRunning) {
+      return isRunning ? "Run started" : "Run ended";
+    }
+
+    private void setButtonText(boolean isRunning) {
+      if (isRunning) {
+        toggleRunButton.setText("End run");
+      } else {
+        toggleRunButton.setText("Start run");
+      }
     }
   };
 
@@ -312,39 +316,33 @@ public class RunActivity extends AppCompatActivity implements
     toggleRunButton.setText("Fetching location...");
   }
 
-  private String determineText(boolean isRunning) {
-    return isRunning ? "Run started" : "Run ended";
-  }
-
-  private void setButtonText(boolean isRunning) {
-    if (isRunning) {
-      toggleRunButton.setText("End run");
-    } else {
-      toggleRunButton.setText("Start run");
-    }
-  }
-
   private class RunUpdateReceiver extends BroadcastReceiver {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
-      if (action.equals("com.ltm.runningtracker.TIME_UPDATE")) {
-        int time = intent.getIntExtra("time", -1);
-        durationView.setText(String.format("%02d min, %02d sec",
-            TimeUnit.SECONDS.toMinutes(time),
-            TimeUnit.SECONDS.toSeconds(time) -
-                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
-        ));
-      } else if (action.equals("com.ltm.runningtracker.DISTANCE_UPDATE")) {
-        double distance = intent.getDoubleExtra("distance", -1L);
-        int formattedDistance = (int) distance;
-        distanceView.setText(formattedDistance + " metres");
-      } else if (action.equals("com.ltm.runningtracker.RUN_ENDED")) {
-        AppCompatActivity a = (AppCompatActivity) activity;
-        a.setResult(RESULT_OK);
-        a.finish();
+      switch (Objects.requireNonNull(action)) {
+        case "com.ltm.runningtracker.TIME_UPDATE":
+          int time = intent.getIntExtra("time", -1);
+          durationView.setText(String.format("%02d min, %02d sec",
+              TimeUnit.SECONDS.toMinutes(time),
+              TimeUnit.SECONDS.toSeconds(time) -
+                  TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
+          ));
+          break;
+        case "com.ltm.runningtracker.DISTANCE_UPDATE":
+          double distance = intent.getDoubleExtra("distance", -1L);
+          int formattedDistance = (int) distance;
+          distanceView.setText(formattedDistance + " metres");
+          break;
+        case "com.ltm.runningtracker.RUN_ENDED":
+          AppCompatActivity a = (AppCompatActivity) activity;
+          a.setResult(RESULT_OK);
+          a.finish();
+          break;
+        default:
+          throw new IllegalStateException("Unexpected value: " + Objects.requireNonNull(action));
       }
     }
   }

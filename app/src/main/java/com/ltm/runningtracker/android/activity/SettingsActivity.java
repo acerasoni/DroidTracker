@@ -11,18 +11,22 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.activity.fragment.FreezingPerformanceFragment;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
-import org.w3c.dom.DOMErrorHandler;
 
 public class SettingsActivity extends AppCompatActivity {
 
-  Button userButton, runsButton, freezingButton, coldButton, mildButton, warmButton, hotButton;
+  Button userButton;
+  Button runsButton;
+  Button freezingButton;
+  Button coldButton;
+  Button mildButton;
+  Button warmButton;
+  Button hotButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
     setContentView(R.layout.activity_settings);
     initialiseViews();
 
-    AsyncTask.execute(
-        () -> setupButtons());
+    AsyncTask.execute(this::setupButtons);
   }
 
   public void setupButtons() {
@@ -75,54 +78,39 @@ public class SettingsActivity extends AppCompatActivity {
     } else {
       runsButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
     }
-    if (doFreezing) {
-      enableButton(freezingButton, WeatherClassifier.FREEZING, "/freezing");
-    } else {
-      freezingButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-    }
-    if (doCold) {
-      enableButton(coldButton, WeatherClassifier.COLD, "/cold");
-    } else {
-      coldButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-    }
-    if (doMild) {
-      enableButton(mildButton, WeatherClassifier.MILD, "/mild");
-    } else {
-      mildButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-    }
-    if (doWarm) {
-      enableButton(warmButton, WeatherClassifier.WARM, "/warm");
-    } else {
-      warmButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-    }
-    if (doHot) {
-      enableButton(hotButton, WeatherClassifier.HOT, "/hot");
-    } else {
-      hotButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-    }
 
+    enableButton(doFreezing, freezingButton, WeatherClassifier.FREEZING, "/freezing");
+    enableButton(doCold, coldButton, WeatherClassifier.COLD, "/cold");
+    enableButton(doMild, mildButton, WeatherClassifier.MILD, "/mild");
+    enableButton(doWarm, warmButton, WeatherClassifier.WARM, "/warm");
+    enableButton(doHot, hotButton, WeatherClassifier.HOT, "/hot");
   }
 
-  private void enableButton(Button button, @Nullable WeatherClassifier weatherClassifier,
-      @Nullable String segment) {
-    button.setOnClickListener(v -> {
-      Uri uri = Uri
-          .withAppendedPath(DroidProviderContract.RUNS_URI, segment);
+  private void enableButton(boolean doRun, Button button,
+      @NonNull WeatherClassifier weatherClassifier,
+      @NonNull String segment) {
+    if (doRun) {
+      button.setOnClickListener(v -> {
+        Uri uri = Uri
+            .withAppendedPath(DroidProviderContract.RUNS_URI, segment);
 
-      button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-      button.setOnClickListener(null);
+        button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        button.setOnClickListener(null);
 
-      // Update cache
-      getRunRepository().flushCacheByWeather(weatherClassifier);
+        // Update cache
+        getRunRepository().flushCacheByWeather(weatherClassifier);
 
-      AsyncTask.execute(() -> {
-        // Update DB
-        getContentResolver().delete(uri, null, null);
-        setupButtons();
+        AsyncTask.execute(() -> {
+          // Update DB
+          getContentResolver().delete(uri, null, null);
+          setupButtons();
+        });
       });
-    });
-  }
+    } else {
+      button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+    }
 
+  }
 
   private void enableRunsButton() {
     runsButton.setOnClickListener(v -> {
@@ -131,7 +119,6 @@ public class SettingsActivity extends AppCompatActivity {
 
       // FLUSH CACHE
       getRunRepository().flushCache();
-
 
       AsyncTask.execute(() -> {
         // DELETE DB

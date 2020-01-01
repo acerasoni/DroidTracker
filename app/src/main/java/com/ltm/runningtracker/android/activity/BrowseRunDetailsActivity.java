@@ -9,21 +9,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
-import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
@@ -33,14 +28,21 @@ import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
  */
 public class BrowseRunDetailsActivity extends AppCompatActivity implements OnItemSelectedListener {
 
-  private TextView activityView, locationView, dateView,
-      weatherView, temperatureView, distanceView, durationView, paceView;
+  // Views
+  private TextView activityView;
+  private TextView locationView;
+  private TextView dateView;
+  private TextView weatherView;
+  private TextView temperatureView;
+  private TextView distanceView;
+  private TextView durationView;
+  private TextView paceView;
   private Spinner spinner;
 
-  private boolean hasChanged = false;
+  // Internal logic
+  private boolean hasTagBeenModified = false;
   private int runId;
-  private int fromFragment;
-  private float pace;
+  private WeatherClassifier weatherClassifier;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
     runId = getIntent().getIntExtra("runId",
         -1);
-    fromFragment = getIntent().getIntExtra("fromFragment", -1);
+    int fromFragment = getIntent().getIntExtra("fromFragment", -1);
 
     // Check if cached has the row we need
     // Start by getting all runs associated with the weather
@@ -82,7 +84,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   }
 
   public void onSave(@Nullable View v) {
-    if (hasChanged) {
+    if (hasTagBeenModified) {
       setResult(RESULT_OK);
     } else {
       setResult(RESULT_CANCELED);
@@ -92,10 +94,17 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   }
 
   public void onDelete(View v) {
+    // Flush cache
+    getRunRepository().flushCacheByWeather(weatherClassifier);
+
+    // DB
     Uri uri = Uri
         .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + runId);
     AsyncTask.execute(() -> {
       getContentResolver().delete(uri, null, null);
+
+      // Refresh cache
+      getRunRepository().getRunsAsync(this, weatherClassifier);
     });
 
     onSave(null);
@@ -111,12 +120,10 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     ContentValues contentValues = new ContentValues();
     String newType = capitalizeFirstLetter(RunTypeClassifier.valueOf(pos).toString());
     contentValues.put("type", newType);
-    AsyncTask.execute(() -> {
-      getContentResolver().update(uri, contentValues, null, null);
-    });
+    AsyncTask.execute(() -> getContentResolver().update(uri, contentValues, null, null));
 
     // Will cause listView in previous activity has to refresh its UI state
-    hasChanged = true;
+    hasTagBeenModified = true;
   }
 
   public void onNothingSelected(AdapterView<?> parent) {
@@ -133,16 +140,20 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + runId);
     Cursor c = getContentResolver().query(customUri, null, null, null, null);
 
-    c.moveToFirst();
-    updateUI(c);
+    if (c != null) {
+      c.moveToFirst();
+      updateUI(c);
+    }
+
   }
 
+  @SuppressLint({"SetTextI18n", "DefaultLocale"})
   public void updateUI(Cursor c) {
     runOnUiThread(() -> {
       StringBuilder sb;
 
       activityView = findViewById(R.id.activityView);
-      activityView.setText("Activity #" + runId);
+      activityView.setText("Run #" + runId);
 
       locationView = findViewById(R.id.locationView);
       locationView.setText(c.getString(1));
@@ -161,8 +172,9 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
       durationView = findViewById(R.id.durationView);
       durationView.setText(c.getString(5));
 
+      weatherClassifier = WeatherClassifier.valueOf(c.getInt(6));
       weatherView = findViewById(R.id.weatherView);
-      weatherView.setText(capitalizeFirstLetter(WeatherClassifier.valueOf(c.getInt(6)).toString()));
+      weatherView.setText(capitalizeFirstLetter(weatherClassifier.toString()));
 
       sb = new StringBuilder(String.format("%.2f", c.getFloat(7))).append("°C");
       temperatureView = findViewById(R.id.temperatureView);

@@ -5,14 +5,15 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import java.util.Objects;
 
 public class MildPerformanceFragment extends PerformanceFragment {
 
   @Override
   protected void onPopulateList() {
     AsyncTask.execute(() -> {
-      Cursor c = getRunRepository().getRunsAsync(getContext(), WeatherClassifier.MILD);
-      getActivity().runOnUiThread(() -> {
+      Cursor c = getRunRepository().getRunsAsync(Objects.requireNonNull(getContext()), WeatherClassifier.MILD);
+      Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
         // Must do the following sequentially to ensure correct behaviour
         // - fetch cursor from database asynchronously
         //  - Swap data adaptor's cursor with new one on UI thread

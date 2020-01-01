@@ -22,10 +22,6 @@
     android:theme="@style/AppTheme"
     tools:ignore="GoogleAppIndexingWarning">
     <activity
-      android:name=".android.activity.EditBmiActivity"
-      android:label="@string/title_activity_edit_bmi"
-      android:theme="@style/AppTheme.NoActionBar"></activity>
-    <activity
       android:name=".android.activity.PerformanceActivity"
       android:label="@string/title_activity_weather_performance"
       android:theme="@style/AppTheme.NoActionBar" />

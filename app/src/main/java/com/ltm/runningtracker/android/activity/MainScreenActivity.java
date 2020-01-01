@@ -1,13 +1,11 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
-import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -31,8 +29,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.MainScreenActivityViewModel;
 import com.ltm.runningtracker.android.service.LocationService;
-import com.ltm.runningtracker.android.service.WeatherService;
-import com.ltm.runningtracker.repository.LocationRepository;
+import org.jetbrains.annotations.NotNull;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -44,9 +41,10 @@ public class MainScreenActivity extends AppCompatActivity {
   private Context context = this;
   private MainScreenActivityViewModel mainActivityViewModel;
   private TextView weatherTextField, locationTextField;
-  private Button runButton, performanceButton, settingsButton, userProfileButton;
+  private Button runButton;
+  private Button performanceButton;
+  private Button userProfileButton;
   private boolean isLocationAndWeatherAvailable;
-  private boolean isRunEnabled = false;
   private ServiceConnection serviceConnection;
   private boolean mBound;
 
@@ -90,9 +88,7 @@ public class MainScreenActivity extends AppCompatActivity {
     bindService(locationIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
     // observe location object
-    mainActivityViewModel.getCounty().observe(this, county -> {
-      locationTextField.setText(county);
-    });
+    mainActivityViewModel.getCounty().observe(this, county -> locationTextField.setText(county));
 
     // observe temperature object
     mainActivityViewModel.getWeather().observe(this, weather -> {
@@ -101,7 +97,6 @@ public class MainScreenActivity extends AppCompatActivity {
       isLocationAndWeatherAvailable = true;
       if (getUserRepository().doesUserExist()) {
         enableRun();
-        isRunEnabled = true;
       }
     });
   }
@@ -148,6 +143,8 @@ public class MainScreenActivity extends AppCompatActivity {
           enablePerformance();
         }
         break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + requestCode);
     }
 
   }
@@ -161,7 +158,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
   @Override
   public void onRequestPermissionsResult(int requestCode,
-      String[] permissions, int[] grantResults) {
+      @NotNull String[] permissions, @NotNull int[] grantResults) {
     setup();
   }
 
@@ -196,7 +193,6 @@ public class MainScreenActivity extends AppCompatActivity {
   private void setupRun() {
     if (isLocationAndWeatherAvailable) {
       enableRun();
-      isRunEnabled = true;
     } else {
       View.OnClickListener runListener = v -> Toast
           .makeText(getApplicationContext(), "Please wait - fetching location",
@@ -235,7 +231,7 @@ public class MainScreenActivity extends AppCompatActivity {
   private void initialiseViews() {
     runButton = findViewById(R.id.runButton);
     performanceButton = findViewById(R.id.performanceButton);
-    settingsButton = findViewById(R.id.settingsButton);
+    Button settingsButton = findViewById(R.id.settingsButton);
     userProfileButton = findViewById(R.id.userProfileButton);
     weatherTextField = findViewById(R.id.weatherField);
     locationTextField = findViewById(R.id.locationField);

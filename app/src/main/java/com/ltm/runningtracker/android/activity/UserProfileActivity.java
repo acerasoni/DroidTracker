@@ -2,12 +2,6 @@ package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
-import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.RUNS;
-import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.JOG_VALUE;
-import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.RUN_VALUE;
-import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.SPRINT_VALUE;
-import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.WALK;
-import static com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier.WALK_VALUE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,29 +15,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
-import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-  EditText nameField, weightField, heightField;
-  TextView walkingPaceField, joggingPaceField, runningPaceField, sprintingPaceField, bmiField;
+  // Views
+  EditText nameField;
+  EditText weightField;
+  EditText heightField;
+  TextView walkingPaceField;
+  TextView joggingPaceField;
+  TextView runningPaceField;
+  TextView sprintingPaceField;
+  TextView bmiField;
+
+  // User-related
   boolean creatingUser;
-  private int weight = -1, height = -1;
-  private Float walkingPace, joggingPace, runningPace, sprintingPace;
+  private int weight = -1;
+  private int height = -1;
+  private Float walkingPace;
+  private Float joggingPace;
+  private Float runningPace;
+  private Float sprintingPace;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user_profile);
 
-    nameField = findViewById(R.id.nameField);
-    weightField = findViewById(R.id.weightField);
-    heightField = findViewById(R.id.heightField);
-    walkingPaceField = findViewById(R.id.walkingPaceField);
-    joggingPaceField = findViewById(R.id.joggingPaceField);
-    runningPaceField = findViewById(R.id.runningPaceField);
-    sprintingPaceField = findViewById(R.id.sprintingPaceField);
-    bmiField = findViewById(R.id.bmiField);
+
+    initialiseViews();
 
     setupBmiListeners();
 
@@ -52,18 +52,20 @@ public class UserProfileActivity extends AppCompatActivity {
 
     if (!creatingUser) {
       populateViews();
-      AsyncTask.execute(
-          () -> calculatePaces());
+      AsyncTask.execute(this::calculatePaces);
     } else {
       populatePaces();
     }
   }
 
   public void calculatePaces() {
-    Cursor c = getContentResolver().query(RUNS_URI, null, null, null, null);
-    if (c.moveToFirst()) {
+    Cursor c;
+    c = getContentResolver().query(RUNS_URI, null, null, null, null);
+    if (c != null && c.moveToFirst()) {
       do {
         switch (RunTypeClassifier.valueOf(c.getString(3).toUpperCase())) {
+          case UNTAGGED:
+            break;
           case WALK:
             if (walkingPace == null) {
               walkingPace = c.getFloat(9);
@@ -89,6 +91,9 @@ public class UserProfileActivity extends AppCompatActivity {
             sprintingPace = calculateAverage(sprintingPace, c.getFloat(9));
             break;
 
+          default:
+            throw new IllegalStateException(
+                "Unexpected value: " + RunTypeClassifier.valueOf(c.getString(3).toUpperCase()));
         }
       } while (c.moveToNext());
     }
@@ -141,10 +146,9 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   public void onSaveButton(View v) {
-    String name, height, weight;
-    name = nameField.getText().toString();
-    height = heightField.getText().toString();
-    weight = weightField.getText().toString();
+    String name = nameField.getText().toString();
+    String height = heightField.getText().toString();
+    String weight = weightField.getText().toString();
 
     if (creatingUser) {
       getUserRepository()
@@ -175,7 +179,7 @@ public class UserProfileActivity extends AppCompatActivity {
     weightField.setOnFocusChangeListener((v, hasFocus) -> {
       if (!hasFocus) {
         String text = weightField.getText().toString();
-        if (text != null && !text.equals("")) {
+        if (!text.equals("")) {
           weight = Integer.parseInt(text);
           if (height > 0) {
             bmiField.setText(Float.toString(calculateBMI(weight, height)));
@@ -187,7 +191,7 @@ public class UserProfileActivity extends AppCompatActivity {
     heightField.setOnFocusChangeListener((v, hasFocus) -> {
       if (!hasFocus) {
         String text = heightField.getText().toString();
-        if (text != null && !text.equals("")) {
+        if (!text.equals("")) {
           height = Integer.parseInt(text);
           if (weight > 0) {
             bmiField.setText(Float.toString(calculateBMI(weight, height)));
@@ -202,4 +206,14 @@ public class UserProfileActivity extends AppCompatActivity {
     return (a + b) / 2;
   }
 
+  private void initialiseViews() {
+    nameField = findViewById(R.id.nameField);
+    weightField = findViewById(R.id.weightField);
+    heightField = findViewById(R.id.heightField);
+    walkingPaceField = findViewById(R.id.walkingPaceField);
+    joggingPaceField = findViewById(R.id.joggingPaceField);
+    runningPaceField = findViewById(R.id.runningPaceField);
+    sprintingPaceField = findViewById(R.id.sprintingPaceField);
+    bmiField = findViewById(R.id.bmiField);
+  }
 }
