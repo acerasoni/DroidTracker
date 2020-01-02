@@ -9,7 +9,6 @@ import static com.ltm.runningtracker.util.Constants.DISTANCE;
 import static com.ltm.runningtracker.util.Constants.DISTANCE_UPDATE_ACTION;
 import static com.ltm.runningtracker.util.Constants.DURATION;
 import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
-import static com.ltm.runningtracker.util.Constants.RUN_ENDED;
 import static com.ltm.runningtracker.util.Constants.RUN_END_ACTION;
 import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
 import static com.ltm.runningtracker.util.Constants.TIME_UPDATE_ACTION;
@@ -44,14 +43,15 @@ import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Location Service class, responsible for requesting weather updates and feeding them to the LocationRepository.
- * It will switch to foreground service when run occurs.
+ * Location Service class, responsible for requesting weather updates and feeding them to the
+ * LocationRepository. It will switch to foreground service when run occurs.
  *
  * @see RunActivity
  *
- * It will start the Weather Service and control it via its lifecycle. This is one of the reasons why
- * LocationService extends LifecycleService. An additional reason deciding to extend LifecycleService
- * is to allow the Service to observe LiveData objects, which requires the observing class to be a LifecycleOwner.
+ * It will start the Weather Service and control it via its lifecycle. This is one of the reasons
+ * why LocationService extends LifecycleService. An additional reason deciding to extend
+ * LifecycleService is to allow the Service to observe LiveData objects, which requires the
+ * observing class to be a LifecycleOwner.
  */
 public class LocationService extends LifecycleService {
 
@@ -106,7 +106,7 @@ public class LocationService extends LifecycleService {
   @Override
   public boolean onUnbind(Intent intent) {
     // Determine is run is ongoing
-    if(!isUserRunning) {
+    if (!isUserRunning) {
       // Explicitly stop weather service
       stopService(new Intent(this, WeatherService.class));
       stopSelf();
@@ -243,9 +243,9 @@ public class LocationService extends LifecycleService {
       @Override
       protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-          Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
 
-          // Asynchronously tell activity that run has been saved
+        // Asynchronously tell activity that run has been saved
         Intent intent = new Intent();
         intent.setAction(RUN_END_ACTION);
         sendBroadcast(intent);
@@ -272,7 +272,8 @@ public class LocationService extends LifecycleService {
   }
 
   private Notification generateNotification() {
-    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    NotificationManager notificationManager = (NotificationManager) getSystemService(
+        NOTIFICATION_SERVICE);
     // Create the NotificationChannel, but only on API 26+ because
     // the NotificationChannel class is new and not in the support library
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

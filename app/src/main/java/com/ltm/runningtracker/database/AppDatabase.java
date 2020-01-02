@@ -12,7 +12,8 @@ import com.ltm.runningtracker.util.RunCoordinates;
 /**
  * Database class as defined in the Android Jetpack architectural standards
  *
- * @see <a href="https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942">Android Jetpack documentation</a>
+ * @see <a href="https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942">Android
+ * Jetpack documentation</a>
  */
 // Database instantiated in the app's constructor above
 @Database(entities = {Run.class, User.class}, version = 200, exportSchema = false)
@@ -32,5 +33,6 @@ public abstract class AppDatabase extends RoomDatabase {
   }
 
   public abstract RunDao runDao();
+
   public abstract UserDao userDao();
 }

@@ -18,7 +18,6 @@ import static com.ltm.runningtracker.util.Constants.HEIGHT;
 import static com.ltm.runningtracker.util.Constants.NAME;
 import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
 import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
-import static com.ltm.runningtracker.util.Constants.TYPE;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 import static com.ltm.runningtracker.util.Constants.WEIGHT;
 
@@ -29,7 +28,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.room.Ignore;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.model.Run;
@@ -41,12 +39,12 @@ import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
 /**
- * Content Provider which exposes access to the underlying Room database. It allows
- * 1. Insertion of new Runs and User objects
- * 2. Updating of Run and User objects
- * 3. Deletion of Run and User objects
+ * Content Provider which exposes access to the underlying Room database. It allows 1. Insertion of
+ * new Runs and User objects 2. Updating of Run and User objects 3. Deletion of Run and User
+ * objects
  *
  * It utilises a ContentProviderContract for its operations.
+ *
  * @see DroidProviderContract
  */
 public class DroidContentProvider extends ContentProvider {
@@ -193,6 +191,7 @@ public class DroidContentProvider extends ContentProvider {
 
   /**
    * This method handles the absence of some values via builder pattern.
+   *
    * @param contentValues containing Run data and meta-data
    * @return Run.Builder object able to construct a Run object on-the-fly
    */
@@ -222,10 +221,10 @@ public class DroidContentProvider extends ContentProvider {
   }
 
   /**
-   * Method's purpose similar to above, appropriately implemented for the User Model.
-   * see {@link #getParsedUserBuilder(ContentValues)}
+   * Method's purpose similar to above, appropriately implemented for the User Model. see {@link
+   * #getParsedUserBuilder(ContentValues)}
+   *
    * @param contentValues containing name, weight and height
-   * @return
    */
   private User.Builder getParsedUserBuilder(ContentValues contentValues) {
     return new User.Builder(contentValues.getAsString(NAME))

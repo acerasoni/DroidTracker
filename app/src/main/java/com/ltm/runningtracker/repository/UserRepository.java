@@ -17,8 +17,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.database.model.User;
 
 /**
- * Repository responsible for exposing, storing and modifying the user's LiveData object which
- * acts as cache to the database.
+ * Repository responsible for exposing, storing and modifying the user's LiveData object which acts
+ * as cache to the database.
  */
 public class UserRepository {
 
@@ -41,6 +41,7 @@ public class UserRepository {
 
   /**
    * Allows setting a new user asynchronously from a background thread.
+   *
    * @param user object to be set.
    */
   public void setUserAsync(User user) {
@@ -49,6 +50,7 @@ public class UserRepository {
 
   /**
    * Allows setting a new user synchronously from the UI thread.
+   *
    * @param user object to be set.
    */
   public void setUser(User user) {
@@ -61,6 +63,7 @@ public class UserRepository {
 
   /**
    * Will asynchronously delete the user. Can be safely called from a background thread.
+   *
    * @param context from which to call the content provider from
    */
   public void deleteUser(Context context) {
@@ -73,10 +76,6 @@ public class UserRepository {
   /**
    * This method is called from the UI thread. It will call the db asynchronously which will create
    * the User object and assign it to the user repository (cache) and database (memory)
-   * @param name
-   * @param weight
-   * @param height
-   * @param context
    */
   public void createUser(String name, int weight, int height, Context context) {
     ContentValues contentValues = new ContentValues();
@@ -90,10 +89,6 @@ public class UserRepository {
   /**
    * Will asynchronously create a new user object and insert it into the underlying Room database.
    * This method is called from the UI thread.
-   * @param name
-   * @param weight
-   * @param height
-   * @param context
    */
   public void updateUser(String name, int weight, int height, Context context) {
     // Update cache
@@ -114,8 +109,7 @@ public class UserRepository {
 
   /**
    * This method retrieves the user cursor from the database, if exists, and builds a user cache
-   * from memory.
-   * {@link #buildUserFromMemory(Cursor)}
+   * from memory. {@link #buildUserFromMemory(Cursor)}
    */
   @SuppressLint("Recycle")
   public void fetchUser() {
@@ -130,8 +124,6 @@ public class UserRepository {
   }
 
   /**
-   *
-   * @param cursor
    * @return User object built from the Cursor via Builder pattern
    */
   private User buildUserFromMemory(Cursor cursor) {

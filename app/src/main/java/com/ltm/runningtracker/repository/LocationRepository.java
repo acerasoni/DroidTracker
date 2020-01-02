@@ -22,12 +22,12 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * The LocationRepository is responsible for storing and exposing Location data, and updating it
- * by listening to LocationEngineCallback events.
+ * The LocationRepository is responsible for storing and exposing Location data, and updating it by
+ * listening to LocationEngineCallback events.
  *
  * Additionally, it provides the functionality of translating latitude and longitude coordinates
- * into a String representing the County, or as "No Man's Land." if no county is available for the given
- * location.
+ * into a String representing the County, or as "No Man's Land." if no county is available for the
+ * given location.
  *
  * Modification to the location object is synchronized with WeatherService's read of the same
  * location object. Although WeatherService does not update the value, we always want it to retrieve
@@ -106,9 +106,11 @@ public class LocationRepository implements LocationEngineCallback {
    * https://developer.android.com/training/location/display-address
    */
 
-  /**@see <a href="https://developer.android.com/training/location/display-address">Android Documentation on displaying addresses</a>
+  /**
    * @param location object
    * @return String representing County, or "No Man's Land" if no county available.
+   * @see <a href="https://developer.android.com/training/location/display-address">Android
+   * Documentation on displaying addresses</a>
    */
   public static String getCounty(Location location) {
     String city = null;

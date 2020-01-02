@@ -45,7 +45,6 @@ public class Constants {
   public static final String NAME = "name";
   public static final String WEIGHT = "weight";
   public static final String HEIGHT = "height";
-  public static final String TYPE = "type";
 
   public static final String DATE = "date";
   public static final String DISTANCE = "distance";

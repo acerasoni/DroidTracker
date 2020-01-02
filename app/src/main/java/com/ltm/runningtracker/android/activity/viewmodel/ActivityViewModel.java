@@ -37,9 +37,11 @@ import java.util.List;
  *
  * This coursework implements the Model-View-Controller pattern. In addition to being a ViewModel as
  * outlined above, this class also acts as the controller in this pattern. Methods tagged with
- * @observer are used by Activities to directly retrieve data. This tag requires to specify which Activities
- * access the method, and which repositories the methods depends on. The controller ultimately determines where the
- * data comes from (cache or asynchronous call to the Database), and in what form.
+ *
+ * @observer are used by Activities to directly retrieve data. This tag requires to specify which
+ * Activities access the method, and which repositories the methods depends on. The controller
+ * ultimately determines where the data comes from (cache or asynchronous call to the Database), and
+ * in what form.
  *
  * There are three available use cases in this class.
  *
@@ -203,11 +205,11 @@ public class ActivityViewModel extends ViewModel {
   public void saveUser(Context context, boolean creatingUser, String name, String weight,
       String height) {
     if (creatingUser) {
-        userRepository
-            .createUser(name.trim(), Integer.parseInt(weight.trim()),
-                Integer.parseInt(height.trim()), context);
-      } else {
-        userRepository.updateUser(name.trim(), Integer.parseInt(weight.trim()),
+      userRepository
+          .createUser(name.trim(), Integer.parseInt(weight.trim()),
+              Integer.parseInt(height.trim()), context);
+    } else {
+      userRepository.updateUser(name.trim(), Integer.parseInt(weight.trim()),
           Integer.parseInt(height.trim()), context);
     }
   }

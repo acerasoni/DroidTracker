@@ -25,7 +25,8 @@ public class RunTypeParser {
     }
 
     static {
-      for (RunTypeParser.RunTypeClassifier runTypeClassifier : RunTypeParser.RunTypeClassifier.values()) {
+      for (RunTypeParser.RunTypeClassifier runTypeClassifier : RunTypeParser.RunTypeClassifier
+          .values()) {
         map.put(runTypeClassifier.value, runTypeClassifier);
       }
     }

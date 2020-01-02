@@ -33,9 +33,11 @@ public class RunningTrackerApplication extends Application {
   }
 
   public static PropertyManager getPropertyManager() {
-    if(propertyManager == null) {
-      propertyManager = new PropertyManager(getAppContext().getResources().getString(R.string.app_properties));
-    } return propertyManager;
+    if (propertyManager == null) {
+      propertyManager = new PropertyManager(
+          getAppContext().getResources().getString(R.string.app_properties));
+    }
+    return propertyManager;
   }
 
   public static synchronized LocationRepository getLocationRepository() {

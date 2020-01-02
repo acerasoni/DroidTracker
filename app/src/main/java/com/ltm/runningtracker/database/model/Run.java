@@ -57,8 +57,8 @@ public class Run {
   }
 
   /**
-   * Builder pattern allows Model objects to be constructed in absence of some values, whilst at the same time
-   * requiring the essential ones via contructor.
+   * Builder pattern allows Model objects to be constructed in absence of some values, whilst at the
+   * same time requiring the essential ones via contructor.
    */
   public static class Builder {
 
@@ -78,7 +78,8 @@ public class Run {
     @SuppressLint("DefaultLocale")
     public Builder(long date, double distance, int duration) {
       Date obj = new Date(date);
-      @SuppressLint("SimpleDateFormat") DateFormat dateFormatter = new SimpleDateFormat("d MMM yyyy");
+      @SuppressLint("SimpleDateFormat") DateFormat dateFormatter = new SimpleDateFormat(
+          "d MMM yyyy");
       this.date = dateFormatter.format(obj);
 
       this.distance = distance;

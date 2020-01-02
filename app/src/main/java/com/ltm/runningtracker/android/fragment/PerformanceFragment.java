@@ -26,8 +26,8 @@ import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
 /**
- * Abstract Performance fragment extended by weather-specific fragments.
- * Behaviour between all child fragments is shared, as they all contain a ListView formatted in the same way. The only different
+ * Abstract Performance fragment extended by weather-specific fragments. Behaviour between all child
+ * fragments is shared, as they all contain a ListView formatted in the same way. The only different
  * is the input Cursor utilised to populate it.
  *
  * @see package com.ltm.runningtracker.android.fragment.impl
@@ -97,7 +97,8 @@ public abstract class PerformanceFragment extends Fragment {
       bundle.putInt(getResources().getString(R.string.run_id), runId);
 
       // Determine from which fragment so we can fetch the cursor from the right cache index
-      bundle.putInt(getResources().getString(R.string.from_fragment), PerformanceActivity.FRAGMENT_TO_ID.get(thisClass));
+      bundle.putInt(getResources().getString(R.string.from_fragment),
+          PerformanceActivity.FRAGMENT_TO_ID.get(thisClass));
 
       intent.putExtras(bundle);
       startActivityForResult(intent, BROWSE_RUN_REQUEST_CODE);

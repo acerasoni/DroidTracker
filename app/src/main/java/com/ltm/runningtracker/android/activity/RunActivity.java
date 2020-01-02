@@ -27,7 +27,6 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,14 +65,15 @@ import org.jetbrains.annotations.NotNull;
  * other data associated to the run are either fetched from third-party API's or computed
  * on-the-fly, and inserted in the database as columns of the run's row.
  *
- * When the run begins, the Location Service is turned into a foreground service as its purpose now changes.
- * Previously, it was required by the UI to display current location and weather. Now, it needs to track location
- * in the absence of activities. When the run ends, it will be reverted into a background service.
- * The reason for this design decision to avoid having two different location services.
+ * When the run begins, the Location Service is turned into a foreground service as its purpose now
+ * changes. Previously, it was required by the UI to display current location and weather. Now, it
+ * needs to track location in the absence of activities. When the run ends, it will be reverted into
+ * a background service. The reason for this design decision to avoid having two different location
+ * services.
  *
- * This Activity will bind to the service and determine if a run is occurring, and update its UI state accordingly.
- * To avoid wastage of resources, the service is
- * The Mapbox API has been setup following the official documentation guide.
+ * This Activity will bind to the service and determine if a run is occurring, and update its UI
+ * state accordingly. To avoid wastage of resources, the service is The Mapbox API has been setup
+ * following the official documentation guide.
  *
  * @see <a href="https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/location/LocationComponentOptionsActivity.java">
  * MapBox documentation</a>
@@ -303,8 +303,8 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   /**
-   * This implementation of a custom BroadcastReceiver allows the activity to react to
-   * time, distance and runEnd actions broadcasts sent by the Location service.
+   * This implementation of a custom BroadcastReceiver allows the activity to react to time,
+   * distance and runEnd actions broadcasts sent by the Location service.
    */
   private class RunUpdateReceiver extends BroadcastReceiver {
 

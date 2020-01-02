@@ -25,9 +25,9 @@ import java.util.List;
  * Repository responsible for storing and exposing a local cache of run objects. Additionally, it is
  * responsible of keeping its cache up-to-date and to flush/refresh it when and where appropriate.
  *
- * It does a best-effort attempt to retrieve and validate runs requested by ID and weather by the ViewModel.
- * 1. It checks the cache
- * 2. If not found, it pings to database and utilises a short living cache to communicate asynchronously with the views.
+ * It does a best-effort attempt to retrieve and validate runs requested by ID and weather by the
+ * ViewModel. 1. It checks the cache 2. If not found, it pings to database and utilises a short
+ * living cache to communicate asynchronously with the views.
  */
 public class RunRepository {
 
@@ -152,6 +152,7 @@ public class RunRepository {
 
   /**
    * Fetches run by id asynchronously. If found, populates the short living cache.
+   *
    * @param id of run
    * @param context with which to make database call
    */
@@ -207,12 +208,9 @@ public class RunRepository {
   }
 
   /**
-   * Calculates the average pace for all tagged runs.
-   * Return array will contain following values:
-   * [0] = walking pace, or null if no walks exist
-   * [1] = jogging pace, or null if no jogs exist
-   * [2] = running pace, or null if no runs exist
-   * [3] = sprinting pace, or null if no sprints exist
+   * Calculates the average pace for all tagged runs. Return array will contain following values:
+   * [0] = walking pace, or null if no walks exist [1] = jogging pace, or null if no jogs exist [2]
+   * = running pace, or null if no runs exist [3] = sprinting pace, or null if no sprints exist
    *
    * @param context with which to query the database.
    * @return Float[] as outlined above.

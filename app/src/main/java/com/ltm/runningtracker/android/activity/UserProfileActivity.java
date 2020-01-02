@@ -108,9 +108,8 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   /**
-   * This method will setup listeners to determine when the user clicks away from
-   * weight or height fields. It will then read the values off both fields, compute
-   * the BMI and display it below.
+   * This method will setup listeners to determine when the user clicks away from weight or height
+   * fields. It will then read the values off both fields, compute the BMI and display it below.
    */
   private void setupBmiListeners() {
     weightField.setOnFocusChangeListener((v, hasFocus) -> {

@@ -34,23 +34,26 @@ import com.ltm.runningtracker.android.service.LocationService;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This Activity presents the user with four buttons which allow him to navigate to the respective Run, Performance,
- * User Profile and Settings Activities.
+ * This Activity presents the user with four buttons which allow him to navigate to the respective
+ * Run, Performance, User Profile and Settings Activities.
  *
- * It will prompt the user for FINE_ACCESS location permission if not previously granted.
- * Then, it handles the following scenarios and adjusts its UI accordingly:
+ * It will prompt the user for FINE_ACCESS location permission if not previously granted. Then, it
+ * handles the following scenarios and adjusts its UI accordingly:
  *
- * - If no user has been setup, Run and Performance tabs are disabled
- * - If user is setup, but no runs exist, disable the Performance tab
+ * - If no user has been setup, Run and Performance tabs are disabled - If user is setup, but no
+ * runs exist, disable the Performance tab
  *
- * Additionally, when returning from an activity which modifies a record in the database, it will recompute its UI logic
- * according to the above scenarios. This is because the user could have been deleted, or all runs could have been erased.
+ * Additionally, when returning from an activity which modifies a record in the database, it will
+ * recompute its UI logic according to the above scenarios. This is because the user could have been
+ * deleted, or all runs could have been erased.
  *
- * It will start the Location service, which in turn starts the Weather service, and binds to them. However, it does not
- * utilise the binder to retrieve data; rather, it observes the LiveData objects modified by the service itself.
+ * It will start the Location service, which in turn starts the Weather service, and binds to them.
+ * However, it does not utilise the binder to retrieve data; rather, it observes the LiveData
+ * objects modified by the service itself.
  *
- * Once all activities unbind from the location service, this will be killed from the OS. However, this only occurs if the user
- * is not on a run, in which case it will keep running as a foreground service.
+ * Once all activities unbind from the location service, this will be killed from the OS. However,
+ * this only occurs if the user is not on a run, in which case it will keep running as a foreground
+ * service.
  */
 public class MainScreenActivity extends AppCompatActivity {
 

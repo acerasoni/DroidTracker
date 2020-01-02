@@ -20,8 +20,8 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This Activity holds the TabLayout and nested ViewPager which allow the user to navigate
- * in between weather fragments. It does not contain additional UI logic.
+ * This Activity holds the TabLayout and nested ViewPager which allow the user to navigate in
+ * between weather fragments. It does not contain additional UI logic.
  */
 public class PerformanceActivity extends AppCompatActivity {
 

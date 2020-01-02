@@ -77,3 +77,11 @@ l
 <app/src/main/java/com/ltm/runningtracker/util/Constants.java,9\1\91e87af6a86ca2cd387b14792ceaae505ac7f44b
 ‚
 Rapp/src/main/java/com/ltm/runningtracker/android/fragment/PerformanceFragment.java,0\2\02a08508fe2d55018cfd8cc0a879c8b05d3ee80c
+
+_app/src/main/java/com/ltm/runningtracker/android/fragment/impl/FreezingPerformanceFragment.java,c\4\c4334328791efaaac961a9c19928ff021b7655ac
+Š
+Zapp/src/main/java/com/ltm/runningtracker/android/fragment/impl/HotPerformanceFragment.java,d\e\de0e2b94aa1e880696360b01c8b526b990e3f20c
+‹
+[app/src/main/java/com/ltm/runningtracker/android/fragment/impl/MildPerformanceFragment.java,7\8\789cb2ac9774a7abf74fe437169187c419e0ee6b
+m
+=app/src/test/java/com/ltm/runningtracker/ExampleUnitTest.java,f\b\fbe0ea148bb21f2759f60d655edef9bd128c3090

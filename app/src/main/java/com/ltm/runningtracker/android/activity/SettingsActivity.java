@@ -25,9 +25,7 @@ import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 /**
  * This Activity allows the user to complete the following operations:
  *
- * 1. Delete user & all runs associated
- * 2. Delete all runs
- * 3. Delete runs only by weather type
+ * 1. Delete user & all runs associated 2. Delete all runs 3. Delete runs only by weather type
  */
 public class SettingsActivity extends AppCompatActivity {
 
@@ -94,11 +92,16 @@ public class SettingsActivity extends AppCompatActivity {
       runsButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
     }
 
-    enableButton(doFreezing, freezingButton, WeatherClassifier.FREEZING, new StringBuilder("/").append(FREEZING_STRING).toString());
-    enableButton(doCold, coldButton, WeatherClassifier.COLD, new StringBuilder("/").append(COLD_STRING).toString());
-    enableButton(doMild, mildButton, WeatherClassifier.MILD, new StringBuilder("/").append(MILD_STRING).toString());
-    enableButton(doWarm, warmButton, WeatherClassifier.WARM, new StringBuilder("/").append(WARM_STRING).toString());
-    enableButton(doHot, hotButton, WeatherClassifier.HOT, new StringBuilder("/").append(HOT_STRING).toString());
+    enableButton(doFreezing, freezingButton, WeatherClassifier.FREEZING,
+        new StringBuilder("/").append(FREEZING_STRING).toString());
+    enableButton(doCold, coldButton, WeatherClassifier.COLD,
+        new StringBuilder("/").append(COLD_STRING).toString());
+    enableButton(doMild, mildButton, WeatherClassifier.MILD,
+        new StringBuilder("/").append(MILD_STRING).toString());
+    enableButton(doWarm, warmButton, WeatherClassifier.WARM,
+        new StringBuilder("/").append(WARM_STRING).toString());
+    enableButton(doHot, hotButton, WeatherClassifier.HOT,
+        new StringBuilder("/").append(HOT_STRING).toString());
   }
 
   private void enableButton(boolean doRun, Button button,

@@ -18,12 +18,11 @@ import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 
 /**
- * This activity allows the user to browse details relating to a specific run.
- * He can then do one of the following:
+ * This activity allows the user to browse details relating to a specific run. He can then do one of
+ * the following:
  *
- * 1. Tag the run as a specific type (note that newly completed runs are 'untagged' by default)
- * 2. Modify the run's tag to another run type
- * 3. Delete the run altogether
+ * 1. Tag the run as a specific type (note that newly completed runs are 'untagged' by default) 2.
+ * Modify the run's tag to another run type 3. Delete the run altogether
  */
 public class BrowseRunDetailsActivity extends AppCompatActivity implements OnItemSelectedListener {
 
@@ -54,7 +53,8 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     hasTagBeenModified = false;
     runId = getIntent().getIntExtra(getResources().getString(R.string.run_id),
         -1);
-    int fromFragment = getIntent().getIntExtra(getResources().getString(R.string.from_fragment), -1);
+    int fromFragment = getIntent()
+        .getIntExtra(getResources().getString(R.string.from_fragment), -1);
     WeatherClassifier wc = WeatherClassifier.valueOf(fromFragment);
 
     // If the synchronous inspection of cache fails, make another effort to observe short living cache
@@ -100,6 +100,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
   /**
    * This method populates the UI with the details from the run in the Cursor.
+   *
    * @param cursor already moved to the correct row position
    */
   @SuppressLint({"SetTextI18n", "DefaultLocale"})
@@ -115,19 +116,24 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
       String runType = cursor.getString(3).toUpperCase();
       spinner.setSelection(RunTypeClassifier.valueOf(runType).getValue());
 
-      sb = new StringBuilder(Integer.toString((int) cursor.getFloat(4))).append(" ").append(getResources().getString(R.string.metres));
+      sb = new StringBuilder(Integer.toString((int) cursor.getFloat(4))).append(" ")
+          .append(getResources().getString(R.string.metres));
       distanceView.setText(sb.toString());
       durationView.setText(cursor.getString(5));
 
       weatherClassifier = WeatherClassifier.valueOf(cursor.getInt(6));
       weatherView.setText(ActivityViewModel.capitalizeFirstLetter(weatherClassifier.toString()));
 
-      sb = new StringBuilder(String.format(getResources().getString(R.string.two_decimals_format), cursor.getFloat(7))).append(getResources().getString(R.string.degrees_celsius));
+      sb = new StringBuilder(
+          String.format(getResources().getString(R.string.two_decimals_format), cursor.getFloat(7)))
+          .append(getResources().getString(R.string.degrees_celsius));
       temperatureView.setText(sb.toString());
 
       float pace = cursor.getFloat(9);
-      String paceString = String.format(getResources().getString(R.string.two_decimals_format), pace);
-      sb = new StringBuilder(paceString).append(" ").append(getResources().getString(R.string.kilometers_per_hour));
+      String paceString = String
+          .format(getResources().getString(R.string.two_decimals_format), pace);
+      sb = new StringBuilder(paceString).append(" ")
+          .append(getResources().getString(R.string.kilometers_per_hour));
       paceView.setText(sb.toString());
     });
 
