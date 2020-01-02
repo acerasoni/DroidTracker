@@ -1,12 +1,19 @@
 package com.ltm.runningtracker.util.parser;
 
+import static com.ltm.runningtracker.util.Constants.JOG_STRING;
+import static com.ltm.runningtracker.util.Constants.RUN_STRING;
+import static com.ltm.runningtracker.util.Constants.SPRINT_STRING;
+import static com.ltm.runningtracker.util.Constants.UNTAGGED_STRING;
+import static com.ltm.runningtracker.util.Constants.WALK_STRING;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class RunTypeParser {
 
   public enum RunTypeClassifier {
-    UNTAGGED("untagged", 0), WALK("walk", 1), JOG("jog", 2), RUN("run", 3), SPRINT("sprint", 4);
+    UNTAGGED(UNTAGGED_STRING, 0), WALK(WALK_STRING, 1), JOG(JOG_STRING, 2),
+    RUN(RUN_STRING, 3), SPRINT(SPRINT_STRING, 4);
 
     private String runTypeDefinition;
     private int value;

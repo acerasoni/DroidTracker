@@ -3,12 +3,10 @@ package com.ltm.runningtracker.repository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 
-import android.content.Intent;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.R;
-import com.ltm.runningtracker.android.service.WeatherService;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
@@ -72,7 +70,7 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
           .build();
       return weatherClient;
     } catch (WeatherProviderInstantiationException e) {
-      Log.d("Exception:", e.getMessage());
+      Log.e("Weather Repository: ", e.getMessage());
     }
     return null;
   }

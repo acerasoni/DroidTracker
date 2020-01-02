@@ -34,6 +34,12 @@ public class Constants {
   public static final String WARM_STRING = "warm";
   public static final String HOT_STRING = "hot";
 
+  public static final String UNTAGGED_STRING = "untagged";
+  public static final String WALK_STRING = "walk";
+  public static final String JOG_STRING = "jog";
+  public static final String RUN_STRING = "run";
+  public static final String SPRINT_STRING = "sprint";
+
   public static final String UNEXPECTED_VALUE = "Unexpected value: ";
 
   public static final String NAME = "name";
@@ -42,7 +48,7 @@ public class Constants {
   public static final String TYPE = "type";
 
   public static final String DATE = "date";
-  public static final String DISTANCE= "distance";
+  public static final String DISTANCE = "distance";
   public static final String DURATION = "duration";
   public static final String TEMPERATURE = "temperature";
   public static final String RUN_COORDINATES = "runCoordinates";

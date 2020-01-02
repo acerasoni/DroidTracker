@@ -4,6 +4,7 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel.capitalizeFirstLetter;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TYPE;
+import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -232,7 +233,7 @@ public class RunRepository {
 
           default:
             throw new IllegalStateException(
-                "Unexpected value: " + RunTypeClassifier.valueOf(c.getString(3).toUpperCase()));
+                UNEXPECTED_VALUE + RunTypeClassifier.valueOf(c.getString(3).toUpperCase()));
         }
       } while (c.moveToNext());
     }

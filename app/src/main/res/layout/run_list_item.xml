@@ -57,14 +57,15 @@
     android:layout_marginTop="28dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@drawable/jog_image" />
+    app:srcCompat="@drawable/jog_image"
+    android:contentDescription="@string/runningimage" />
   <TextView
     android:id="@+id/textView22"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:layout_marginTop="14dp"
-    android:text="Type:"
+    android:text="@string/type_formatted"
     android:textColor="#000000"
     app:layout_constraintStart_toEndOf="@+id/divider2"
     app:layout_constraintTop_toBottomOf="@+id/textView25" />
@@ -74,7 +75,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:layout_marginTop="8dp"
-    android:text="Date:"
+    android:text="@string/date_formatted"
     android:textColor="#000000"
     app:layout_constraintStart_toEndOf="@+id/imageView"
     app:layout_constraintTop_toTopOf="parent" />
@@ -84,7 +85,7 @@
     android:layout_height="19dp"
     android:layout_marginStart="16dp"
     android:layout_marginTop="14dp"
-    android:text="Location:"
+    android:text="@string/location_formatted"
     android:textColor="#000000"
     app:layout_constraintStart_toEndOf="@+id/imageView"
     app:layout_constraintTop_toBottomOf="@+id/textView23" />
@@ -94,7 +95,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:layout_marginTop="8dp"
-    android:text="Pace:"
+    android:text="@string/pace_formatted"
     android:textColor="#000000"
     app:layout_constraintStart_toEndOf="@+id/divider2"
     app:layout_constraintTop_toTopOf="parent" />
@@ -123,7 +124,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="10dp"
-    android:text="km/h"
+    android:text="@string/kilometers_per_hour"
     android:textSize="12sp"
     app:layout_constraintStart_toEndOf="@+id/pace"
     app:layout_constraintTop_toTopOf="parent" />

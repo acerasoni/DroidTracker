@@ -2,6 +2,7 @@ package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.repository.LocationRepository.getCounty;
 import static com.ltm.runningtracker.util.Constants.BEGIN_RUN_TO_DISPLAY;
+import static com.ltm.runningtracker.util.Constants.DISTANCE;
 import static com.ltm.runningtracker.util.Constants.DISTANCE_UPDATE_ACTION;
 import static com.ltm.runningtracker.util.Constants.END_RUN;
 import static com.ltm.runningtracker.util.Constants.FETCHING_LOCATION;
@@ -294,7 +295,7 @@ public class RunActivity extends AppCompatActivity implements
           ));
           break;
         case DISTANCE_UPDATE_ACTION:
-          double distance = intent.getDoubleExtra(getResources().getString(R.string.distance), -1L);
+          double distance = intent.getDoubleExtra(DISTANCE, -1L);
           int formattedDistance = (int) distance;
           StringBuilder sb = new StringBuilder(Integer.toString(formattedDistance)).append(" ").append(getResources().getString(R.string.metres));
           distanceView.setText(sb.toString());

@@ -20,7 +20,7 @@
       android:layout_marginStart="8dp"
       android:layout_marginTop="8dp"
       android:layout_marginBottom="8dp"
-      android:text="Performance"
+      android:text="@string/performance"
       android:textColor="#FFFFFF"
       android:textSize="30sp"
       app:layout_constraintBottom_toBottomOf="parent"
@@ -33,7 +33,7 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="8dp"
       android:layout_marginBottom="3dp"
-      android:text="by weather"
+      android:text="@string/by_weather"
       android:textColor="#FFFFFF"
       android:textSize="18sp"
       app:layout_constraintBottom_toBottomOf="@+id/textView6"
@@ -61,26 +61,26 @@
         android:id="@+id/tabItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Freezing" />
+        android:text="@string/freezing" />
       <com.google.android.material.tabs.TabItem
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cold" />
+        android:text="@string/cold" />
 
       <com.google.android.material.tabs.TabItem
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mild" />
+        android:text="@string/mild" />
 
       <com.google.android.material.tabs.TabItem
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Warm" />
+        android:text="@string/warm" />
       <com.google.android.material.tabs.TabItem
         android:id="@+id/tabItem2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hot" />
+        android:text="@string/hot" />
     </com.google.android.material.tabs.TabLayout>
 
   </androidx.viewpager.widget.ViewPager>

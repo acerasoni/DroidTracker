@@ -22,7 +22,6 @@
   <string name="request">request</string>
   <string name="time">time</string>
   <string name="data_unavailable">No data available</string>
-  <string name="distance">distance</string>
   <string name="from_fragment">fromFragment</string>
   <string name="metres">metres</string>
   <string name="run">Run</string>
@@ -44,8 +43,48 @@
     <item>Sprint</item>
   </string-array>
 
+  <!-- Layout -->
 
-
-  <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="delete_run">Delete run</string>
+  <string name="save">Save</string>
+  <string name="pace">Pace</string>
+  <string name="duration">Duration</string>
+  <string name="distance">Distance</string>
+  <string name="type">Type</string>
+  <string name="date">Date</string>
+  <string name="temperature">Temperature</string>
+  <string name="menu">Menu</string>
+  <string name="location">Location</string>
+  <string name="weather">Weather</string>
+  <string name="user_profile">user profile</string>
+  <string name="settings">settings</string>
+  <string name="settings_camel_case">Settings</string>
+  <string name="by_weather">by weather</string>
+  <string name="performance">Performance</string>
+  <string name="map">Map</string>
+  <string name="delete_hot_runs">Delete hot runs</string>
+  <string name="delete_warm_runs">Delete warm runs</string>
+  <string name="delete_mild_runs">Delete mild runs</string>
+  <string name="delete_cold_runs">Delete cold runs</string>
+  <string name="delete_freezing_runs">Delete freezing runs</string>
+  <string name="delete_user_and_all_runs_associated">Delete User (And All Runs Associated)</string>
+  <string name="user">User</string>
+  <string name="runs">Runs</string>
+  <string name="delete_all_runs">Delete all runs</string>
+  <string name="weight_in_kg">Weight in kg:</string>
+  <string name="height_in_cm">Height in cm:</string>
+  <string name="bmi">BMI:</string>
+  <string name="name">Name:</string>
+  <string name="profile">Profile</string>
+  <string name="average_pace">Average Pace</string>
+  <string name="walking">Walking:</string>
+  <string name="running">Running:</string>
+  <string name="jogging">Jogging:</string>
+  <string name="sprinting">Sprinting:</string>
+  <string name="type_formatted">Type:</string>
+  <string name="date_formatted">Date:</string>
+  <string name="location_formatted">Location:</string>
+  <string name="pace_formatted">Pace:</string>
+  <string name="runningimage">RunningImage</string>
 </resources>

@@ -94,10 +94,7 @@ public class UserRepository {
       c[0] = getAppContext().getContentResolver()
           .query(USER_URI, null, null, null, null, null);
       if (c[0] != null && c[0].getCount() > 0) {
-        Log.d("User", "found");
         setUserAsync(buildUserFromMemory(c[0]));
-      } else {
-        Log.d("User", "not found");
       }
     });
   }
