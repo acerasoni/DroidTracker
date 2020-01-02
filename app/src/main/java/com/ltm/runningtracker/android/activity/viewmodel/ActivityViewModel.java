@@ -58,9 +58,7 @@ public class ActivityViewModel extends ViewModel {
     weatherLiveData = weatherRepository.getLiveDataWeather();
   }
 
-  /*
-   * MVVM exposure of live data objects
-   */
+  // <-- Model-View-ViewModel compliant exposure of LiveData objects -->
 
   public LiveData<Location> getLocation() {
     return locationLiveData;
@@ -86,9 +84,7 @@ public class ActivityViewModel extends ViewModel {
     return weatherLiveData;
   }
 
-  /*
-   *        MVC
-   */
+  // <-- Implementation of Model-View-Control pattern -->
 
   @Controller(usedBy = {RunActivity.class}, repositoriesAccessed = {
       LocationRepository.class})
@@ -212,6 +208,8 @@ public class ActivityViewModel extends ViewModel {
     getWeatherRepository();
     getRunRepository();
   }
+
+  // <-- Util functions -->
 
   public static String capitalizeFirstLetter(String original) {
     if (original == null || original.length() == 0) {

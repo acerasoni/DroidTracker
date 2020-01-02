@@ -4,18 +4,21 @@ import static com.ltm.runningtracker.android.contentprovider.DroidProviderContra
 
 import android.content.UriMatcher;
 
-public class DroidUriMatcher {
+class DroidUriMatcher {
 
-  public static final UriMatcher URI_MATCHER;
+  // <-- Purposely package private. Avoids other modules having access to the logic with which
+  // the content provider matches URI's, and access to the UriMatcher object -->
 
-  public static final int RUNS = 0;
-  public static final int FREEZING_RUNS = 1;
-  public static final int COLD_RUNS = 2;
-  public static final int MILD_RUNS = 3;
-  public static final int WARM_RUNS = 4;
-  public static final int HOT_RUNS = 5;
-  public static final int RUN_BY_ID = 6;
-  public static final int USER = 7;
+  static final UriMatcher URI_MATCHER;
+
+  static final int RUNS = 0;
+  static final int FREEZING_RUNS = 1;
+  static final int COLD_RUNS = 2;
+  static final int MILD_RUNS = 3;
+  static final int WARM_RUNS = 4;
+  static final int HOT_RUNS = 5;
+  static final int RUN_BY_ID = 6;
+  static final int USER = 7;
 
   static {
     URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);

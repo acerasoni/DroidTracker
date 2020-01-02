@@ -111,6 +111,8 @@
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="1"
+          android:drawableStart="@drawable/jog_image"
+          android:drawablePadding="-32sp"
           android:text="@string/run"
           tools:ignore="NestedWeights" />
         <Button
@@ -118,6 +120,7 @@
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="1"
+          android:drawableStart="@drawable/graph_image"
           android:text="@string/performance" />
       </LinearLayout>
       <LinearLayout
@@ -129,12 +132,15 @@
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="1"
+          android:drawableStart="@drawable/profile_image"
           android:text="@string/user_profile" />
         <Button
           android:id="@+id/settingsButton"
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="1"
+          android:drawableStart="@drawable/settings_image"
+          android:drawablePadding="-32sp"
           android:text="@string/settings" />
       </LinearLayout>
     </LinearLayout>

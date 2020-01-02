@@ -99,6 +99,7 @@ public abstract class PerformanceFragment extends Fragment {
     return view;
   }
 
+  @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == BROWSE_RUN_REQUEST_CODE) {
       if (resultCode == RESULT_OK) {

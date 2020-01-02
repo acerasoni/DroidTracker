@@ -259,7 +259,7 @@ public class LocationService extends LifecycleService {
       getLocationRepository().getLocationEngine()
           .requestLocationUpdates(locationEngineRequest, getLocationRepository(), null);
     } catch (SecurityException e) {
-      Log.d("Security exception: ", e.toString());
+      Log.e("Security exception: ", e.toString());
     }
   }
 
