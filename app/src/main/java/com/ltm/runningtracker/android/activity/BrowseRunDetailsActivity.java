@@ -77,7 +77,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
   public void onDelete(View v) {
     browseDetailsActivityViewModel.deleteRun(weatherClassifier, this, runId);
-    finish();
+    onSave(null);
   }
 
   public void onItemSelected(AdapterView<?> parent, View view,
