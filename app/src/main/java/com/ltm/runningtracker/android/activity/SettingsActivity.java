@@ -2,6 +2,11 @@ package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
+import static com.ltm.runningtracker.util.Constants.COLD_STRING;
+import static com.ltm.runningtracker.util.Constants.FREEZING_STRING;
+import static com.ltm.runningtracker.util.Constants.HOT_STRING;
+import static com.ltm.runningtracker.util.Constants.MILD_STRING;
+import static com.ltm.runningtracker.util.Constants.WARM_STRING;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -81,11 +86,11 @@ public class SettingsActivity extends AppCompatActivity {
       runsButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
     }
 
-    enableButton(doFreezing, freezingButton, WeatherClassifier.FREEZING, "/freezing");
-    enableButton(doCold, coldButton, WeatherClassifier.COLD, "/cold");
-    enableButton(doMild, mildButton, WeatherClassifier.MILD, "/mild");
-    enableButton(doWarm, warmButton, WeatherClassifier.WARM, "/warm");
-    enableButton(doHot, hotButton, WeatherClassifier.HOT, "/hot");
+    enableButton(doFreezing, freezingButton, WeatherClassifier.FREEZING, new StringBuilder("/").append(FREEZING_STRING).toString());
+    enableButton(doCold, coldButton, WeatherClassifier.COLD, new StringBuilder("/").append(COLD_STRING).toString());
+    enableButton(doMild, mildButton, WeatherClassifier.MILD, new StringBuilder("/").append(MILD_STRING).toString());
+    enableButton(doWarm, warmButton, WeatherClassifier.WARM, new StringBuilder("/").append(WARM_STRING).toString());
+    enableButton(doHot, hotButton, WeatherClassifier.HOT, new StringBuilder("/").append(HOT_STRING).toString());
   }
 
   private void enableButton(boolean doRun, Button button,

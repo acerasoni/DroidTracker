@@ -46,7 +46,7 @@ public class UserProfileActivity extends AppCompatActivity {
     setupBmiListeners();
 
     creatingUser =
-        getIntent().getIntExtra("request", -1) != MainScreenActivity.USER_MODIFICATION_REQUEST;
+        getIntent().getIntExtra(getResources().getString(R.string.request), -1) != MainScreenActivity.USER_MODIFICATION_REQUEST;
 
     if (!creatingUser) {
       populateViews();
@@ -78,9 +78,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
   private void populatePace(TextView textView, Float pace, StringBuilder sb) {
     if (pace == null) {
-      textView.setText("No data available");
+      textView.setText(getResources().getString(R.string.data_unavailable));
     } else {
-      sb = new StringBuilder(String.format("%.2f", pace)).append(" km/h");
+      sb = new StringBuilder(String.format(getResources().
+          getString(R.string.two_decimals_format), pace)).
+          append(" ").append(getResources().getString(R.string.kilometers_per_hour));
       textView.setText(sb.toString());
     }
   }

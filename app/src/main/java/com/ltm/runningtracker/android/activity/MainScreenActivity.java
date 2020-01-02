@@ -1,5 +1,13 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.util.Constants.FETCHING_LOCATION;
+import static com.ltm.runningtracker.util.Constants.FETCHING_TEMPERATURE;
+import static com.ltm.runningtracker.util.Constants.RUN_FIRST;
+import static com.ltm.runningtracker.util.Constants.SETUP_REQUIRED;
+import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
+import static com.ltm.runningtracker.util.Constants.USER_CREATED;
+import static com.ltm.runningtracker.util.Constants.USER_DELETED;
+
 import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -68,12 +76,12 @@ public class MainScreenActivity extends AppCompatActivity {
     switch (requestCode) {
       case USER_CREATION_REQUEST:
         if (resultCode == Activity.RESULT_OK) {
-          Toast.makeText(this, "User created", Toast.LENGTH_LONG).show();
+          Toast.makeText(this, USER_CREATED, Toast.LENGTH_LONG).show();
         }
         break;
       case SETTINGS_MODIFICATION_REQUEST:
         if (resultCode == Activity.RESULT_OK) {
-          Toast.makeText(this, "User deleted", Toast.LENGTH_LONG).show();
+          Toast.makeText(this, USER_DELETED, Toast.LENGTH_LONG).show();
         }
         break;
       case RUN_ACTIVITY_REQUEST:
@@ -82,7 +90,8 @@ public class MainScreenActivity extends AppCompatActivity {
         }
         break;
       default:
-        throw new IllegalStateException("Unexpected value: " + requestCode);
+        throw new IllegalStateException(
+            UNEXPECTED_VALUE + requestCode);
     }
 
   }
@@ -113,7 +122,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
   private void disableButtons() {
     View.OnClickListener sharedListener = v -> {
-      Toast.makeText(getApplicationContext(), "User setup required",
+      Toast.makeText(getApplicationContext(), SETUP_REQUIRED,
           Toast.LENGTH_LONG).show();
     };
     runButton.setOnClickListener(sharedListener);
@@ -134,7 +143,7 @@ public class MainScreenActivity extends AppCompatActivity {
     userProfileButton
         .setOnClickListener(v -> {
           Intent intent = new Intent(context, UserProfileActivity.class);
-          intent.putExtra("request", USER_MODIFICATION_REQUEST);
+          intent.putExtra(getResources().getString(R.string.request), USER_MODIFICATION_REQUEST);
           startActivity(intent);
         });
   }
@@ -144,7 +153,7 @@ public class MainScreenActivity extends AppCompatActivity {
       enableRun();
     } else {
       View.OnClickListener runListener = v -> Toast
-          .makeText(getApplicationContext(), "Please wait - fetching location",
+          .makeText(getApplicationContext(), FETCHING_LOCATION,
               Toast.LENGTH_LONG).show();
       runButton.setOnClickListener(runListener);
       performanceButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
@@ -157,7 +166,7 @@ public class MainScreenActivity extends AppCompatActivity {
         enablePerformance();
       } else {
         View.OnClickListener runListener = v -> Toast
-            .makeText(getApplicationContext(), "Go for a run first",
+            .makeText(getApplicationContext(), RUN_FIRST,
                 Toast.LENGTH_LONG).show();
         performanceButton.setOnClickListener(runListener);
         performanceButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
@@ -187,8 +196,8 @@ public class MainScreenActivity extends AppCompatActivity {
     weatherTextField = findViewById(R.id.weatherField);
     locationTextField = findViewById(R.id.locationField);
 
-    weatherTextField.setText("Fetching temperature...");
-    locationTextField.setText("Fetching location...");
+    weatherTextField.setText(FETCHING_TEMPERATURE);
+    locationTextField.setText(FETCHING_LOCATION);
 
     settingsButton.setOnClickListener(v -> {
       startActivityForResult(new Intent(context, SettingsActivity.class),
@@ -203,8 +212,11 @@ public class MainScreenActivity extends AppCompatActivity {
 
       //If it is fetched at a later stage from DB, enable
       mainActivityViewModel.getUser().observe(this, user -> {
-        if(user != null) enableButtons();
-        else disableButtons();
+        if (user != null) {
+          enableButtons();
+        } else {
+          disableButtons();
+        }
       });
     } else {
       enableButtons();
@@ -239,7 +251,9 @@ public class MainScreenActivity extends AppCompatActivity {
 
     // observe temperature object
     mainActivityViewModel.getWeather().observe(this, weather -> {
-      weatherTextField.setText(weather.temperature.getTemp() + " °C");
+      StringBuilder sb = new StringBuilder(Float.toString(weather.temperature.getTemp()))
+          .append(" ").append(getResources().getString(R.string.degrees_celsius));
+      weatherTextField.setText(sb.toString());
       // Location and weather now available
       isLocationAndWeatherAvailable = true;
       if (mainActivityViewModel.doesUserExist()) {

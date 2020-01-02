@@ -47,9 +47,9 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     initialiseViews();
 
     hasTagBeenModified = false;
-    runId = getIntent().getIntExtra("runId",
+    runId = getIntent().getIntExtra(getResources().getString(R.string.run_id),
         -1);
-    int fromFragment = getIntent().getIntExtra("fromFragment", -1);
+    int fromFragment = getIntent().getIntExtra(getResources().getString(R.string.from_fragment), -1);
     WeatherClassifier wc = WeatherClassifier.valueOf(fromFragment);
 
     browseDetailsActivityViewModel.getShortLivingCache().observe(this, cursor -> {
@@ -98,26 +98,27 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     runOnUiThread(() -> {
       StringBuilder sb;
 
-      activityView.setText("Run #" + runId);
+      sb = new StringBuilder(getResources().getString(R.string.run)).append(" #").append(runId);
+      activityView.setText(sb.toString());
       locationView.setText(c.getString(1));
       dateView.setText(c.getString(2));
 
       String runType = c.getString(3).toUpperCase();
       spinner.setSelection(RunTypeClassifier.valueOf(runType).getValue());
 
-      sb = new StringBuilder(Integer.toString((int) c.getFloat(4))).append(" metres");
+      sb = new StringBuilder(Integer.toString((int) c.getFloat(4))).append(" ").append(getResources().getString(R.string.metres));
       distanceView.setText(sb.toString());
       durationView.setText(c.getString(5));
 
       weatherClassifier = WeatherClassifier.valueOf(c.getInt(6));
       weatherView.setText(ActivityViewModel.capitalizeFirstLetter(weatherClassifier.toString()));
 
-      sb = new StringBuilder(String.format("%.2f", c.getFloat(7))).append("°C");
+      sb = new StringBuilder(String.format(getResources().getString(R.string.two_decimals_format), c.getFloat(7))).append(getResources().getString(R.string.degrees_celsius));
       temperatureView.setText(sb.toString());
 
       float pace = c.getFloat(9);
-      String paceString = String.format("%.2f", pace);
-      sb = new StringBuilder(paceString).append(" km/h");
+      String paceString = String.format(getResources().getString(R.string.two_decimals_format), pace);
+      sb = new StringBuilder(paceString).append(" ").append(getResources().getString(R.string.kilometers_per_hour));
       paceView.setText(sb.toString());
     });
 

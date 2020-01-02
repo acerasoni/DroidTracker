@@ -3,6 +3,9 @@ package com.ltm.runningtracker.repository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
+import static com.ltm.runningtracker.util.Constants.HEIGHT;
+import static com.ltm.runningtracker.util.Constants.NAME;
+import static com.ltm.runningtracker.util.Constants.WEIGHT;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -60,9 +63,9 @@ public class UserRepository {
    */
   public void createUser(String name, int weight, int height, Context context) {
     ContentValues contentValues = new ContentValues();
-    contentValues.put("name", name);
-    contentValues.put("weight", weight);
-    contentValues.put("height", height);
+    contentValues.put(NAME, name);
+    contentValues.put(WEIGHT, weight);
+    contentValues.put(HEIGHT, height);
     AsyncTask.execute(
         () -> context.getContentResolver().insert(USER_URI, contentValues));
   }
@@ -74,9 +77,9 @@ public class UserRepository {
     user.getValue().height = height;
 
     ContentValues contentValues = new ContentValues();
-    contentValues.put("name", name);
-    contentValues.put("weight", weight);
-    contentValues.put("height", height);
+    contentValues.put(NAME, name);
+    contentValues.put(WEIGHT, weight);
+    contentValues.put(HEIGHT, height);
 
     // Asynchronously update DB
     AsyncTask.execute(

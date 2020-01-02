@@ -32,7 +32,6 @@ public class WeatherService extends Service {
   public void onCreate() {
     super.onCreate();
 
-    Log.d("Weather Service: ", "onCreate");
     weatherClient = buildWeatherClient();
     lock = LocationRepository.getLock();
 
@@ -80,7 +79,6 @@ public class WeatherService extends Service {
 
   @Override
   public void onDestroy() {
-    Log.d("Weather Service", "onDestroy");
     scheduledExecutorService.shutdownNow();
     super.onDestroy();
   }
@@ -93,19 +91,16 @@ public class WeatherService extends Service {
 
   @Override
   public void onRebind(Intent intent) {
-    Log.d("Weather Service", "onUnbind");
     super.onRebind(intent);
   }
 
   @Override
   public boolean onUnbind(Intent intent) {
-    Log.d("g53mdp", "service onUnbind");
     return super.onUnbind(intent);
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    Log.d("g53mdp", "service onStartCommand");
     return Service.START_STICKY;
   }
 

@@ -1,5 +1,11 @@
 package com.ltm.runningtracker.util.parser;
 
+import static com.ltm.runningtracker.util.Constants.COLD_STRING;
+import static com.ltm.runningtracker.util.Constants.FREEZING_STRING;
+import static com.ltm.runningtracker.util.Constants.HOT_STRING;
+import static com.ltm.runningtracker.util.Constants.MILD_STRING;
+import static com.ltm.runningtracker.util.Constants.WARM_STRING;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class WeatherParser {
 
   public enum WeatherClassifier {
-    FREEZING("freezing", 0), COLD("cold", 1), MILD("mild", 2), WARM("warm", 3), HOT("hot", 4);
+    FREEZING(FREEZING_STRING, 0), COLD(COLD_STRING, 1), MILD(MILD_STRING, 2), WARM(WARM_STRING, 3), HOT(HOT_STRING, 4);
 
     private String weatherDefinition;
     private int value;

@@ -70,7 +70,6 @@ public abstract class PerformanceFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    Log.d("Create View", "Called");
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.performance_fragment, container, false);
     listView = view.findViewById(R.id.runList);
@@ -88,10 +87,10 @@ public abstract class PerformanceFragment extends Fragment {
       TextView idView = viewGroup.findViewById(R.id.id);
 
       int runId = Integer.parseInt(idView.getText().toString());
-      bundle.putInt("runId", runId);
+      bundle.putInt(getResources().getString(R.string.run_id), runId);
 
       // Determine from which fragment so we can fetch the cursor from the right cache index
-      bundle.putInt("fromFragment", PerformanceActivity.FRAGMENT_TO_ID.get(thisClass));
+      bundle.putInt(getResources().getString(R.string.from_fragment), PerformanceActivity.FRAGMENT_TO_ID.get(thisClass));
 
       intent.putExtras(bundle);
       startActivityForResult(intent, BROWSE_RUN_REQUEST_CODE);

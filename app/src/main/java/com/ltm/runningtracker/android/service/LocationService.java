@@ -3,6 +3,16 @@ package com.ltm.runningtracker.android.service;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
+import static com.ltm.runningtracker.util.Constants.CHANNEL_ID;
+import static com.ltm.runningtracker.util.Constants.DATE;
+import static com.ltm.runningtracker.util.Constants.DISTANCE;
+import static com.ltm.runningtracker.util.Constants.DISTANCE_UPDATE_ACTION;
+import static com.ltm.runningtracker.util.Constants.DURATION;
+import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
+import static com.ltm.runningtracker.util.Constants.RUN_ENDED;
+import static com.ltm.runningtracker.util.Constants.RUN_END_ACTION;
+import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
+import static com.ltm.runningtracker.util.Constants.TIME_UPDATE_ACTION;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -68,7 +78,6 @@ public class LocationService extends LifecycleService {
 
   @Override
   public void onDestroy() {
-    Log.d("Weather Service", "onDestroy");
     super.onDestroy();
   }
 
@@ -81,14 +90,11 @@ public class LocationService extends LifecycleService {
 
   @Override
   public void onRebind(Intent intent) {
-    Log.d("Weather Service", "onUnbind");
     super.onRebind(intent);
   }
 
   @Override
   public boolean onUnbind(Intent intent) {
-    Log.d("g53mdp", "service onUnbind");
-
     // Determine is run is ongoing
     if(!isUserRunning) {
       // Explicitly stop weather service
@@ -102,7 +108,6 @@ public class LocationService extends LifecycleService {
   @Override
   public int onStartCommand(@NotNull Intent intent, int flags, int startId) {
     super.onStartCommand(intent, flags, startId);
-    Log.d("g53mdp", "service onStartCommand");
     return Service.START_STICKY;
   }
 
@@ -161,10 +166,10 @@ public class LocationService extends LifecycleService {
       time++;
       Intent intent = new Intent();
       Bundle bundle = new Bundle();
-      bundle.putInt("time", time);
+      bundle.putInt(getResources().getString(R.string.time), time);
       intent.putExtras(bundle);
 
-      intent.setAction("com.ltm.runningtracker.TIME_UPDATE");
+      intent.setAction(TIME_UPDATE_ACTION);
       sendBroadcast(intent);
 
     };
@@ -183,10 +188,10 @@ public class LocationService extends LifecycleService {
 
           Intent intent = new Intent();
           Bundle bundle = new Bundle();
-          bundle.putDouble("distance", distance);
+          bundle.putDouble(DISTANCE, distance);
           intent.putExtras(bundle);
 
-          intent.setAction("com.ltm.runningtracker.DISTANCE_UPDATE");
+          intent.setAction(DISTANCE_UPDATE_ACTION);
           sendBroadcast(intent);
 
           currentLocation = location;
@@ -218,11 +223,11 @@ public class LocationService extends LifecycleService {
         byte[] runCoordinates = RunCoordinates
             .toByteArray(new RunCoordinates(startLat, startLon, endLat, endLon));
 
-        contentValues.put("runCoordinates", runCoordinates);
-        contentValues.put("temperature", temperature);
-        contentValues.put("duration", time);
-        contentValues.put("distance", distance);
-        contentValues.put("date", System.currentTimeMillis());
+        contentValues.put(RUN_COORDINATES, runCoordinates);
+        contentValues.put(TEMPERATURE, temperature);
+        contentValues.put(DURATION, time);
+        contentValues.put(DISTANCE, distance);
+        contentValues.put(DATE, System.currentTimeMillis());
         getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
         return null;
       }
@@ -234,7 +239,7 @@ public class LocationService extends LifecycleService {
 
           // Asynchronously tell activity that run has been saved
         Intent intent = new Intent();
-        intent.setAction("com.ltm.runningtracker.RUN_ENDED");
+        intent.setAction(RUN_END_ACTION);
         sendBroadcast(intent);
       }
     }
@@ -263,10 +268,10 @@ public class LocationService extends LifecycleService {
     // Create the NotificationChannel, but only on API 26+ because
     // the NotificationChannel class is new and not in the support library
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      CharSequence name = "channel name";
+      CharSequence name = "Channel name";
       String description = "channel description";
       int importance = NotificationManager.IMPORTANCE_DEFAULT;
-      NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
+      NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
       channel.setDescription(description);
       // Register the channel with the system; you can't change the importance
       // or other notification behaviors after this
@@ -280,9 +285,9 @@ public class LocationService extends LifecycleService {
     Intent actionIntent = new Intent(this, RunActivity.class);
     PendingIntent pendingActionIntent = PendingIntent.getService(this, 0, actionIntent, 0);
 
-    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "CHANNEL_ID")
+    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_launcher_background)
-        .setContentTitle("Running service")
+        .setContentTitle("On a run")
         .setContentText("Return to map")
         .setContentIntent(pendingIntent)
         .addAction(R.drawable.ic_launcher_foreground, "Message Service", pendingActionIntent)

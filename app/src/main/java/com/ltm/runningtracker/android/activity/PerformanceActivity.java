@@ -1,5 +1,7 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
+
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -69,7 +71,7 @@ public class PerformanceActivity extends AppCompatActivity {
           fragment = new HotPerformanceFragment();
           break;
         default:
-          throw new IllegalStateException("Unexpected value: " + position);
+          throw new IllegalStateException(UNEXPECTED_VALUE + position);
       }
 
       return fragment;
@@ -87,15 +89,15 @@ public class PerformanceActivity extends AppCompatActivity {
       // Generate title based on item position
       switch (position) {
         case 0:
-          return "Freezing";
+          return getResources().getString(R.string.freezing);
         case 1:
-          return "Cold";
+          return getResources().getString(R.string.cold);
         case 2:
-          return "Mild";
+          return getResources().getString(R.string.mild);
         case 3:
-          return "Warm";
+          return getResources().getString(R.string.warm);
         case 4:
-          return "Hot";
+          return getResources().getString(R.string.hot);
         default:
           return null;
       }

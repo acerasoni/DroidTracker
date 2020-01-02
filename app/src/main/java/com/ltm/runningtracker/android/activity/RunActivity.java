@@ -1,6 +1,20 @@
 package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.repository.LocationRepository.getCounty;
+import static com.ltm.runningtracker.util.Constants.BEGIN_RUN_TO_DISPLAY;
+import static com.ltm.runningtracker.util.Constants.DISTANCE_UPDATE_ACTION;
+import static com.ltm.runningtracker.util.Constants.END_RUN;
+import static com.ltm.runningtracker.util.Constants.FETCHING_LOCATION;
+import static com.ltm.runningtracker.util.Constants.FETCHING_TIME;
+import static com.ltm.runningtracker.util.Constants.PERMISSION_NOT_GRANTED;
+import static com.ltm.runningtracker.util.Constants.REQUESTING_PERMISSION;
+import static com.ltm.runningtracker.util.Constants.RUN_ENDED;
+import static com.ltm.runningtracker.util.Constants.RUN_END_ACTION;
+import static com.ltm.runningtracker.util.Constants.RUN_STARTED;
+import static com.ltm.runningtracker.util.Constants.START_RUN;
+import static com.ltm.runningtracker.util.Constants.TIME_FORMAT;
+import static com.ltm.runningtracker.util.Constants.TIME_UPDATE_ACTION;
+import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -91,8 +105,8 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   public void onLocationComponentClick() {
     if (locationComponent.getLastKnownLocation() != null) {
-      Toast.makeText(this, "Lat" +
-          locationComponent.getLastKnownLocation().getLatitude() + "Lon"
+      Toast.makeText(this, getResources().getString(R.string.lat) +
+          locationComponent.getLastKnownLocation().getLatitude() + getResources().getString(R.string.lon)
           + locationComponent.getLastKnownLocation().getLongitude(), Toast.LENGTH_LONG).show();
     }
   }
@@ -115,7 +129,7 @@ public class RunActivity extends AppCompatActivity implements
 
   @Override
   public void onExplanationNeeded(List<String> permissionsToExplain) {
-    Toast.makeText(this, "Requesting user permission", Toast.LENGTH_LONG).show();
+    Toast.makeText(this, REQUESTING_PERMISSION, Toast.LENGTH_LONG).show();
   }
 
   @Override
@@ -123,7 +137,7 @@ public class RunActivity extends AppCompatActivity implements
     if (granted) {
       mapboxMap.getStyle(style -> enableLocationComponent(style));
     } else {
-      Toast.makeText(this, "User permission not granted", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, PERMISSION_NOT_GRANTED, Toast.LENGTH_LONG).show();
       finish();
     }
   }
@@ -201,19 +215,20 @@ public class RunActivity extends AppCompatActivity implements
 
     // Non run-related info can be observed straight away
     runActivityViewModel.getWeather().observe(this, weather -> {
-      temperatureView.setText(weather.temperature.getTemp() + "°C");
+      StringBuilder sb = new StringBuilder(Float.toString(weather.temperature.getTemp())).append(getResources().getString(R.string.degrees_celsius));
+      temperatureView.setText(sb.toString());
     });
 
-    toggleRunButton.setText("Fetching location...");
+    toggleRunButton.setText(FETCHING_LOCATION);
   }
 
   private void initialiseBroadcastReceiver() {
     runUpdateReceiver = new RunUpdateReceiver();
 
     runUpdateFilter = new IntentFilter();
-    runUpdateFilter.addAction("com.ltm.runningtracker.DISTANCE_UPDATE");
-    runUpdateFilter.addAction("com.ltm.runningtracker.TIME_UPDATE");
-    runUpdateFilter.addAction("com.ltm.runningtracker.RUN_ENDED");
+    runUpdateFilter.addAction(DISTANCE_UPDATE_ACTION);
+    runUpdateFilter.addAction(TIME_UPDATE_ACTION);
+    runUpdateFilter.addAction(RUN_END_ACTION);
   }
 
   @SuppressWarnings({"MissingPermission"})
@@ -270,26 +285,27 @@ public class RunActivity extends AppCompatActivity implements
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
       switch (Objects.requireNonNull(action)) {
-        case "com.ltm.runningtracker.TIME_UPDATE":
-          int time = intent.getIntExtra("time", -1);
-          durationView.setText(String.format("%02d min, %02d sec",
+        case TIME_UPDATE_ACTION:
+          int time = intent.getIntExtra(getResources().getString(R.string.time), -1);
+          durationView.setText(String.format(TIME_FORMAT,
               TimeUnit.SECONDS.toMinutes(time),
               TimeUnit.SECONDS.toSeconds(time) -
                   TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
           ));
           break;
-        case "com.ltm.runningtracker.DISTANCE_UPDATE":
-          double distance = intent.getDoubleExtra("distance", -1L);
+        case DISTANCE_UPDATE_ACTION:
+          double distance = intent.getDoubleExtra(getResources().getString(R.string.distance), -1L);
           int formattedDistance = (int) distance;
-          distanceView.setText(formattedDistance + " metres");
+          StringBuilder sb = new StringBuilder(Integer.toString(formattedDistance)).append(" ").append(getResources().getString(R.string.metres));
+          distanceView.setText(sb.toString());
           break;
-        case "com.ltm.runningtracker.RUN_ENDED":
+        case RUN_END_ACTION:
           AppCompatActivity a = (AppCompatActivity) activity;
           a.setResult(RESULT_OK);
           a.finish();
           break;
         default:
-          throw new IllegalStateException("Unexpected value: " + Objects.requireNonNull(action));
+          throw new IllegalStateException(UNEXPECTED_VALUE + Objects.requireNonNull(action));
       }
     }
   }
@@ -302,17 +318,17 @@ public class RunActivity extends AppCompatActivity implements
     @Override
     public void onServiceConnected(ComponentName className,
         IBinder service) {
-      Log.d("Bound", "b");
       // We've bound to LocalService, cast the IBinder and get LocalService instance
       LocationServiceBinder binder = (LocationServiceBinder) service;
 
       // Determine if user is running
       isRunning = binder.isUserRunning();
       if (!isRunning) {
-        durationView.setText("Begin run to display progress");
+        durationView.setText(BEGIN_RUN_TO_DISPLAY);
       } else {
-        distanceView.setText(binder.getDistance() + " metres");
-        durationView.setText("Fetching time...");
+        StringBuilder sb = new StringBuilder(binder.getDistance()).append(" ").append(getResources().getString(R.string.metres));
+        distanceView.setText(sb.toString());
+        durationView.setText(FETCHING_TIME);
       }
       setButtonText(isRunning);
 
@@ -337,14 +353,14 @@ public class RunActivity extends AppCompatActivity implements
     }
 
     private String determineText(boolean isRunning) {
-      return isRunning ? "Run started" : "Run ended";
+      return isRunning ? RUN_STARTED : RUN_ENDED;
     }
 
     private void setButtonText(boolean isRunning) {
       if (isRunning) {
-        toggleRunButton.setText("End run");
+        toggleRunButton.setText(END_RUN);
       } else {
-        toggleRunButton.setText("Start run");
+        toggleRunButton.setText(START_RUN);
       }
     }
   };

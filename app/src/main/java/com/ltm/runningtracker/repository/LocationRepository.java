@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.repository;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
+import static com.ltm.runningtracker.util.Constants.NO_TERRITORY;
 import static java.lang.String.format;
 
 import android.location.Address;
@@ -44,14 +45,11 @@ public class LocationRepository implements LocationEngineCallback {
   @Override
   public void onSuccess(Object result) {
     Location lastLocation = ((LocationEngineResult) result).getLastLocation();
-    Log.d("Locationrep: ",
-        "onLocationRetrieved " + Objects.requireNonNull(lastLocation).toString());
     setLocation(lastLocation);
   }
 
   @Override
   public void onFailure(@NonNull Exception exception) {
-    Log.d("Location Repository: ", Objects.requireNonNull(exception.getMessage()));
   }
 
   // Expose locationMutableLiveData as livedata object to make it immutable from outside the class
@@ -105,7 +103,7 @@ public class LocationRepository implements LocationEngineCallback {
           // In this sample, get just a single address.
           1);
       if ((address == null) || (address.size() == 0)) {
-        city = "No man's land.";
+        city = NO_TERRITORY;
       } else {
         city = address.get(0).getSubAdminArea();
       }

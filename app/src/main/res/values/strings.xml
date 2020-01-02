@@ -15,6 +15,26 @@
   <string name="title_activity_performance_type_selector">PerformanceTypeSelectorActivity</string>
   <string name="title_activity_weather_performance">WeatherPerformanceActivity</string>
   <string name="title_activity_edit_bmi">EditBmiActivity</string>
+  <string name="two_decimals_format">%.2f</string>
+  <string name="degrees_celsius">°C</string>
+  <string name="kilometers_per_hour">km/h</string>
+  <string name="run_id">runId</string>
+  <string name="request">request</string>
+  <string name="time">time</string>
+  <string name="data_unavailable">No data available</string>
+  <string name="distance">distance</string>
+  <string name="from_fragment">fromFragment</string>
+  <string name="metres">metres</string>
+  <string name="run">Run</string>
+
+  <string name="freezing">Freezing</string>
+  <string name="cold">Cold</string>
+  <string name="mild">Mild</string>
+  <string name="warm">Warm</string>
+  <string name="hot">Hot</string>
+
+  <string name="lat">Lat</string>
+  <string name="lon">Lon</string>
 
   <string-array name="activity_types">
     <item>Untagged</item>
@@ -23,6 +43,8 @@
     <item>Run</item>
     <item>Sprint</item>
   </string-array>
+
+
 
   <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
