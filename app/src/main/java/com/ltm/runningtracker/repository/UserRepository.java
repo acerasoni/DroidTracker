@@ -1,8 +1,8 @@
 package com.ltm.runningtracker.repository;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
+import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
-import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -45,6 +45,13 @@ public class UserRepository {
 
   public void flushCache() {
     user.postValue(null);
+  }
+
+  public void deleteUser(Context context) {
+    AsyncTask.execute(() -> {
+      context.getContentResolver().delete(USER_URI, null, null);
+      getUserRepository().flushCache();
+    });
   }
 
   /**
@@ -101,6 +108,5 @@ public class UserRepository {
     return new User.Builder(name).withWeight(weight)
         .withHeight(height).build();
   }
-
 
 }

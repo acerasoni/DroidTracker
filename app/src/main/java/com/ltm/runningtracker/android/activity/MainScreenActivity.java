@@ -36,6 +36,7 @@ public class MainScreenActivity extends AppCompatActivity {
   private Button runButton;
   private Button performanceButton;
   private Button userProfileButton;
+  private Button settingsButton;
 
   private ServiceConnection serviceConnection;
   private Context context = this;
@@ -44,53 +45,13 @@ public class MainScreenActivity extends AppCompatActivity {
   private boolean mBound;
   private boolean isLocationAndWeatherAvailable;
 
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main_screen);
-    mainActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     initialiseViews();
     requestPermission();
-  }
-
-
-  private void setup() {
-    // Initialise repositories
-    mainActivityViewModel.initRepos();
-
-    // Start weather and location service
-    // No need to bind because no communication is required - just observing objects
-    // Acts as a callback
-    Intent locationIntent = new Intent(this, LocationService.class);
-    startService(locationIntent);
-    serviceConnection = new ServiceConnection() {
-      @Override
-      public void onServiceConnected(ComponentName name, IBinder service) {
-        mBound = true;
-      }
-
-      @Override
-      public void onServiceDisconnected(ComponentName name) {
-        mBound = false;
-      }
-    };
-
-    bindService(locationIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-    // observe location object
-    mainActivityViewModel.getCounty().observe(this, county -> locationTextField.setText(county));
-
-    // observe temperature object
-    mainActivityViewModel.getWeather().observe(this, weather -> {
-      weatherTextField.setText(weather.temperature.getTemp() + " °C");
-      // Location and weather now available
-      isLocationAndWeatherAvailable = true;
-      if (mainActivityViewModel.doesUserExist()) {
-        enableRun();
-      }
-    });
   }
 
   @Override
@@ -98,21 +59,6 @@ public class MainScreenActivity extends AppCompatActivity {
     super.onDestroy();
     if (mBound) {
       unbindService(serviceConnection);
-    }
-  }
-
-  private void setupButtons() {
-    // If user does not exist in cache
-    if (!mainActivityViewModel.doesUserExist()) {
-      disableButtons();
-
-      //If it is fetched at a later stage from DB, enable
-      mainActivityViewModel.getUser().observe(this, user -> {
-        if(user != null) enableButtons();
-        else disableButtons();
-      });
-    } else {
-      enableButtons();
     }
   }
 
@@ -152,6 +98,17 @@ public class MainScreenActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode,
       @NotNull String[] permissions, @NotNull int[] grantResults) {
     setup();
+  }
+
+  private void requestPermission() {
+    if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this,
+          new String[]{permission.ACCESS_FINE_LOCATION},
+          0);
+    } else {
+      setup();
+    }
   }
 
   private void disableButtons() {
@@ -221,30 +178,74 @@ public class MainScreenActivity extends AppCompatActivity {
   }
 
   private void initialiseViews() {
+    mainActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
+
     runButton = findViewById(R.id.runButton);
     performanceButton = findViewById(R.id.performanceButton);
-    Button settingsButton = findViewById(R.id.settingsButton);
+    settingsButton = findViewById(R.id.settingsButton);
     userProfileButton = findViewById(R.id.userProfileButton);
     weatherTextField = findViewById(R.id.weatherField);
     locationTextField = findViewById(R.id.locationField);
 
     weatherTextField.setText("Fetching temperature...");
     locationTextField.setText("Fetching location...");
+
     settingsButton.setOnClickListener(v -> {
       startActivityForResult(new Intent(context, SettingsActivity.class),
           SETTINGS_MODIFICATION_REQUEST);
     });
   }
 
-  public void requestPermission() {
-    if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(this,
-          new String[]{permission.ACCESS_FINE_LOCATION},
-          0);
+  private void setupButtons() {
+    // If user does not exist in cache
+    if (!mainActivityViewModel.doesUserExist()) {
+      disableButtons();
+
+      //If it is fetched at a later stage from DB, enable
+      mainActivityViewModel.getUser().observe(this, user -> {
+        if(user != null) enableButtons();
+        else disableButtons();
+      });
     } else {
-      setup();
+      enableButtons();
     }
+  }
+
+  private void setup() {
+    // Initialise repositories
+    mainActivityViewModel.initRepos();
+
+    // Start weather and location service
+    // No need to bind because no communication is required - just observing objects
+    // Acts as a callback
+    Intent locationIntent = new Intent(this, LocationService.class);
+    startService(locationIntent);
+    serviceConnection = new ServiceConnection() {
+      @Override
+      public void onServiceConnected(ComponentName name, IBinder service) {
+        mBound = true;
+      }
+
+      @Override
+      public void onServiceDisconnected(ComponentName name) {
+        mBound = false;
+      }
+    };
+
+    bindService(locationIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+    // observe location object
+    mainActivityViewModel.getCounty().observe(this, county -> locationTextField.setText(county));
+
+    // observe temperature object
+    mainActivityViewModel.getWeather().observe(this, weather -> {
+      weatherTextField.setText(weather.temperature.getTemp() + " °C");
+      // Location and weather now available
+      isLocationAndWeatherAvailable = true;
+      if (mainActivityViewModel.doesUserExist()) {
+        enableRun();
+      }
+    });
   }
 
 }

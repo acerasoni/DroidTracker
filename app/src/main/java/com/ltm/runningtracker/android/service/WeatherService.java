@@ -67,6 +67,17 @@ public class WeatherService extends Service {
             TimeUnit.SECONDS);
   }
 
+  // No need to use callbacks as the worker thread updating our temperature client is already implemented
+  // we just call it periodically. Activities observe temperature object
+  public class WeatherServiceBinder extends Binder implements IInterface {
+
+    @Override
+    public IBinder asBinder() {
+      return this;
+    }
+
+  }
+
   @Override
   public void onDestroy() {
     Log.d("Weather Service", "onDestroy");
@@ -103,17 +114,6 @@ public class WeatherService extends Service {
   public void onTaskRemoved(Intent intent) {
     stopSelf();
     super.onTaskRemoved(intent);
-  }
-
-  // No need to use callbacks as the worker thread updating our temperature client is already implemented
-  // we just call it periodically. Activities observe temperature object
-  public class WeatherServiceBinder extends Binder implements IInterface {
-
-    @Override
-    public IBinder asBinder() {
-      return this;
-    }
-
   }
 
 }

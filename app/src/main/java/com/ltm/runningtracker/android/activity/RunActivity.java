@@ -84,54 +84,7 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   public void onMapReady(@NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    mapboxMap.setStyle(Style.LIGHT, style -> enableLocationComponent(style));
-  }
-
-  @SuppressWarnings({"MissingPermission"})
-  private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-    // Check if permissions are enabled and if not request
-    if (PermissionsManager.areLocationPermissionsGranted(this)) {
-
-      // Create and customize the LocationComponent's options
-      LocationComponentOptions customLocationComponentOptions = LocationComponentOptions
-          .builder(this)
-          .elevation(5)
-          .accuracyAlpha(.6f)
-          .accuracyColor(Color.RED)
-          .build();
-
-      // Get an instance of the component
-      locationComponent = mapboxMap.getLocationComponent();
-
-      LocationComponentActivationOptions locationComponentActivationOptions =
-          LocationComponentActivationOptions.builder(this, loadedMapStyle)
-              .locationComponentOptions(customLocationComponentOptions)
-              // utilising the repository's location engine, hence no redundancy
-              .locationEngine(runActivityViewModel.getLocationEngine())
-              .build();
-
-      // Activate with options
-      locationComponent.activateLocationComponent(locationComponentActivationOptions);
-
-      // Enable to make component visible
-      locationComponent.setLocationComponentEnabled(true);
-
-      // Set the component's camera mode
-      locationComponent.setCameraMode(CameraMode.TRACKING, 3, 15.0, null, null, null);
-
-      // Set the component's render mode
-      locationComponent.setRenderMode(RenderMode.COMPASS);
-
-      // Add the location icon click listener
-      locationComponent.addOnLocationClickListener(this);
-
-      // Add the camera tracking listener. Fires if the map camera is manually moved.
-      locationComponent.addOnCameraTrackingChangedListener(this);
-
-    } else {
-      permissionsManager = new PermissionsManager(this);
-      permissionsManager.requestLocationPermissions(this);
-    }
+    mapboxMap.setStyle(Style.LIGHT, this::enableLocationComponent);
   }
 
   @SuppressWarnings({"MissingPermission"})
@@ -174,7 +127,6 @@ public class RunActivity extends AppCompatActivity implements
       finish();
     }
   }
-
 
   @Override
   protected void onResume() {
@@ -225,6 +177,121 @@ public class RunActivity extends AppCompatActivity implements
   public void onLowMemory() {
     super.onLowMemory();
     mapView.onLowMemory();
+  }
+
+  private void setupMaxbox(Bundle savedInstanceState) {
+    Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+    mapView = findViewById(R.id.mapView);
+    mapView.onCreate(savedInstanceState);
+    mapView.getMapAsync(this);
+  }
+
+  private void initialiseViews() {
+    runActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
+    countyView = findViewById(R.id.countyView);
+    durationView = findViewById(R.id.timeView);
+    temperatureView = findViewById(R.id.temperatureView);
+    distanceView = findViewById(R.id.distanceView);
+    toggleRunButton = findViewById(R.id.toggleRunButton);
+
+    // Non run-related info can be observed straight away
+    runActivityViewModel.getLocation().observe(this, location -> {
+      countyView.setText(getCounty(location));
+    });
+
+    // Non run-related info can be observed straight away
+    runActivityViewModel.getWeather().observe(this, weather -> {
+      temperatureView.setText(weather.temperature.getTemp() + "°C");
+    });
+
+    toggleRunButton.setText("Fetching location...");
+  }
+
+  private void initialiseBroadcastReceiver() {
+    runUpdateReceiver = new RunUpdateReceiver();
+
+    runUpdateFilter = new IntentFilter();
+    runUpdateFilter.addAction("com.ltm.runningtracker.DISTANCE_UPDATE");
+    runUpdateFilter.addAction("com.ltm.runningtracker.TIME_UPDATE");
+    runUpdateFilter.addAction("com.ltm.runningtracker.RUN_ENDED");
+  }
+
+  @SuppressWarnings({"MissingPermission"})
+  private void enableLocationComponent(@NonNull Style loadedMapStyle) {
+    // Check if permissions are enabled and if not request
+    if (PermissionsManager.areLocationPermissionsGranted(this)) {
+
+      // Create and customize the LocationComponent's options
+      LocationComponentOptions customLocationComponentOptions = LocationComponentOptions
+          .builder(this)
+          .elevation(5)
+          .accuracyAlpha(.6f)
+          .accuracyColor(Color.RED)
+          .build();
+
+      // Get an instance of the component
+      locationComponent = mapboxMap.getLocationComponent();
+
+      LocationComponentActivationOptions locationComponentActivationOptions =
+          LocationComponentActivationOptions.builder(this, loadedMapStyle)
+              .locationComponentOptions(customLocationComponentOptions)
+              // utilising the repository's location engine, hence no redundancy
+              .locationEngine(runActivityViewModel.getLocationEngine())
+              .build();
+
+      // Activate with options
+      locationComponent.activateLocationComponent(locationComponentActivationOptions);
+
+      // Enable to make component visible
+      locationComponent.setLocationComponentEnabled(true);
+
+      // Set the component's camera mode
+      locationComponent.setCameraMode(CameraMode.TRACKING, 3, 15.0, null, null, null);
+
+      // Set the component's render mode
+      locationComponent.setRenderMode(RenderMode.COMPASS);
+
+      // Add the location icon click listener
+      locationComponent.addOnLocationClickListener(this);
+
+      // Add the camera tracking listener. Fires if the map camera is manually moved.
+      locationComponent.addOnCameraTrackingChangedListener(this);
+
+    } else {
+      permissionsManager = new PermissionsManager(this);
+      permissionsManager.requestLocationPermissions(this);
+    }
+  }
+
+  private class RunUpdateReceiver extends BroadcastReceiver {
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      String action = intent.getAction();
+      switch (Objects.requireNonNull(action)) {
+        case "com.ltm.runningtracker.TIME_UPDATE":
+          int time = intent.getIntExtra("time", -1);
+          durationView.setText(String.format("%02d min, %02d sec",
+              TimeUnit.SECONDS.toMinutes(time),
+              TimeUnit.SECONDS.toSeconds(time) -
+                  TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
+          ));
+          break;
+        case "com.ltm.runningtracker.DISTANCE_UPDATE":
+          double distance = intent.getDoubleExtra("distance", -1L);
+          int formattedDistance = (int) distance;
+          distanceView.setText(formattedDistance + " metres");
+          break;
+        case "com.ltm.runningtracker.RUN_ENDED":
+          AppCompatActivity a = (AppCompatActivity) activity;
+          a.setResult(RESULT_OK);
+          a.finish();
+          break;
+        default:
+          throw new IllegalStateException("Unexpected value: " + Objects.requireNonNull(action));
+      }
+    }
   }
 
   /**
@@ -281,73 +348,5 @@ public class RunActivity extends AppCompatActivity implements
       }
     }
   };
-
-  private void setupMaxbox(Bundle savedInstanceState) {
-    Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-    mapView = findViewById(R.id.mapView);
-    mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(this);
-  }
-
-  private void initialiseViews() {
-    runActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
-    countyView = findViewById(R.id.countyView);
-    durationView = findViewById(R.id.timeView);
-    temperatureView = findViewById(R.id.temperatureView);
-    distanceView = findViewById(R.id.distanceView);
-    toggleRunButton = findViewById(R.id.toggleRunButton);
-
-    // Non run-related info can be observed straight away
-    runActivityViewModel.getLocation().observe(this, location -> {
-      countyView.setText(getCounty(location));
-    });
-
-    // Non run-related info can be observed straight away
-    runActivityViewModel.getWeather().observe(this, weather -> {
-      temperatureView.setText(weather.temperature.getTemp() + "°C");
-    });
-
-    toggleRunButton.setText("Fetching location...");
-  }
-
-  private void initialiseBroadcastReceiver() {
-    runUpdateReceiver = new RunUpdateReceiver();
-
-    runUpdateFilter = new IntentFilter();
-    runUpdateFilter.addAction("com.ltm.runningtracker.DISTANCE_UPDATE");
-    runUpdateFilter.addAction("com.ltm.runningtracker.TIME_UPDATE");
-    runUpdateFilter.addAction("com.ltm.runningtracker.RUN_ENDED");
-  }
-
-  private class RunUpdateReceiver extends BroadcastReceiver {
-
-    @SuppressLint({"SetTextI18n", "DefaultLocale"})
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      String action = intent.getAction();
-      switch (Objects.requireNonNull(action)) {
-        case "com.ltm.runningtracker.TIME_UPDATE":
-          int time = intent.getIntExtra("time", -1);
-          durationView.setText(String.format("%02d min, %02d sec",
-              TimeUnit.SECONDS.toMinutes(time),
-              TimeUnit.SECONDS.toSeconds(time) -
-                  TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
-          ));
-          break;
-        case "com.ltm.runningtracker.DISTANCE_UPDATE":
-          double distance = intent.getDoubleExtra("distance", -1L);
-          int formattedDistance = (int) distance;
-          distanceView.setText(formattedDistance + " metres");
-          break;
-        case "com.ltm.runningtracker.RUN_ENDED":
-          AppCompatActivity a = (AppCompatActivity) activity;
-          a.setResult(RESULT_OK);
-          a.finish();
-          break;
-        default:
-          throw new IllegalStateException("Unexpected value: " + Objects.requireNonNull(action));
-      }
-    }
-  }
 
 }

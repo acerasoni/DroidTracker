@@ -1,7 +1,6 @@
 package com.ltm.runningtracker.android.contentprovider;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.COLD_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.FREEZING_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.HOT_RUNS;
@@ -21,15 +20,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Ignore;
-import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
-import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
-import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
+import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
 public class DroidContentProvider extends ContentProvider {
@@ -161,7 +159,6 @@ public class DroidContentProvider extends ContentProvider {
     // Number of rows updated
     return 1;
   }
-
 
   @Nullable
   @Override

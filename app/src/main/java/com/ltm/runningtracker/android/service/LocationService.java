@@ -49,7 +49,7 @@ public class LocationService extends LifecycleService {
 
   // Time
   private int time;
-  ScheduledExecutorService timeScheduledExecutorService;
+  private ScheduledExecutorService timeScheduledExecutorService;
 
   private ContentValues contentValues;
 
@@ -120,11 +120,6 @@ public class LocationService extends LifecycleService {
       return this;
     }
 
-    public LocationService getService() {
-      // Return this instance of LocalService so clients can call public methods
-      return LocationService.this;
-    }
-
     public boolean isUserRunning() {
       return isUserRunning;
     }
@@ -149,7 +144,7 @@ public class LocationService extends LifecycleService {
 
   }
 
-  public void onRunStart() {
+  private void onRunStart() {
 
     // Convert to foreground
 
@@ -198,7 +193,7 @@ public class LocationService extends LifecycleService {
         });
   }
 
-  public void onRunEnd() {
+  private void onRunEnd() {
 
     // Reconvert to background
 

@@ -1,13 +1,21 @@
 package com.ltm.runningtracker.repository;
 
+import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
+import static com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel.capitalizeFirstLetter;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
+import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +57,34 @@ public class RunRepository {
     return shortLivingCache;
   }
 
+  public boolean doRunsExist(Context context) {
+    Cursor c;
+
+    // Check cache
+    for (LiveData m : runCursors) {
+      // Iterate all cached cursors to check there aren't any cached runs
+      c = ((Cursor) m.getValue());
+      if (c != null && c.moveToFirst()) {
+        return true;
+      }
+    }
+
+    // Check DB
+    // Necessary as run cursors are cached only when looking at performance
+    c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
+    if (c != null && c.moveToFirst()) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public void deleteRuns(Context context) {
+    AsyncTask.execute(() -> {
+      context.getContentResolver().delete(RUNS_URI, null, null);
+      getRunRepository().flushCache();
+    });
+  }
 
   public boolean doRunsExistByWeather(Context context, WeatherClassifier weatherClassifier) {
     Cursor c = getRunsSync(weatherClassifier);
@@ -103,6 +139,108 @@ public class RunRepository {
 
     // Return
     return c;
+  }
+
+  @SuppressLint("DefaultLocale")
+  public void fetchRunAsyncById(int id, Context context) {
+    Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + id);
+    Cursor c = context.getContentResolver().query(customUri, null, null, null, null);
+
+    if (c != null) {
+      // Move cursor to position
+      c.moveToFirst();
+
+      // Set short living cache to cursor
+      getRunRepository().populateShortLivingCache(c);
+    }
+
+  }
+
+  public void deleteRun(WeatherClassifier weatherClassifier, Context context, int id) {
+    // Flush cache
+    getRunRepository().flushCacheByWeather(weatherClassifier);
+
+    // DB
+    Uri uri = Uri
+        .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + id);
+    AsyncTask.execute(() -> {
+      context.getContentResolver().delete(uri, null, null);
+
+      // Refresh cache
+      getRunRepository().getRunsAsync(context, weatherClassifier);
+    });
+  }
+
+  public void updateTypeOfRun(int id, int pos, Context context) {
+    //UPDATE DB
+    Uri uri = Uri
+        .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + id);
+    ContentValues contentValues = new ContentValues();
+    String newType = capitalizeFirstLetter(RunTypeClassifier.valueOf(pos).toString());
+    contentValues.put("type", newType);
+    AsyncTask.execute(() -> context.getContentResolver().update(uri, contentValues, null, null));
+  }
+
+  public void deleteRunsByType(Uri uri, Context context, WeatherClassifier weatherClassifier) {
+    // Update cache
+    getRunRepository().flushCacheByWeather(weatherClassifier);
+
+    AsyncTask.execute(() -> {
+      // Update DB
+      context.getContentResolver().delete(uri, null, null);
+      ((AppCompatActivity) context).finish();
+    });
+  }
+
+  public Float[] calculatateAveragePaces(Context context) {
+    Float walkingPace = null;
+    Float joggingPace = null;
+    Float runningPace = null;
+    Float sprintingPace = null;
+
+    Cursor c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
+    if (c != null && c.moveToFirst()) {
+      do {
+        switch (RunTypeClassifier.valueOf(c.getString(3).toUpperCase())) {
+          case UNTAGGED:
+            break;
+          case WALK:
+            if (walkingPace == null) {
+              walkingPace = c.getFloat(9);
+            }
+            walkingPace = calculateAverage(walkingPace, c.getFloat(9));
+            break;
+          case JOG:
+            if (joggingPace == null) {
+              joggingPace = c.getFloat(9);
+            }
+            joggingPace = calculateAverage(joggingPace, c.getFloat(9));
+            break;
+          case RUN:
+            if (runningPace == null) {
+              runningPace = c.getFloat(9);
+            }
+            runningPace = calculateAverage(runningPace, c.getFloat(9));
+            break;
+          case SPRINT:
+            if (sprintingPace == null) {
+              sprintingPace = c.getFloat(9);
+            }
+            sprintingPace = calculateAverage(sprintingPace, c.getFloat(9));
+            break;
+
+          default:
+            throw new IllegalStateException(
+                "Unexpected value: " + RunTypeClassifier.valueOf(c.getString(3).toUpperCase()));
+        }
+      } while (c.moveToNext());
+    }
+
+    return new Float[]{walkingPace, joggingPace, runningPace, sprintingPace};
+  }
+
+  private Float calculateAverage(float a, float b) {
+    return (a + b) / 2;
   }
 
 }

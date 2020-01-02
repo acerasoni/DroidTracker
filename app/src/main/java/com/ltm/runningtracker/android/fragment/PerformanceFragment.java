@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.android.activity.fragment;
+package com.ltm.runningtracker.android.fragment;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -23,7 +23,7 @@ import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
 import com.ltm.runningtracker.android.activity.PerformanceActivity;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
-import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
 public abstract class PerformanceFragment extends Fragment {
@@ -31,7 +31,7 @@ public abstract class PerformanceFragment extends Fragment {
   public static final int BROWSE_RUN_REQUEST_CODE = 0;
 
   // Protected because must be accessed by other fragments
-  protected final String[] RUN_DISPLAYED_DATA = new String[]{
+  protected static final String[] RUN_DISPLAYED_DATA = new String[]{
       DroidProviderContract.ID,
       DroidProviderContract.DATE,
       DroidProviderContract.LOCATION,
@@ -39,7 +39,7 @@ public abstract class PerformanceFragment extends Fragment {
       DroidProviderContract.PACE
   };
 
-  protected final int[] COLUMNS_RESULT_IDS = new int[]{
+  protected static final int[] COLUMNS_RESULT_IDS = new int[]{
       R.id.id,
       R.id.date,
       R.id.location,
@@ -118,7 +118,8 @@ public abstract class PerformanceFragment extends Fragment {
 
   protected void onPopulateList(WeatherClassifier weatherClassifier) {
     AsyncTask.execute(() -> {
-      Cursor c = performanceViewModel.fetchRunAsyncByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
+      Cursor c = performanceViewModel
+          .getRunsByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
       Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
         // Must do the following sequentially to ensure correct behaviour
         // - fetch cursor from database asynchronously
@@ -129,6 +130,6 @@ public abstract class PerformanceFragment extends Fragment {
         listView.setAdapter(dataAdapter);
       });
     });
-  };
+  }
 
 }

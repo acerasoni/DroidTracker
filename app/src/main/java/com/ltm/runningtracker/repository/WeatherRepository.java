@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class WeatherRepository implements WeatherClient.WeatherEventListener {
 
-  public MutableLiveData<Weather> weatherMutableLiveData;
+  private MutableLiveData<Weather> weatherMutableLiveData;
 
   public WeatherRepository() {
     weatherMutableLiveData = new MutableLiveData<>();
@@ -30,10 +30,6 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
 
   public LiveData<Weather> getLiveDataWeather() {
     return weatherMutableLiveData;
-  }
-
-  private void setWeather(Weather weather) {
-    weatherMutableLiveData.setValue(weather);
   }
 
   public String getTemperature() {
@@ -79,6 +75,10 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
       Log.d("Exception:", e.getMessage());
     }
     return null;
+  }
+
+  private void setWeather(Weather weather) {
+    weatherMutableLiveData.setValue(weather);
   }
 
 }

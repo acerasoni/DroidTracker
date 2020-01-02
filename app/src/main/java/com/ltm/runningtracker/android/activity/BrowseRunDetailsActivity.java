@@ -14,8 +14,8 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
-import com.ltm.runningtracker.util.RunTypeParser.RunTypeClassifier;
-import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
+import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 
 /**
  * The purpose of this activity is to browse details relating to a specific run, and tag the
@@ -35,7 +35,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   private Spinner spinner;
 
   // Internal logic
-  private boolean hasTagBeenModified = false;
+  private boolean hasTagBeenModified;
   private int runId;
   private WeatherClassifier weatherClassifier;
   private ActivityViewModel browseDetailsActivityViewModel;
@@ -46,6 +46,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     setContentView(R.layout.activity_browse_run_details);
     initialiseViews();
 
+    hasTagBeenModified = false;
     runId = getIntent().getIntExtra("runId",
         -1);
     int fromFragment = getIntent().getIntExtra("fromFragment", -1);
@@ -59,7 +60,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     });
 
     browseDetailsActivityViewModel
-        .requestRunById(runId, wc, this);
+        .getRunById(runId, wc, this);
   }
 
   public void onSave(@Nullable View v) {
@@ -73,10 +74,9 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   }
 
   public void onDelete(View v) {
-    browseDetailsActivityViewModel.onDelete(weatherClassifier, this, runId);
+    browseDetailsActivityViewModel.deleteRun(weatherClassifier, this, runId);
     onSave(null);
   }
-
 
   public void onItemSelected(AdapterView<?> parent, View view,
       int pos, long id) {
@@ -91,7 +91,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   }
 
   /**
-   * Expected cursor to be in correct position
+   * Expects cursor to be in correct position
    */
   @SuppressLint({"SetTextI18n", "DefaultLocale"})
   public void updateUI(Cursor c) {

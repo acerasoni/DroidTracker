@@ -89,21 +89,7 @@ public class LocationRepository implements LocationEngineCallback {
   public static float calculatePace(double distance, double duration) {
     float metersPerSecond = (float) distance / (float) (duration / 1000);
     float kmPerHour = (metersPerSecond * 3.6f) / 1000;
-    return Float.parseFloat(format("%.2f",kmPerHour));
-  }
-
-  private void setLocation(Location location) {
-    // If this is the first time we set locationMutableLiveData, we can notify the temperature update service to start
-    // fetching temperature updates
-    synchronized (lock) {
-      this.locationMutableLiveData.setValue(location);
-
-      String county = getCounty(location);
-      if (county != null) {
-        this.stringMutableLiveData.setValue(county);
-      }
-      lock.notify();
-    }
+    return Float.parseFloat(format("%.2f", kmPerHour));
   }
 
   /**
@@ -141,4 +127,19 @@ public class LocationRepository implements LocationEngineCallback {
   public static Object getLock() {
     return lock;
   }
+
+  private void setLocation(Location location) {
+    // If this is the first time we set locationMutableLiveData, we can notify the temperature update service to start
+    // fetching temperature updates
+    synchronized (lock) {
+      this.locationMutableLiveData.setValue(location);
+
+      String county = getCounty(location);
+      if (county != null) {
+        this.stringMutableLiveData.setValue(county);
+      }
+      lock.notify();
+    }
+  }
+
 }

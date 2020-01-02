@@ -1,9 +1,7 @@
 package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -17,7 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
-import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
+import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -36,12 +34,11 @@ public class SettingsActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_settings);
     initialiseViews();
-    settingsActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     AsyncTask.execute(this::setupButtons);
   }
 
-  public void setupButtons() {
+  private void setupButtons() {
     // If user exists, setup run buttons
     if (settingsActivityViewModel.doesUserExist()) {
       enableUserButton();
@@ -67,10 +64,9 @@ public class SettingsActivity extends AppCompatActivity {
     });
   }
 
-
   private void enableRunButtonsIfAppropriate() {
     boolean[] runsExist = settingsActivityViewModel
-        .determineIfRunsExist(this);
+        .determineWhichRunTypesExist(this);
     boolean doRunsExist = runsExist[5];
 
     boolean doFreezing = runsExist[0];
@@ -102,7 +98,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
         button.setOnClickListener(null);
-        settingsActivityViewModel.deleteAllRunsByType(uri, this, weatherClassifier);
+        settingsActivityViewModel.deleteRunsByType(uri, this, weatherClassifier);
       });
     } else {
       button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
@@ -137,6 +133,8 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   private void initialiseViews() {
+    settingsActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
+
     userButton = findViewById(R.id.userButton);
     runsButton = findViewById(R.id.allRuns);
     freezingButton = findViewById(R.id.freezingRuns);
@@ -145,6 +143,5 @@ public class SettingsActivity extends AppCompatActivity {
     warmButton = findViewById(R.id.warmRuns);
     hotButton = findViewById(R.id.hotRuns);
   }
-
 
 }

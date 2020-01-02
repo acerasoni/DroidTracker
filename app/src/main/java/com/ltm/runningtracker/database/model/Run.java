@@ -8,7 +8,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
-import com.ltm.runningtracker.util.WeatherParser;
+import com.ltm.runningtracker.util.parser.WeatherParser;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.ltm.runningtracker.util;
+package com.ltm.runningtracker.util.parser;
 
 import java.util.HashMap;
 import java.util.Map;

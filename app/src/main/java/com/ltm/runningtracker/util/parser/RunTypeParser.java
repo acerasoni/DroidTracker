@@ -1,6 +1,5 @@
-package com.ltm.runningtracker.util;
+package com.ltm.runningtracker.util.parser;
 
-import com.ltm.runningtracker.util.WeatherParser.WeatherClassifier;
 import java.util.HashMap;
 import java.util.Map;
 
