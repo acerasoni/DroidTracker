@@ -18,6 +18,10 @@ import com.survivingwithandroid.weather.lib.provider.openweathermap.Openweatherm
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import java.util.Objects;
 
+/**
+ * Repository responsible for storing, exposing and updating a Weather object which acts as
+ * cache to the database.
+ */
 public class WeatherRepository implements WeatherClient.WeatherEventListener {
 
   private MutableLiveData<Weather> weatherMutableLiveData;

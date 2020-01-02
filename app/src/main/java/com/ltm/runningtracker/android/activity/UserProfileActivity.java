@@ -1,14 +1,10 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +12,18 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.database.model.User;
-import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 
+/**
+ * This Activity allows the user to:
+ *
+ * 1. Create a new user profile if one does not exist 2. Modify its user profile
+ *
+ * Additionally, it displays the average pace across all runs of any given type. As newly completed
+ * runs are 'untagged', they don't influence the average pace of any run type. However, once they
+ * are tagged in the BrowseRunDetailsActivity, they will be accounted for when computing averages.
+ *
+ * An additional text field will display the BMI computed from the weight and height inserted.
+ */
 public class UserProfileActivity extends AppCompatActivity {
 
   // Views
@@ -46,7 +52,8 @@ public class UserProfileActivity extends AppCompatActivity {
     setupBmiListeners();
 
     creatingUser =
-        getIntent().getIntExtra(getResources().getString(R.string.request), -1) != MainScreenActivity.USER_MODIFICATION_REQUEST;
+        getIntent().getIntExtra(getResources().getString(R.string.request), -1)
+            != MainScreenActivity.USER_MODIFICATION_REQUEST;
 
     if (!creatingUser) {
       populateViews();
@@ -66,6 +73,9 @@ public class UserProfileActivity extends AppCompatActivity {
     finish();
   }
 
+  /**
+   * Will populate the average pace fields.
+   */
   private void calculatePaces() {
     Float[] paces = userProfileActivityViewModel.getUserAveragePaces(this);
 
@@ -97,6 +107,11 @@ public class UserProfileActivity extends AppCompatActivity {
     bmiField.setText(Float.toString(bmi));
   }
 
+  /**
+   * This method will setup listeners to determine when the user clicks away from
+   * weight or height fields. It will then read the values off both fields, compute
+   * the BMI and display it below.
+   */
   private void setupBmiListeners() {
     weightField.setOnFocusChangeListener((v, hasFocus) -> {
       if (!hasFocus) {

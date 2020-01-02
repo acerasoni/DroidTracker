@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -26,12 +25,18 @@ import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
+/**
+ * Abstract Performance fragment extended by weather-specific fragments.
+ * Behaviour between all child fragments is shared, as they all contain a ListView formatted in the same way. The only different
+ * is the input Cursor utilised to populate it.
+ *
+ * @see package com.ltm.runningtracker.android.fragment.impl
+ */
 public abstract class PerformanceFragment extends Fragment {
 
   public static final int BROWSE_RUN_REQUEST_CODE = 0;
 
-  // Protected because must be accessed by other fragments
-  protected static final String[] RUN_DISPLAYED_DATA = new String[]{
+  private static final String[] RUN_DISPLAYED_DATA = new String[]{
       DroidProviderContract.ID,
       DroidProviderContract.DATE,
       DroidProviderContract.LOCATION,
@@ -39,7 +44,7 @@ public abstract class PerformanceFragment extends Fragment {
       DroidProviderContract.PACE
   };
 
-  protected static final int[] COLUMNS_RESULT_IDS = new int[]{
+  private static final int[] COLUMNS_RESULT_IDS = new int[]{
       R.id.id,
       R.id.date,
       R.id.location,
@@ -47,9 +52,11 @@ public abstract class PerformanceFragment extends Fragment {
       R.id.pace
   };
 
-  protected SimpleCursorAdapter dataAdapter;
-  protected ListView listView;
-  protected ActivityViewModel performanceViewModel;
+  private SimpleCursorAdapter dataAdapter;
+  private ListView listView;
+  private ActivityViewModel performanceViewModel;
+
+  // Set in child fragments. Needs to be protected in order to be accessed in child class
   protected WeatherClassifier weatherClassifierOfFragment;
 
   @Override
@@ -123,7 +130,7 @@ public abstract class PerformanceFragment extends Fragment {
       Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
         // Must do the following sequentially to ensure correct behaviour
         // - fetch cursor from database asynchronously
-        //  - Swap data adaptor's cursor with new one on UI thread
+        // - Swap data adaptor's cursor with new one on UI thread
         // - Notify data adapter on UI thread
         dataAdapter.swapCursor(c);
         dataAdapter.notifyDataSetChanged();

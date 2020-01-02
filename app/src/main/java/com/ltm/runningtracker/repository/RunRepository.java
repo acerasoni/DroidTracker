@@ -21,17 +21,24 @@ import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository responsible for storing and exposing a local cache of run objects. Additionally, it is
+ * responsible of keeping its cache up-to-date and to flush/refresh it when and where appropriate.
+ *
+ * It does a best-effort attempt to retrieve and validate runs requested by ID and weather by the ViewModel.
+ * 1. It checks the cache
+ * 2. If not found, it pings to database and utilises a short living cache to communicate asynchronously with the views.
+ */
 public class RunRepository {
 
-  // Associated with retrieving runs
   // Cursors associated with current run list returned by DB
-  // Acts as short-living cache, as it is overritten by subsequent DB queries
   // Enum provides us with index of run types
+  // Each cursor represents the cache for a given weather type
   private List<MutableLiveData<Cursor>> runCursors;
   private MutableLiveData<Cursor> shortLivingCache;
 
   public RunRepository() {
-    // Cache empty
+    // Initialise empty cache
     runCursors = new ArrayList<MutableLiveData<Cursor>>() {
       {
         // Initialise list with number of cursors equivalent to the number of weather types
@@ -143,6 +150,11 @@ public class RunRepository {
     return c;
   }
 
+  /**
+   * Fetches run by id asynchronously. If found, populates the short living cache.
+   * @param id of run
+   * @param context with which to make database call
+   */
   @SuppressLint("DefaultLocale")
   public void fetchRunAsyncById(int id, Context context) {
     Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + id);
@@ -194,6 +206,17 @@ public class RunRepository {
     });
   }
 
+  /**
+   * Calculates the average pace for all tagged runs.
+   * Return array will contain following values:
+   * [0] = walking pace, or null if no walks exist
+   * [1] = jogging pace, or null if no jogs exist
+   * [2] = running pace, or null if no runs exist
+   * [3] = sprinting pace, or null if no sprints exist
+   *
+   * @param context with which to query the database.
+   * @return Float[] as outlined above.
+   */
   public Float[] calculatateAveragePaces(Context context) {
     Float walkingPace = null;
     Float joggingPace = null;

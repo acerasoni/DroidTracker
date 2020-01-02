@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.database.model;
 
+import android.content.ContentValues;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -23,9 +24,7 @@ public class User {
   }
 
   /**
-   * We need a builder pattern as some values could be unavailable - Pace information
-   * User will not have pace relating to walks, for instance, if he never completed a walk.
-   * However, he could have a pace related to jogging and running.
+   * Builder pattern required as described in {@link Run}
    */
   public static class Builder {
 

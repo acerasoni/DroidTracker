@@ -58,7 +58,28 @@ import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/location/LocationComponentOptionsActivity.java
+ * This Activity allows the user to see his location on a map, alongside the current weather. He can
+ * then choose to begin a run. The map will continue tracking his location throughout the run. When
+ * he decides to end the run, the activity is destroyed and the run saved to the database.
+ *
+ * There is no need for the user to manually insert any information. The location, weather, and all
+ * other data associated to the run are either fetched from third-party API's or computed
+ * on-the-fly, and inserted in the database as columns of the run's row.
+ *
+ * When the run begins, the Location Service is turned into a foreground service as its purpose now changes.
+ * Previously, it was required by the UI to display current location and weather. Now, it needs to track location
+ * in the absence of activities. When the run ends, it will be reverted into a background service.
+ * The reason for this design decision to avoid having two different location services.
+ *
+ * This Activity will bind to the service and determine if a run is occurring, and update its UI state accordingly.
+ * To avoid wastage of resources, the service is
+ * The Mapbox API has been setup following the official documentation guide.
+ *
+ * @see <a href="https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/location/LocationComponentOptionsActivity.java">
+ * MapBox documentation</a>
+ *
+ * This Activity utilises an internal BroadcastReceiver to receive updates on the run progress.
+ * However, its view still observe the repository LiveData objects and update accordingly.
  */
 public class RunActivity extends AppCompatActivity implements
     OnMapReadyCallback, OnLocationClickListener, PermissionsListener,
@@ -107,7 +128,8 @@ public class RunActivity extends AppCompatActivity implements
   public void onLocationComponentClick() {
     if (locationComponent.getLastKnownLocation() != null) {
       Toast.makeText(this, getResources().getString(R.string.lat) +
-          locationComponent.getLastKnownLocation().getLatitude() + getResources().getString(R.string.lon)
+          locationComponent.getLastKnownLocation().getLatitude() + getResources()
+          .getString(R.string.lon)
           + locationComponent.getLastKnownLocation().getLongitude(), Toast.LENGTH_LONG).show();
     }
   }
@@ -216,7 +238,8 @@ public class RunActivity extends AppCompatActivity implements
 
     // Non run-related info can be observed straight away
     runActivityViewModel.getWeather().observe(this, weather -> {
-      StringBuilder sb = new StringBuilder(Float.toString(weather.temperature.getTemp())).append(getResources().getString(R.string.degrees_celsius));
+      StringBuilder sb = new StringBuilder(Float.toString(weather.temperature.getTemp()))
+          .append(getResources().getString(R.string.degrees_celsius));
       temperatureView.setText(sb.toString());
     });
 
@@ -279,6 +302,10 @@ public class RunActivity extends AppCompatActivity implements
     }
   }
 
+  /**
+   * This implementation of a custom BroadcastReceiver allows the activity to react to
+   * time, distance and runEnd actions broadcasts sent by the Location service.
+   */
   private class RunUpdateReceiver extends BroadcastReceiver {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
@@ -297,7 +324,8 @@ public class RunActivity extends AppCompatActivity implements
         case DISTANCE_UPDATE_ACTION:
           double distance = intent.getDoubleExtra(DISTANCE, -1L);
           int formattedDistance = (int) distance;
-          StringBuilder sb = new StringBuilder(Integer.toString(formattedDistance)).append(" ").append(getResources().getString(R.string.metres));
+          StringBuilder sb = new StringBuilder(Integer.toString(formattedDistance)).append(" ")
+              .append(getResources().getString(R.string.metres));
           distanceView.setText(sb.toString());
           break;
         case RUN_END_ACTION:
@@ -327,7 +355,8 @@ public class RunActivity extends AppCompatActivity implements
       if (!isRunning) {
         durationView.setText(BEGIN_RUN_TO_DISPLAY);
       } else {
-        StringBuilder sb = new StringBuilder(binder.getDistance()).append(" ").append(getResources().getString(R.string.metres));
+        StringBuilder sb = new StringBuilder(binder.getDistance()).append(" ")
+            .append(getResources().getString(R.string.metres));
         distanceView.setText(sb.toString());
         durationView.setText(FETCHING_TIME);
       }

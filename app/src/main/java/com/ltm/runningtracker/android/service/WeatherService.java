@@ -19,6 +19,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Weather Service which retrieves weather updates and populates the repository. It is started by
+ * the Location Service, and tightly bound to its lifecycle.
+ *
+ * @see LocationService
+ */
 public class WeatherService extends Service {
 
   // Worker thread

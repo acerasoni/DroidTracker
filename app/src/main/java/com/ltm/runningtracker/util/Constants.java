@@ -2,7 +2,7 @@ package com.ltm.runningtracker.util;
 
 public class Constants {
 
-  public static final String NO_TERRITORY = "No man's land.";
+  public static final String NO_TERRITORY = "No Man's Land.";
 
   public static final String USER_CREATED = "User created";
   public static final String USER_DELETED = "User deleted";

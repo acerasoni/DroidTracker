@@ -10,7 +10,9 @@ import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.RunCoordinates;
 
 /**
- * https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942
+ * Database class as defined in the Android Jetpack architectural standards
+ *
+ * @see <a href="https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942">Android Jetpack documentation</a>
  */
 // Database instantiated in the app's constructor above
 @Database(entities = {Run.class, User.class}, version = 200, exportSchema = false)

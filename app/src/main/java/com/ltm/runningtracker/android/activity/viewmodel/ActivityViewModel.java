@@ -30,13 +30,41 @@ import com.mapbox.android.core.location.LocationEngine;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import java.util.List;
 
+/**
+ * This coursework implements the Model-View-ViewModel pattern. This class acts as the View Model in
+ * this pattern. It does so by exposing LiveData repositories which Activities can observe.
+ * Activities can then react to changes made to the Model objects.
+ *
+ * This coursework implements the Model-View-Controller pattern. In addition to being a ViewModel as
+ * outlined above, this class also acts as the controller in this pattern. Methods tagged with
+ * @observer are used by Activities to directly retrieve data. This tag requires to specify which Activities
+ * access the method, and which repositories the methods depends on. The controller ultimately determines where the
+ * data comes from (cache or asynchronous call to the Database), and in what form.
+ *
+ * There are three available use cases in this class.
+ *
+ * 1. Views observe LiveData objects and react to changes made to them. For example, a TextView can
+ * observe the location's LiveData object and call .setText(location.getLatitude()). The
+ * Model-View-ViewModel pattern is enough for this use case.
+ *
+ * 2. Views request data stored in the Model without the Model changing. Data is fetched from cache,
+ * validated and returned. The Data retrieval on the UI thread is made synchronously and through
+ * inspecting the cache. This use case requires the Model-View-Controller.
+ *
+ * 3. Views request data stored in the Model without the Model changing. Data is not found in the
+ * cache. An asynchronous call to the database is made in the background, and the value is cached.
+ * The View is then setup to observe the cache and update it's UI when cache is populated. This use
+ * case requires both Model-View-ViewModel, and Model-View-Controller patterns.
+ */
 public class ActivityViewModel extends ViewModel {
 
+  // Repositories
   private LocationRepository locationRepository;
   private RunRepository runRepository;
   private UserRepository userRepository;
   private WeatherRepository weatherRepository;
 
+  // LiveData objects
   private LiveData<Location> locationLiveData;
   private LiveData<String> countyLiveData;
   private LiveData<Cursor> shortLivingCache;
@@ -98,8 +126,10 @@ public class ActivityViewModel extends ViewModel {
   }
 
   /**
-   * Given an id, check cached cursor for weather type or DB Return cursor moved to the correct
-   * position
+   * @param id of the requested run
+   * @param weatherClassifier of the run, for optimisation purposes
+   * @param context for the asynchronous call to the database if the cache was empty
+   * @return Cursor with one row which contains the run requested.
    */
   @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
@@ -125,6 +155,10 @@ public class ActivityViewModel extends ViewModel {
     return null;
   }
 
+  /**
+   * @param context with which database query is made
+   * @return Cursor containing all the runs of the given weatherClassifier type
+   */
   @Controller(usedBy = {PerformanceFragment.class}, repositoriesAccessed = {RunRepository.class})
   public Cursor getRunsByWeather(WeatherClassifier weatherClassifier, Context context) {
     return runRepository.getRunsAsync(context, weatherClassifier);
@@ -142,6 +176,15 @@ public class ActivityViewModel extends ViewModel {
     return runRepository.doRunsExist(context);
   }
 
+  /**
+   * Queries the database to determine if at least one run of each given type exists. The returned
+   * array is defined as follows [0] is true if runs in freezing weather exist [1] is true if runs
+   * in cold weather exist [2] is true if runs in mild weather exist [3] is true if runs in warm
+   * weather exist [4] is true if runs in hot weather exist [5] is true if runs of any type exist
+   *
+   * @param context with which database query is made
+   * @return boolean[] containing result of the queries outlined above
+   */
   @Controller(usedBy = {SettingsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public boolean[] determineWhichRunTypesExist(Context context) {
@@ -160,18 +203,15 @@ public class ActivityViewModel extends ViewModel {
   public void saveUser(Context context, boolean creatingUser, String name, String weight,
       String height) {
     if (creatingUser) {
-      userRepository
-          .createUser(name.trim(), Integer.parseInt(weight.trim()),
-              Integer.parseInt(height.trim()), context);
-    } else {
-      userRepository.updateUser(name.trim(), Integer.parseInt(weight.trim()),
+        userRepository
+            .createUser(name.trim(), Integer.parseInt(weight.trim()),
+                Integer.parseInt(height.trim()), context);
+      } else {
+        userRepository.updateUser(name.trim(), Integer.parseInt(weight.trim()),
           Integer.parseInt(height.trim()), context);
     }
   }
 
-  /**
-   * No need to update cache as the column has changed but row stayed the same
-   */
   @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public void updateTypeOfRun(int id, int pos, Context context) {
@@ -188,15 +228,15 @@ public class ActivityViewModel extends ViewModel {
     runRepository.deleteRuns(context);
   }
 
-  @Controller(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
-  public void deleteRunsByType(Uri uri, Context context, WeatherClassifier weatherClassifier) {
-    runRepository.deleteRunsByType(uri, context, weatherClassifier);
-  }
-
   @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public void deleteRun(WeatherClassifier weatherClassifier, Context context, int id) {
     runRepository.deleteRun(weatherClassifier, context, id);
+  }
+
+  @Controller(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
+  public void deleteRunsByType(Uri uri, Context context, WeatherClassifier weatherClassifier) {
+    runRepository.deleteRunsByType(uri, context, weatherClassifier);
   }
 
   @Controller(usedBy = {MainScreenActivity.class}, repositoriesAccessed = {

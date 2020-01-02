@@ -9,7 +9,10 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * https://stackoverflow.com/questions/23792029/where-to-put-own-properties-file-in-an-android-project-created-with-android-stud
+ * Class to manage access to property files
+ *
+ * @see <a href=""https://stackoverflow.com/questions/23792029/where-to-put-own-properties-file-in-an-android-project-created-with-android-stud>Stackoverflow
+ * Issue</a>
  */
 public class PropertyManager {
 

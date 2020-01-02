@@ -22,6 +22,13 @@ import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 
+/**
+ * This Activity allows the user to complete the following operations:
+ *
+ * 1. Delete user & all runs associated
+ * 2. Delete all runs
+ * 3. Delete runs only by weather type
+ */
 public class SettingsActivity extends AppCompatActivity {
 
   private Button userButton;
@@ -69,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
     });
   }
 
+  // Only enable weather-specific button if runs of that type exist
   private void enableRunButtonsIfAppropriate() {
     boolean[] runsExist = settingsActivityViewModel
         .determineWhichRunTypesExist(this);

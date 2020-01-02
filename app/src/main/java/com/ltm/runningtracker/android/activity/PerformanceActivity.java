@@ -19,10 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This Activity holds the TabLayout and nested ViewPager which allow the user to navigate
+ * in between weather fragments. It does not contain additional UI logic.
+ */
 public class PerformanceActivity extends AppCompatActivity {
 
   public static final Map<Class, Integer> FRAGMENT_TO_ID;
 
+  // Required to determine which fragment we currently are on
   static {
     FRAGMENT_TO_ID = new HashMap<Class, Integer>() {
       {

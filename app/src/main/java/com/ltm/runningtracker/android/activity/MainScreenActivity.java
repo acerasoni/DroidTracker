@@ -33,6 +33,25 @@ import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.service.LocationService;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This Activity presents the user with four buttons which allow him to navigate to the respective Run, Performance,
+ * User Profile and Settings Activities.
+ *
+ * It will prompt the user for FINE_ACCESS location permission if not previously granted.
+ * Then, it handles the following scenarios and adjusts its UI accordingly:
+ *
+ * - If no user has been setup, Run and Performance tabs are disabled
+ * - If user is setup, but no runs exist, disable the Performance tab
+ *
+ * Additionally, when returning from an activity which modifies a record in the database, it will recompute its UI logic
+ * according to the above scenarios. This is because the user could have been deleted, or all runs could have been erased.
+ *
+ * It will start the Location service, which in turn starts the Weather service, and binds to them. However, it does not
+ * utilise the binder to retrieve data; rather, it observes the LiveData objects modified by the service itself.
+ *
+ * Once all activities unbind from the location service, this will be killed from the OS. However, this only occurs if the user
+ * is not on a run, in which case it will keep running as a foreground service.
+ */
 public class MainScreenActivity extends AppCompatActivity {
 
   public static final int USER_CREATION_REQUEST = 1;
@@ -96,6 +115,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
   }
 
+  // Recompute UI state following onCreate event and when returning from an Activity
   @Override
   public void onStart() {
     super.onStart();
@@ -228,7 +248,6 @@ public class MainScreenActivity extends AppCompatActivity {
     mainActivityViewModel.initRepos();
 
     // Start weather and location service
-    // No need to bind because no communication is required - just observing objects
     // Acts as a callback
     Intent locationIntent = new Intent(this, LocationService.class);
     startService(locationIntent);
@@ -246,10 +265,10 @@ public class MainScreenActivity extends AppCompatActivity {
 
     bindService(locationIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-    // observe location object
+    // Observe location object
     mainActivityViewModel.getCounty().observe(this, county -> locationTextField.setText(county));
 
-    // observe temperature object
+    // Observe temperature object
     mainActivityViewModel.getWeather().observe(this, weather -> {
       StringBuilder sb = new StringBuilder(Float.toString(weather.temperature.getTemp()))
           .append(" ").append(getResources().getString(R.string.degrees_celsius));

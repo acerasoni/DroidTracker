@@ -10,7 +10,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Serialized to byte[] to be passed into ContentValues and to be stored in DB
+ * Data structure containing run's start & end latitude and longitude key-value pair.
+ * Serialized to byte[] to be passed into ContentValues, to be stored in DB as a complex entity
  */
 public class RunCoordinates implements Serializable {
 
@@ -29,6 +30,8 @@ public class RunCoordinates implements Serializable {
   /**
    * Used by Room DB as TypeConverter and in RunActivity to serialize coordinates to be passed in
    * ContentValue object.
+   * @param runCoordinates object
+   * @return stream of bytes
    */
   @TypeConverter
   public static byte[] toByteArray(RunCoordinates runCoordinates) {
@@ -44,6 +47,11 @@ public class RunCoordinates implements Serializable {
     }
   }
 
+  /**
+   * Used by Room DB as TypeConverter to deserialize a stream of bytes into a RunCoordinates object
+   * @param bytes to be deserialized
+   * @return RunCoordinates object
+   */
   @TypeConverter
   public static RunCoordinates fromByteArray(byte[] bytes) {
     try {

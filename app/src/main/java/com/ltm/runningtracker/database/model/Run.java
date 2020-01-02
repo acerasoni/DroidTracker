@@ -14,11 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Storing speed and distance can be considered redundant as this can be derived at runtime, though
- * it is a tradeoff between runtime resources vs having an additional column in the database. We
- * saved parsed temperature because it will allow a custom cursor on specific temperature types
- */
 @Entity
 public class Run {
 
@@ -28,6 +23,7 @@ public class Run {
   @ColumnInfo(name = "location")
   public String location;
 
+  // Save as String rather than long (milliseconds) because we don't operate on this value
   @ColumnInfo(name = "date")
   public String date;
 
@@ -37,6 +33,7 @@ public class Run {
   @ColumnInfo(name = "distance")
   public double distance;
 
+  // Save as String for the same reason as date
   @ColumnInfo(name = "duration")
   public String duration;
 
@@ -46,6 +43,7 @@ public class Run {
   @ColumnInfo(name = "temperature")
   public float temperature;
 
+  // Data structure containing starting and ending latitude and longitude value pairs
   @ColumnInfo(name = "runCoordinates")
   public RunCoordinates runCoordinates;
 
@@ -59,8 +57,8 @@ public class Run {
   }
 
   /**
-   * We need a builder pattern as some values could be unavailable - Fetching weather/temperature -
-   * IOException when serializing location - Run runType tagging
+   * Builder pattern allows Model objects to be constructed in absence of some values, whilst at the same time
+   * requiring the essential ones via contructor.
    */
   public static class Builder {
 

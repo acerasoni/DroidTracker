@@ -18,8 +18,12 @@ import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 
 /**
- * The purpose of this activity is to browse details relating to a specific run, and tag the
- * associated diet Details shown are start location, end location ... //TODO finish
+ * This activity allows the user to browse details relating to a specific run.
+ * He can then do one of the following:
+ *
+ * 1. Tag the run as a specific type (note that newly completed runs are 'untagged' by default)
+ * 2. Modify the run's tag to another run type
+ * 3. Delete the run altogether
  */
 public class BrowseRunDetailsActivity extends AppCompatActivity implements OnItemSelectedListener {
 
@@ -53,6 +57,8 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     int fromFragment = getIntent().getIntExtra(getResources().getString(R.string.from_fragment), -1);
     WeatherClassifier wc = WeatherClassifier.valueOf(fromFragment);
 
+    // If the synchronous inspection of cache fails, make another effort to observe short living cache
+    // populated by the asynchronous database call
     browseDetailsActivityViewModel.getShortLivingCache().observe(this, cursor -> {
       if (cursor != null) {
         updateUI(cursor);
@@ -80,6 +86,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     onSave(null);
   }
 
+  // Switch between tabs
   public void onItemSelected(AdapterView<?> parent, View view,
       int pos, long id) {
     newRunType = pos;
@@ -92,32 +99,33 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   }
 
   /**
-   * Expects cursor to be in correct position
+   * This method populates the UI with the details from the run in the Cursor.
+   * @param cursor already moved to the correct row position
    */
   @SuppressLint({"SetTextI18n", "DefaultLocale"})
-  public void updateUI(Cursor c) {
+  public void updateUI(Cursor cursor) {
     runOnUiThread(() -> {
       StringBuilder sb;
 
       sb = new StringBuilder(getResources().getString(R.string.run)).append(" #").append(runId);
       activityView.setText(sb.toString());
-      locationView.setText(c.getString(1));
-      dateView.setText(c.getString(2));
+      locationView.setText(cursor.getString(1));
+      dateView.setText(cursor.getString(2));
 
-      String runType = c.getString(3).toUpperCase();
+      String runType = cursor.getString(3).toUpperCase();
       spinner.setSelection(RunTypeClassifier.valueOf(runType).getValue());
 
-      sb = new StringBuilder(Integer.toString((int) c.getFloat(4))).append(" ").append(getResources().getString(R.string.metres));
+      sb = new StringBuilder(Integer.toString((int) cursor.getFloat(4))).append(" ").append(getResources().getString(R.string.metres));
       distanceView.setText(sb.toString());
-      durationView.setText(c.getString(5));
+      durationView.setText(cursor.getString(5));
 
-      weatherClassifier = WeatherClassifier.valueOf(c.getInt(6));
+      weatherClassifier = WeatherClassifier.valueOf(cursor.getInt(6));
       weatherView.setText(ActivityViewModel.capitalizeFirstLetter(weatherClassifier.toString()));
 
-      sb = new StringBuilder(String.format(getResources().getString(R.string.two_decimals_format), c.getFloat(7))).append(getResources().getString(R.string.degrees_celsius));
+      sb = new StringBuilder(String.format(getResources().getString(R.string.two_decimals_format), cursor.getFloat(7))).append(getResources().getString(R.string.degrees_celsius));
       temperatureView.setText(sb.toString());
 
-      float pace = c.getFloat(9);
+      float pace = cursor.getFloat(9);
       String paceString = String.format(getResources().getString(R.string.two_decimals_format), pace);
       sb = new StringBuilder(paceString).append(" ").append(getResources().getString(R.string.kilometers_per_hour));
       paceView.setText(sb.toString());

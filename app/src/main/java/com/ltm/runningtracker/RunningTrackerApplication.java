@@ -9,9 +9,6 @@ import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;
 import com.mapbox.mapboxsdk.Mapbox;
 
-/**
- * https://stackoverflow.com/questions/2002288/static-way-to-get-context-in-android
- */
 public class RunningTrackerApplication extends Application {
 
   private static Context context;
@@ -27,7 +24,7 @@ public class RunningTrackerApplication extends Application {
     super.onCreate();
     context = getApplicationContext();
 
-    // Mapbox Access token
+    // Initialise mapbox instance with access token
     Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
   }
 

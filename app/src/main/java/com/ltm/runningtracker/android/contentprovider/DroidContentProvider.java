@@ -40,8 +40,18 @@ import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
+/**
+ * Content Provider which exposes access to the underlying Room database. It allows
+ * 1. Insertion of new Runs and User objects
+ * 2. Updating of Run and User objects
+ * 3. Deletion of Run and User objects
+ *
+ * It utilises a ContentProviderContract for its operations.
+ * @see DroidProviderContract
+ */
 public class DroidContentProvider extends ContentProvider {
 
+  // Data access objects
   private RunDao runDao;
   private UserDao userDao;
 
@@ -68,6 +78,7 @@ public class DroidContentProvider extends ContentProvider {
       case MILD_RUNS:
       case WARM_RUNS:
       case HOT_RUNS:
+        // All run types can be fetched in the same way by using the weatherType in the parameter uri
         c = runDao.getByWeather(
             WeatherClassifier
                 .valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase())
@@ -126,6 +137,7 @@ public class DroidContentProvider extends ContentProvider {
       case MILD_RUNS:
       case WARM_RUNS:
       case HOT_RUNS:
+        // Similarly to query, all run types can be deleted by using the weatherType in the uri
         numRowsDeleted = runDao.deleteByWeather(
             WeatherClassifier
                 .valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase())
@@ -152,6 +164,7 @@ public class DroidContentProvider extends ContentProvider {
         userDao.updateHeight(contentValues.getAsInteger(HEIGHT));
         break;
       case RUN_BY_ID:
+        // You can only update the run's tag, not any additional information
         String type = contentValues.getAsString(RUN_TYPE);
         runDao.updateRunType(Integer.parseInt(uri.getLastPathSegment()),
             type);
@@ -179,10 +192,10 @@ public class DroidContentProvider extends ContentProvider {
   }
 
   /**
-   * This method handles the absence of some values via builder pattern. This can be caused by
-   * network issues (couldn't retrieve weather information), or lack of user input.
+   * This method handles the absence of some values via builder pattern.
+   * @param contentValues containing Run data and meta-data
+   * @return Run.Builder object able to construct a Run object on-the-fly
    */
-  @Ignore
   private Run.Builder getParsedRunBuilder(ContentValues contentValues) {
     Run.Builder builder = new Run.Builder(contentValues.getAsLong(DATE),
         contentValues.getAsDouble(DISTANCE), contentValues.getAsInteger(DURATION));
@@ -208,7 +221,12 @@ public class DroidContentProvider extends ContentProvider {
     return builder.withRunType(runType);
   }
 
-  @Ignore
+  /**
+   * Method's purpose similar to above, appropriately implemented for the User Model.
+   * see {@link #getParsedUserBuilder(ContentValues)}
+   * @param contentValues containing name, weight and height
+   * @return
+   */
   private User.Builder getParsedUserBuilder(ContentValues contentValues) {
     return new User.Builder(contentValues.getAsString(NAME))
         .withWeight(contentValues.getAsInteger(WEIGHT))

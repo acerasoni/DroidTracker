@@ -43,6 +43,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Location Service class, responsible for requesting weather updates and feeding them to the LocationRepository.
+ * It will switch to foreground service when run occurs.
+ *
+ * @see RunActivity
+ *
+ * It will start the Weather Service and control it via its lifecycle. This is one of the reasons why
+ * LocationService extends LifecycleService. An additional reason deciding to extend LifecycleService
+ * is to allow the Service to observe LiveData objects, which requires the observing class to be a LifecycleOwner.
+ */
 public class LocationService extends LifecycleService {
 
   // Binder given to clients
@@ -118,6 +128,7 @@ public class LocationService extends LifecycleService {
     super.onTaskRemoved(intent);
   }
 
+  // RunActivity will directly call methods on the binder object to retrieve the run's status
   public class LocationServiceBinder extends Binder implements IInterface {
 
     @Override
@@ -129,12 +140,15 @@ public class LocationService extends LifecycleService {
       return isUserRunning;
     }
 
+    // Receive a toggle run command from RunActivity
     public boolean toggleRun() {
       if (isUserRunning) {
+        // Revert to background service
         stopForeground(true);
         onRunEnd();
         isUserRunning = false;
       } else {
+        // Convert to foreground service
         startForeground(1, generateNotification());
         onRunStart();
         isUserRunning = true;
@@ -150,9 +164,6 @@ public class LocationService extends LifecycleService {
   }
 
   private void onRunStart() {
-
-    // Convert to foreground
-
     // Time elapsed since run started
     time = 0;
     distance = 0;
@@ -199,9 +210,6 @@ public class LocationService extends LifecycleService {
   }
 
   private void onRunEnd() {
-
-    // Reconvert to background
-
     // Stop time updates
     timeScheduledExecutorService.shutdownNow();
 
