@@ -35,7 +35,7 @@ public abstract class PerformanceFragment extends Fragment {
       DroidProviderContract.ID,
       DroidProviderContract.DATE,
       DroidProviderContract.LOCATION,
-      DroidProviderContract.TYPE,
+      DroidProviderContract.RUN_TYPE,
       DroidProviderContract.PACE
   };
 

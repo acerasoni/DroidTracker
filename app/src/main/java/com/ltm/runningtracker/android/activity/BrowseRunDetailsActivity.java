@@ -37,6 +37,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   // Internal logic
   private boolean hasTagBeenModified;
   private int runId;
+  private int newRunType;
   private WeatherClassifier weatherClassifier;
   private ActivityViewModel browseDetailsActivityViewModel;
 
@@ -65,6 +66,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
   public void onSave(@Nullable View v) {
     if (hasTagBeenModified) {
+      browseDetailsActivityViewModel.updateTypeOfRun(runId, newRunType, this);
       setResult(RESULT_OK);
     } else {
       setResult(RESULT_CANCELED);
@@ -75,13 +77,12 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
   public void onDelete(View v) {
     browseDetailsActivityViewModel.deleteRun(weatherClassifier, this, runId);
-    onSave(null);
+    finish();
   }
 
   public void onItemSelected(AdapterView<?> parent, View view,
       int pos, long id) {
-
-    browseDetailsActivityViewModel.updateTypeOfRun(runId, pos, this);
+    newRunType = pos;
     // Will cause listView in previous activity has to refresh its UI state
     hasTagBeenModified = true;
   }

@@ -52,7 +52,6 @@ public class Constants {
   public static final String DURATION = "duration";
   public static final String TEMPERATURE = "temperature";
   public static final String RUN_COORDINATES = "runCoordinates";
-  public static final String RUN_TYPE = "runType";
 
   public static final String CHANNEL_ID = "channelId";
 }

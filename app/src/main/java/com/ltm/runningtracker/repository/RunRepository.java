@@ -3,7 +3,7 @@ package com.ltm.runningtracker.repository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel.capitalizeFirstLetter;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TYPE;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUN_TYPE;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 
 import android.annotation.SuppressLint;
@@ -179,7 +179,7 @@ public class RunRepository {
         .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + id);
     ContentValues contentValues = new ContentValues();
     String newType = capitalizeFirstLetter(RunTypeClassifier.valueOf(pos).toString());
-    contentValues.put(TYPE, newType);
+    contentValues.put(RUN_TYPE, newType);
     AsyncTask.execute(() -> context.getContentResolver().update(uri, contentValues, null, null));
   }
 

@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.android.contentprovider;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUN_TYPE;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.COLD_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.FREEZING_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.HOT_RUNS;
@@ -16,7 +17,6 @@ import static com.ltm.runningtracker.util.Constants.DURATION;
 import static com.ltm.runningtracker.util.Constants.HEIGHT;
 import static com.ltm.runningtracker.util.Constants.NAME;
 import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
-import static com.ltm.runningtracker.util.Constants.RUN_TYPE;
 import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
 import static com.ltm.runningtracker.util.Constants.TYPE;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
@@ -152,7 +152,7 @@ public class DroidContentProvider extends ContentProvider {
         userDao.updateHeight(contentValues.getAsInteger(HEIGHT));
         break;
       case RUN_BY_ID:
-        String type = contentValues.getAsString(TYPE);
+        String type = contentValues.getAsString(RUN_TYPE);
         runDao.updateRunType(Integer.parseInt(uri.getLastPathSegment()),
             type);
         break;
