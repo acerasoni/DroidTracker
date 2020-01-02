@@ -57,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
       userButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
       userButton.setOnClickListener(null);
       settingsActivityViewModel.deleteUser(this);
+      settingsActivityViewModel.deleteRuns(this);
 
       // Observe user. When change occurs (aka it gets deleted), finish
       settingsActivityViewModel.getUser().observe(this, user -> {
@@ -68,15 +69,15 @@ public class SettingsActivity extends AppCompatActivity {
 
 
   private void enableRunButtonsIfAppropriate() {
-    Boolean doRunsExist = false;
-    Boolean doFreezing = false;
-    Boolean doCold = false;
-    Boolean doMild = false;
-    Boolean doWarm = false;
-    Boolean doHot = false;
+    boolean[] runsExist = settingsActivityViewModel
+        .determineIfRunsExist(this);
+    boolean doRunsExist = runsExist[5];
 
-    settingsActivityViewModel
-        .determineIfRunsExist(this, doRunsExist, doFreezing, doCold, doMild, doWarm, doHot);
+    boolean doFreezing = runsExist[0];
+    boolean doCold = runsExist[1];
+    boolean doMild = runsExist[2];
+    boolean doWarm = runsExist[3];
+    boolean doHot = runsExist[4];
 
     if (doRunsExist) {
       enableRunsButton();

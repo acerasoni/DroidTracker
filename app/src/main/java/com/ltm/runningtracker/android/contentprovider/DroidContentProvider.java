@@ -61,7 +61,9 @@ public class DroidContentProvider extends ContentProvider {
       case WARM_RUNS:
       case HOT_RUNS:
         c = runDao.getByWeather(
-            WeatherClassifier.valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase()).getValue());
+            WeatherClassifier
+                .valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase())
+                .getValue());
         break;
       case USER:
         c = userDao.getUser();
@@ -78,7 +80,8 @@ public class DroidContentProvider extends ContentProvider {
 
     switch (URI_MATCHER.match(uri)) {
       case RUNS:
-        long runId = runDao.insert(getParsedRunBuilder(Objects.requireNonNull(contentValues)).build());
+        long runId = runDao
+            .insert(getParsedRunBuilder(Objects.requireNonNull(contentValues)).build());
         var = ContentUris.withAppendedId(uri, runId);
         break;
       case USER:
@@ -118,11 +121,12 @@ public class DroidContentProvider extends ContentProvider {
       case WARM_RUNS:
       case HOT_RUNS:
         numRowsDeleted = runDao.deleteByWeather(
-            WeatherClassifier.valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase()).getValue());
+            WeatherClassifier
+                .valueOf(Objects.requireNonNull(uri.getLastPathSegment()).toUpperCase())
+                .getValue());
         break;
       case USER:
         numRowsDeleted = userDao.delete();
-        numRowsDeleted += runDao.delete();
         break;
     }
 
@@ -148,7 +152,7 @@ public class DroidContentProvider extends ContentProvider {
       case RUN_BY_ID:
         String type = contentValues.getAsString("type");
         runDao.updateRunType(Integer.parseInt(uri.getLastPathSegment()),
-           type);
+            type);
         break;
       default:
         throw new IllegalStateException("Unexpected value: " + URI_MATCHER.match(uri));
@@ -205,7 +209,8 @@ public class DroidContentProvider extends ContentProvider {
 
   @Ignore
   private User.Builder getParsedUserBuilder(ContentValues contentValues) {
-    return new User.Builder(contentValues.getAsString("name")).withWeight(contentValues.getAsInteger("weight"))
+    return new User.Builder(contentValues.getAsString("name"))
+        .withWeight(contentValues.getAsInteger("weight"))
         .withHeight(contentValues.getAsInteger("height"));
   }
 

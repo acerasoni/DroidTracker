@@ -152,7 +152,7 @@ public class UserProfileActivity extends AppCompatActivity {
     String height = heightField.getText().toString();
     String weight = weightField.getText().toString();
 
-    userProfileActivityViewModel.onSaveFromProfile(creatingUser, name, weight, height);
+    userProfileActivityViewModel.onSaveFromProfile(this, creatingUser, name, weight, height);
 
     Intent returnIntent = new Intent();
     setResult(Activity.RESULT_OK, returnIntent);

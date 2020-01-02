@@ -6,6 +6,7 @@ import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -50,16 +51,16 @@ public class UserRepository {
    * This method is called from the UI thread. It will call the db asynchronously which will create
    * the User object and assign it to the user repository (cache) and database (memory)
    */
-  public void createUser(String name, int weight, int height) {
+  public void createUser(String name, int weight, int height, Context context) {
     ContentValues contentValues = new ContentValues();
     contentValues.put("name", name);
     contentValues.put("weight", weight);
     contentValues.put("height", height);
     AsyncTask.execute(
-        () -> getApplicationContext().getContentResolver().insert(USER_URI, contentValues));
+        () -> context.getContentResolver().insert(USER_URI, contentValues));
   }
 
-  public void updateUser(String name, int weight, int height) {
+  public void updateUser(String name, int weight, int height, Context context) {
     // Update cache
     user.getValue().name = name;
     user.getValue().weight = weight;
@@ -72,7 +73,7 @@ public class UserRepository {
 
     // Asynchronously update DB
     AsyncTask.execute(
-        () -> getApplicationContext().getContentResolver()
+        () -> context.getContentResolver()
             .update(USER_URI, contentValues, null, null));
   }
 

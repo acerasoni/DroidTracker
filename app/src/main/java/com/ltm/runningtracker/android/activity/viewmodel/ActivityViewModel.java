@@ -109,19 +109,26 @@ public class ActivityViewModel extends ViewModel {
   public void deleteUser(Context context) {
     AsyncTask.execute(() -> {
       context.getContentResolver().delete(USER_URI, null, null);
-      getRunRepository().flushCache();
       getUserRepository().flushCache();
     });
   }
 
-  public void determineIfRunsExist(Context context, Boolean doRunsExist, Boolean doFreezing,
-      Boolean doCold, Boolean doMild, Boolean doWarm, Boolean doHot) {
-    doFreezing = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.FREEZING);
-    doCold = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.COLD);
-    doMild = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.MILD);
-    doWarm = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.WARM);
-    doHot = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.HOT);
-    doRunsExist = doFreezing || doCold || doMild || doWarm || doHot;
+  public void deleteRuns(Context context) {
+    AsyncTask.execute(() -> {
+      context.getContentResolver().delete(RUNS_URI, null, null);
+      getRunRepository().flushCache();
+    });
+  }
+
+  public boolean[] determineIfRunsExist(Context context) {
+    boolean[] runsExist = new boolean[6];
+    runsExist[0] = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.FREEZING);
+    runsExist[1] = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.COLD);
+    runsExist[2] = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.MILD);
+    runsExist[3] = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.WARM);
+    runsExist[4] = getRunRepository().doRunsExistByWeather(context, WeatherClassifier.HOT);
+    runsExist[5] = runsExist[0] || runsExist[1] || runsExist[2] || runsExist[3] || runsExist[4];
+    return runsExist;
   }
 
   public Cursor requestRunByWeather(WeatherClassifier weatherClassifier, Context context) {
@@ -225,14 +232,14 @@ public class ActivityViewModel extends ViewModel {
     });
   }
 
-  public void onSaveFromProfile(boolean creatingUser, String name, String weight, String height) {
+  public void onSaveFromProfile(Context context, boolean creatingUser, String name, String weight, String height) {
     if (creatingUser) {
       getUserRepository()
           .createUser(name.trim(), Integer.parseInt(weight.trim()),
-              Integer.parseInt(height.trim()));
+              Integer.parseInt(height.trim()), context);
     } else {
       getUserRepository().updateUser(name.trim(), Integer.parseInt(weight.trim()),
-          Integer.parseInt(height.trim()));
+          Integer.parseInt(height.trim()), context);
     }
   }
 
