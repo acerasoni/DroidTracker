@@ -10,4 +10,6 @@
   <color name="mildColor">#f5c836</color>
   <color name="warmColor">#f28430</color>
   <color name="hotColor">#ff0000</color>
+  <color name="mainButtonColor">#E6BC6D</color>
+  <color name="secondaryButtonColor">#F9FBE7</color>
 </resources>

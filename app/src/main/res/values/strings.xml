@@ -64,11 +64,11 @@
   <string name="by_weather">by weather</string>
   <string name="performance">Performance</string>
   <string name="map">Map</string>
-  <string name="delete_hot_runs">Delete hot runs</string>
-  <string name="delete_warm_runs">Delete warm runs</string>
-  <string name="delete_mild_runs">Delete mild runs</string>
-  <string name="delete_cold_runs">Delete cold runs</string>
-  <string name="delete_freezing_runs">Delete freezing runs</string>
+  <string name="delete_hot_runs">Delete runs in hot weather</string>
+  <string name="delete_warm_runs">Delete runs in warm weather</string>
+  <string name="delete_mild_runs">Delete runs in mild weather</string>
+  <string name="delete_cold_runs">Delete runs in cold weather</string>
+  <string name="delete_freezing_runs">Delete runs in freezing weather</string>
   <string name="delete_user_and_all_runs_associated">Delete User (And All Runs Associated)</string>
   <string name="user">User</string>
   <string name="runs">Runs</string>

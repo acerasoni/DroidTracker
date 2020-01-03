@@ -85,3 +85,5 @@ Zapp/src/main/java/com/ltm/runningtracker/android/fragment/impl/HotPerformanceFr
 [app/src/main/java/com/ltm/runningtracker/android/fragment/impl/MildPerformanceFragment.java,7\8\789cb2ac9774a7abf74fe437169187c419e0ee6b
 m
 =app/src/test/java/com/ltm/runningtracker/ExampleUnitTest.java,f\b\fbe0ea148bb21f2759f60d655edef9bd128c3090
+|
+Lapp/src/main/java/com/ltm/runningtracker/util/SimpleRecyclerViewAdapter.java,a\9\a959eba4b4d649321f330132202d84208d1bc65f
