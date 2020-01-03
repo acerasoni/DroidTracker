@@ -10,6 +10,8 @@ import static com.ltm.runningtracker.util.Constants.DISTANCE_UPDATE_ACTION;
 import static com.ltm.runningtracker.util.Constants.DURATION;
 import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
 import static com.ltm.runningtracker.util.Constants.RUN_END_ACTION;
+import static com.ltm.runningtracker.util.Constants.RUN_ONGOING;
+import static com.ltm.runningtracker.util.Constants.RUN_PAUSED;
 import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
 import static com.ltm.runningtracker.util.Constants.TIME_UPDATE_ACTION;
 
@@ -19,6 +21,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -41,6 +44,7 @@ import com.ltm.runningtracker.util.RunCoordinates.Coordinate;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,15 +58,25 @@ import org.jetbrains.annotations.NotNull;
  * why LocationService extends LifecycleService. An additional reason deciding to extend
  * LifecycleService is to allow the Service to observe LiveData objects, which requires the
  * observing class to be a LifecycleOwner.
+ *
+ * The run can be paused. This functionality is controlled by RunActivity via Binder interface.
+ * When paused the time and distance will be frozen and no more coordinates are added to the RunCoordinates
+ * container. The current state is rendered in the notification.
+ *
+ * Note that even when the run is paused, the map on and both location and temperature TextViews in
+ * RunActivity will update. This has been done purposely.
  */
 public class LocationService extends LifecycleService {
+
+  private static int NOTIFICATION_ID = 1;
 
   // Binder given to clients
   private final IBinder binder = new LocationServiceBinder();
   private boolean isUserRunning;
+  private boolean runPaused;
 
   // Location variables
-  private double distance;
+  private Double distance;
   private Location currentLocation;
   private RunCoordinates runCoordinates;
 
@@ -71,7 +85,9 @@ public class LocationService extends LifecycleService {
 
   // Time
   private int time;
+  private Runnable timeUpdateTask;
   private ScheduledExecutorService timeScheduledExecutorService;
+  private ScheduledFuture<?> scheduledFuture;
 
   private ContentValues contentValues;
 
@@ -80,6 +96,7 @@ public class LocationService extends LifecycleService {
   public void onCreate() {
     super.onCreate();
     isUserRunning = false;
+    runPaused = false;
     contentValues = new ContentValues();
 
     // Can make weather a started service, no need to bind as it's closely coupled to the lifecycle
@@ -142,6 +159,10 @@ public class LocationService extends LifecycleService {
       return isUserRunning;
     }
 
+    public boolean isRunPaused() {
+      return runPaused;
+    }
+
     public boolean userDeleted() {
       boolean runningState = isUserRunning;
       if (isUserRunning) {
@@ -163,7 +184,7 @@ public class LocationService extends LifecycleService {
         isUserRunning = false;
       } else {
         // Convert to foreground service
-        startForeground(1, generateNotification());
+        startForeground(NOTIFICATION_ID, generateNotification("Run ongoing"));
         onRunStart();
         isUserRunning = true;
       }
@@ -171,8 +192,39 @@ public class LocationService extends LifecycleService {
       return isUserRunning;
     }
 
+    public boolean togglePause() {
+      if(runPaused) {
+        // Resume updating time
+        scheduledFuture =
+            timeScheduledExecutorService.scheduleAtFixedRate(timeUpdateTask, 0, 1L, TimeUnit.SECONDS);
+
+        // Update notification
+        updateNotification(RUN_ONGOING);
+
+        // Resume observing location
+        enableLocationObserver();
+        runPaused = false;
+      } else {
+        // Cease updating time
+        scheduledFuture.cancel(false);
+
+        // Update notification
+        updateNotification(RUN_PAUSED);
+
+        // Cease observing location
+        removeLocationObserver();
+        runPaused = true;
+      }
+
+      return runPaused;
+    }
+
     public int getDistance() {
-      return (int) distance;
+      return distance.intValue();
+    }
+
+    public int getTime() {
+      return time;
     }
 
   }
@@ -180,7 +232,7 @@ public class LocationService extends LifecycleService {
   private void onRunStart() {
     // Time elapsed since run started
     time = 0;
-    distance = 0;
+    distance = 0.0;
 
     runCoordinates = new RunCoordinates();
     float x1 = (float) getLocationRepository().getLocation().getLatitude();
@@ -190,7 +242,7 @@ public class LocationService extends LifecycleService {
     currentLocation = getLocationRepository().getLocation();
 
     // Start time update thread
-    Runnable timeUpdateTask = () -> {
+    timeUpdateTask = () -> {
       time++;
       Intent intent = new Intent();
       Bundle bundle = new Bundle();
@@ -203,31 +255,10 @@ public class LocationService extends LifecycleService {
 
     // Begin execution of worker thread
     timeScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    timeScheduledExecutorService
-        .scheduleAtFixedRate(timeUpdateTask, 0, 1,
-            TimeUnit.SECONDS);
+    scheduledFuture =
+        timeScheduledExecutorService.scheduleAtFixedRate(timeUpdateTask, 0, 1L, TimeUnit.SECONDS);
 
-    // Observe the location repo for changes
-    getLocationRepository().getLocationLiveData()
-        .observe(this, location -> {
-          // Set new coordinate
-          float x2 = (float) location.getLatitude();
-          float y2 = (float) location.getLongitude();
-          runCoordinates.addCoordinate(new Coordinate(x2, y2, false));
-
-          // Dynamically increases the distance covered rather than calculating distance between point A and point B
-          distance += location.distanceTo(currentLocation);
-
-          Intent intent = new Intent();
-          Bundle bundle = new Bundle();
-          bundle.putDouble(DISTANCE, distance);
-          intent.putExtras(bundle);
-
-          intent.setAction(DISTANCE_UPDATE_ACTION);
-          sendBroadcast(intent);
-
-          currentLocation = location;
-        });
+    enableLocationObserver();
   }
 
   private void onRunEnd(boolean shouldSave) {
@@ -303,7 +334,37 @@ public class LocationService extends LifecycleService {
     }
   }
 
-  private Notification generateNotification() {
+  private void enableLocationObserver() {
+    // Observe the location repo for changes
+    getLocationRepository().getLocationLiveData()
+        .observe(this, location -> {
+          // Set new coordinate
+          float x2 = (float) location.getLatitude();
+          float y2 = (float) location.getLongitude();
+          runCoordinates.addCoordinate(new Coordinate(x2, y2, false));
+
+          // Dynamically increases the distance covered rather than calculating distance between point A and point B
+          distance += location.distanceTo(currentLocation);
+
+          Intent intent = new Intent();
+          Bundle bundle = new Bundle();
+          bundle.putDouble(DISTANCE, distance);
+          intent.putExtras(bundle);
+
+          intent.setAction(DISTANCE_UPDATE_ACTION);
+          sendBroadcast(intent);
+
+          currentLocation = location;
+        });
+  }
+
+  private void removeLocationObserver() {
+    // Stop distance updates
+    getLocationRepository().getLocationLiveData().removeObservers
+        (this);
+  }
+
+  private Notification generateNotification(String message) {
     NotificationManager notificationManager = (NotificationManager) getSystemService(
         NOTIFICATION_SERVICE);
     // Create the NotificationChannel, but only on API 26+ because
@@ -327,14 +388,21 @@ public class LocationService extends LifecycleService {
     PendingIntent pendingActionIntent = PendingIntent.getService(this, 0, actionIntent, 0);
 
     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_launcher_background)
-        .setContentTitle("Exercise ongoing")
-        .setContentText("Return to map")
+        .setSmallIcon(R.mipmap.ic_launcher)
+        .setContentTitle(message)
+        .setContentText("Return to DroidTracker")
         .setContentIntent(pendingIntent)
         .addAction(R.drawable.ic_launcher_foreground, "Message Service", pendingActionIntent)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
     return mBuilder.build();
+  }
+
+  public void updateNotification(String newMessage) {
+    Notification notification = generateNotification(newMessage);
+
+    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    mNotificationManager.notify(NOTIFICATION_ID, notification);
   }
 
 }

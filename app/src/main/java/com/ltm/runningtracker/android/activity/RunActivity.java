@@ -7,7 +7,6 @@ import static com.ltm.runningtracker.util.Constants.DISTANCE;
 import static com.ltm.runningtracker.util.Constants.DISTANCE_UPDATE_ACTION;
 import static com.ltm.runningtracker.util.Constants.END_RUN;
 import static com.ltm.runningtracker.util.Constants.FETCHING_LOCATION;
-import static com.ltm.runningtracker.util.Constants.FETCHING_TIME;
 import static com.ltm.runningtracker.util.Constants.PERMISSION_NOT_GRANTED;
 import static com.ltm.runningtracker.util.Constants.REQUESTING_PERMISSION;
 import static com.ltm.runningtracker.util.Constants.RUN_ENDED;
@@ -27,6 +26,7 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,6 +89,7 @@ public class RunActivity extends AppCompatActivity implements
   private ActivityViewModel runActivityViewModel;
   private IntentFilter runUpdateFilter;
   private Boolean isRunning = null;
+  private Boolean isPaused = null;
   boolean mBound;
   private RunUpdateReceiver runUpdateReceiver;
   Context activity = this;
@@ -106,6 +107,7 @@ public class RunActivity extends AppCompatActivity implements
   private TextView temperatureView;
   private TextView durationView;
 
+  private Button pauseResumeButton;
   private Button toggleRunButton;
 
   @Override
@@ -230,6 +232,7 @@ public class RunActivity extends AppCompatActivity implements
     durationView = findViewById(R.id.timeView);
     temperatureView = findViewById(R.id.temperatureView);
     distanceView = findViewById(R.id.distanceView);
+    pauseResumeButton = findViewById(R.id.pauseResumeButton);
     toggleRunButton = findViewById(R.id.toggleRunButton);
 
     // Non run-related info can be observed straight away
@@ -351,19 +354,27 @@ public class RunActivity extends AppCompatActivity implements
 
       // Determine if user is running
       isRunning = binder.isUserRunning();
+      setButtonText(isRunning);
       if (!isRunning) {
         durationView.setText(BEGIN_RUN_TO_DISPLAY);
+        pauseResumeButton.setVisibility(View.INVISIBLE);
       } else {
-        StringBuilder sb = new StringBuilder(binder.getDistance()).append(" ")
+        durationView.setText(getFormattedTime(binder.getTime()));
+        StringBuilder sb = new StringBuilder().append(binder.getDistance()).append(" ")
             .append(getResources().getString(R.string.metres));
         distanceView.setText(sb.toString());
-        durationView.setText(FETCHING_TIME);
+        pauseResumeButton.setVisibility(View.VISIBLE);
+
+        // If running, determine if run is paused
+        isPaused = binder.isRunPaused();
+        renderPauseButtonText(isPaused);
       }
-      setButtonText(isRunning);
 
       toggleRunButton.setOnClickListener(v -> {
         isRunning = binder.toggleRun();
+        renderPauseButtonText(false);
         setButtonText(isRunning);
+        pauseResumeButton.setVisibility(View.VISIBLE);
         if (!isInTrackingMode) {
           isInTrackingMode = true;
           locationComponent.setCameraMode(CameraMode.TRACKING);
@@ -371,6 +382,11 @@ public class RunActivity extends AppCompatActivity implements
           Toast.makeText(RunActivity.this, determineText(isRunning),
               Toast.LENGTH_SHORT).show();
         }
+      });
+
+      pauseResumeButton.setOnClickListener(v -> {
+        isPaused = binder.togglePause();
+        renderPauseButtonText(isPaused);
       });
 
       mBound = true;
@@ -393,5 +409,13 @@ public class RunActivity extends AppCompatActivity implements
       }
     }
   };
+
+  private void renderPauseButtonText(boolean isPaused) {
+    if (isPaused) {
+      pauseResumeButton.setText(R.string.resume);
+    } else {
+      pauseResumeButton.setText(R.string.pause);
+    }
+  }
 
 }
