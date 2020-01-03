@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.database.model.Run.getFormattedTime;
 import static com.ltm.runningtracker.repository.LocationRepository.getCounty;
 import static com.ltm.runningtracker.util.Constants.BEGIN_RUN_TO_DISPLAY;
 import static com.ltm.runningtracker.util.Constants.DISTANCE;
@@ -13,7 +14,6 @@ import static com.ltm.runningtracker.util.Constants.RUN_ENDED;
 import static com.ltm.runningtracker.util.Constants.RUN_END_ACTION;
 import static com.ltm.runningtracker.util.Constants.RUN_STARTED;
 import static com.ltm.runningtracker.util.Constants.START_RUN;
-import static com.ltm.runningtracker.util.Constants.TIME_FORMAT;
 import static com.ltm.runningtracker.util.Constants.TIME_UPDATE_ACTION;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 
@@ -315,12 +315,10 @@ public class RunActivity extends AppCompatActivity implements
       String action = intent.getAction();
       switch (Objects.requireNonNull(action)) {
         case TIME_UPDATE_ACTION:
+          // In seconds
           int time = intent.getIntExtra(getResources().getString(R.string.time), -1);
-          durationView.setText(String.format(TIME_FORMAT,
-              TimeUnit.SECONDS.toMinutes(time),
-              TimeUnit.SECONDS.toSeconds(time) -
-                  TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(time))
-          ));
+          String formattedTime = getFormattedTime(time);
+          durationView.setText(formattedTime);
           break;
         case DISTANCE_UPDATE_ACTION:
           double distance = intent.getDoubleExtra(DISTANCE, -1L);

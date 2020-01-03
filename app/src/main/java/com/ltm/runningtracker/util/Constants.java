@@ -2,6 +2,7 @@ package com.ltm.runningtracker.util;
 
 public class Constants {
 
+  public static final String TIME_FORMAT = "%02d:%02d:%02d";
   public static final String NO_TERRITORY = "No Man's Land.";
 
   public static final String USER_CREATED = "User created";
@@ -25,7 +26,6 @@ public class Constants {
   public static final String TIME_UPDATE_ACTION = "com.ltm.runningtracker.TIME_UPDATE";
   public static final String RUN_END_ACTION = "com.ltm.runningtracker.RUN_ENDED";
 
-  public static final String TIME_FORMAT = "%02d min, %02d sec";
   public static final String BEGIN_RUN_TO_DISPLAY = "Begin run to display progress";
 
   public static final String FREEZING_STRING = "freezing";

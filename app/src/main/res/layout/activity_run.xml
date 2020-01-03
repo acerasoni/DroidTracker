@@ -34,6 +34,7 @@
     android:layout_height="50dp"
     android:background="@drawable/rectangle_base"
     app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
   <com.mapbox.mapboxsdk.maps.MapView
@@ -43,7 +44,8 @@
     app:layout_constraintBottom_toTopOf="@+id/myRectangleView8"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintStart_toStartOf="parent"></com.mapbox.mapboxsdk.maps.MapView>
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/myRectangleView5"></com.mapbox.mapboxsdk.maps.MapView>
   <Button
     android:id="@+id/toggleRunButton"
     android:layout_width="328dp"
@@ -89,7 +91,7 @@
     android:id="@+id/timeView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:textColor="#FFFFFF"
     android:textSize="14sp"
@@ -99,7 +101,7 @@
     android:id="@+id/textView11"
     android:layout_width="wrap_content"
     android:layout_height="40dp"
-    android:layout_marginStart="16dp"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
     android:text="@string/map"

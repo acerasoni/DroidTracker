@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.database.model;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
+import static com.ltm.runningtracker.util.Constants.TIME_FORMAT;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
@@ -92,12 +93,9 @@ public class Run {
 
       this.distance = distance;
       this.pace = LocationRepository.calculatePace(distance, duration);
-      this.duration = String.format("%02d min, %02d sec",
-          TimeUnit.SECONDS.toMinutes(duration),
-          TimeUnit.SECONDS.toSeconds(duration) -
-              TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(duration))
-      );
 
+      //hh:mm:ss
+      this.duration = getFormattedTime(duration);
       this.location = getLocationRepository().getCountyLiveData().getValue();
     }
 
@@ -134,6 +132,22 @@ public class Run {
 
       return run;
     }
+  }
+
+  /**
+   * @param seconds
+   * @return Formatted time in hours:minutes:seconds
+   */
+  @SuppressLint("DefaultLocale")
+  public static String getFormattedTime(int seconds) {
+    final String format;
+    format = String.format(TIME_FORMAT,
+        TimeUnit.SECONDS.toHours(seconds),
+        TimeUnit.SECONDS.toMinutes(seconds) -
+            TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(seconds)),
+        seconds -
+            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(seconds)));
+    return format;
   }
 
 }

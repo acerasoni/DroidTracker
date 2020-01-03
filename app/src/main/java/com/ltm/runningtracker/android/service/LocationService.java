@@ -280,7 +280,7 @@ public class LocationService extends LifecycleService {
     // Save run
     new SaveRun().execute();
     if (shouldSave) {
-      Toast.makeText(getApplicationContext(), "User saved", Toast.LENGTH_LONG).show();
+      Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
     } else {
       Toast.makeText(getApplicationContext(), "User deleted - run aborted", Toast.LENGTH_LONG)
           .show();
@@ -328,7 +328,7 @@ public class LocationService extends LifecycleService {
 
     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_launcher_background)
-        .setContentTitle("On a run")
+        .setContentTitle("Exercise ongoing")
         .setContentText("Return to map")
         .setContentIntent(pendingIntent)
         .addAction(R.drawable.ic_launcher_foreground, "Message Service", pendingActionIntent)
