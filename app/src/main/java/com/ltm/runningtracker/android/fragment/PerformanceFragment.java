@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.android.fragment;
 
 import static android.app.Activity.RESULT_OK;
+import static com.ltm.runningtracker.android.activity.PerformanceActivity.FRAGMENT_TO_ID;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,11 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
 import com.ltm.runningtracker.android.activity.PerformanceActivity;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.util.SimpleRecyclerViewAdapter;
+import com.ltm.runningtracker.util.SimpleRecyclerViewAdapter.ItemClickListener;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
@@ -52,9 +57,11 @@ public abstract class PerformanceFragment extends Fragment {
       R.id.pace
   };
 
-  private SimpleCursorAdapter dataAdapter;
-  private ListView listView;
+  private RecyclerView recyclerView;
+  private SimpleRecyclerViewAdapter adapter;
   private ActivityViewModel performanceViewModel;
+  private Cursor c;
+  private Class thisClass = this.getClass();
 
   // Set in child fragments. Needs to be protected in order to be accessed in child class
   protected WeatherClassifier weatherClassifierOfFragment;
@@ -63,46 +70,34 @@ public abstract class PerformanceFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     performanceViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
-
-    dataAdapter = new SimpleCursorAdapter(
-        getActivity(),
-        R.layout.run_list_item,
-        // Will be swapped out in child classes
-        null,
-        RUN_DISPLAYED_DATA,
-        COLUMNS_RESULT_IDS,
-        0);
   }
 
+  /**
+   * Inflating the fragment's view and updating its UI state is more appropriate in onCreateView
+   * rather than onCreate. This is because, due to Android's Fragment's lifecycle, onCreateView
+   * is always called after onCreate but also after onDestroyView.
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return inflated View
+   */
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.performance_fragment, container, false);
-    listView = view.findViewById(R.id.runList);
-    onPopulateList(weatherClassifierOfFragment);
+    recyclerView = view.findViewById(R.id.runList);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-    Class thisClass = this.getClass();
+    AsyncTask.execute(() -> {
+          onPopulateList(weatherClassifierOfFragment);
+      adapter = new SimpleRecyclerViewAdapter(getActivity(), c);
+      adapter.setClickListener(new RunItemClickListener());
+      getActivity().runOnUiThread(() -> recyclerView.setAdapter(adapter));
+        });
 
-    // Start details activity when item is clicked
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      Intent intent = new Intent(getActivity(), BrowseRunDetailsActivity.class);
-      Bundle bundle = new Bundle();
 
-      // Get ID of run
-      ViewGroup viewGroup = (ViewGroup) view1;
-      TextView idView = viewGroup.findViewById(R.id.id);
 
-      int runId = Integer.parseInt(idView.getText().toString());
-      bundle.putInt(getResources().getString(R.string.run_id), runId);
-
-      // Determine from which fragment so we can fetch the cursor from the right cache index
-      bundle.putInt(getResources().getString(R.string.from_fragment),
-          PerformanceActivity.FRAGMENT_TO_ID.get(thisClass));
-
-      intent.putExtras(bundle);
-      startActivityForResult(intent, BROWSE_RUN_REQUEST_CODE);
-    });
 
     return view;
   }
@@ -125,19 +120,41 @@ public abstract class PerformanceFragment extends Fragment {
   }
 
   protected void onPopulateList(WeatherClassifier weatherClassifier) {
-    AsyncTask.execute(() -> {
-      Cursor c = performanceViewModel
+      c = performanceViewModel
           .getRunsByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
       Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
         // Must do the following sequentially to ensure correct behaviour
         // - fetch cursor from database asynchronously
         // - Swap data adaptor's cursor with new one on UI thread
         // - Notify data adapter on UI thread
-        dataAdapter.swapCursor(c);
-        dataAdapter.notifyDataSetChanged();
-        listView.setAdapter(dataAdapter);
+
+        adapter.swapCursor(c);
       });
-    });
+  }
+
+  private class RunItemClickListener implements SimpleRecyclerViewAdapter.ItemClickListener {
+
+    @Override
+    public void onItemClick(View view, int position) {
+      // Start details activity when item is clicked
+      // recyclerView.s((parent, view1, position, id) -> {
+        Intent intent = new Intent(getActivity(), BrowseRunDetailsActivity.class);
+        Bundle bundle = new Bundle();
+
+        // Get ID of run
+        ViewGroup viewGroup = (ViewGroup) view;
+        TextView idView = viewGroup.findViewById(R.id.id);
+
+        int runId = Integer.parseInt(idView.getText().toString());
+        bundle.putInt(getResources().getString(R.string.run_id), runId);
+
+        // Determine from which fragment so we can fetch the cursor from the right cache index
+        bundle.putInt(getResources().getString(R.string.from_fragment),
+            FRAGMENT_TO_ID.get(thisClass));
+
+        intent.putExtras(bundle);
+        startActivityForResult(intent, BROWSE_RUN_REQUEST_CODE);
+    }
   }
 
 }
