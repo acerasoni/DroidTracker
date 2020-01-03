@@ -29,6 +29,7 @@ import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
  */
 public class SettingsActivity extends AppCompatActivity {
 
+  // Views
   private Button userButton;
   private Button runsButton;
   private Button freezingButton;
@@ -63,10 +64,11 @@ public class SettingsActivity extends AppCompatActivity {
     userButton.setOnClickListener(v -> {
       userButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
       userButton.setOnClickListener(null);
+
       settingsActivityViewModel.deleteUser(this);
       settingsActivityViewModel.deleteRuns(this);
 
-      // Observe user. When change occurs (aka it gets deleted), finish
+      // Observe user. When change occurs (cache is setup to null, aka deleted), finish
       settingsActivityViewModel.getUser().observe(this, user -> {
         setResult(RESULT_OK);
         finish();

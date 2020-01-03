@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.service.LocationService;
+import com.ltm.runningtracker.android.service.LocationService.LocationServiceBinder;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -72,6 +73,7 @@ public class MainScreenActivity extends AppCompatActivity {
   private Context context = this;
   private ActivityViewModel mainActivityViewModel;
 
+  private LocationServiceBinder locationServiceBinder;
   private boolean mBound;
   private boolean isLocationAndWeatherAvailable;
 
@@ -103,7 +105,9 @@ public class MainScreenActivity extends AppCompatActivity {
         break;
       case SETTINGS_MODIFICATION_REQUEST:
         if (resultCode == Activity.RESULT_OK) {
-          Toast.makeText(this, USER_DELETED, Toast.LENGTH_LONG).show();
+          if (!locationServiceBinder.userDeleted()) {
+            Toast.makeText(this, USER_DELETED, Toast.LENGTH_LONG).show();
+          }
         }
         break;
       case RUN_ACTIVITY_REQUEST:
@@ -258,11 +262,13 @@ public class MainScreenActivity extends AppCompatActivity {
       @Override
       public void onServiceConnected(ComponentName name, IBinder service) {
         mBound = true;
+        locationServiceBinder = (LocationServiceBinder) service;
       }
 
       @Override
       public void onServiceDisconnected(ComponentName name) {
         mBound = false;
+        locationServiceBinder = null;
       }
     };
 

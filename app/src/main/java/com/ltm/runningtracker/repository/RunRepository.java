@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.ArrayList;
@@ -265,5 +266,6 @@ public class RunRepository {
   private Float calculateAverage(float a, float b) {
     return (a + b) / 2;
   }
+
 
 }

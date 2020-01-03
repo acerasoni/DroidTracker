@@ -29,6 +29,7 @@ dependencies {
     def nav_version = "2.1.0"
     def room_version = "2.2.2"
 
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v8:0.7.0'
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     // For Kotlin use kapt instead of annotationProcessor

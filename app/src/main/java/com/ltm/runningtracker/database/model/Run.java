@@ -3,15 +3,23 @@ package com.ltm.runningtracker.database.model;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.parser.WeatherParser;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Entity

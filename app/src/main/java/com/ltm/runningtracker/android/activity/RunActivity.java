@@ -95,6 +95,7 @@ public class RunActivity extends AppCompatActivity implements
 
   // Mapbox-related
   private MapboxMap mapboxMap;
+  private MapView mapView;
   private LocationComponent locationComponent;
   private PermissionsManager permissionsManager;
   private boolean isInTrackingMode;
@@ -104,7 +105,7 @@ public class RunActivity extends AppCompatActivity implements
   private TextView distanceView;
   private TextView temperatureView;
   private TextView durationView;
-  private MapView mapView;
+
   private Button toggleRunButton;
 
   @Override
@@ -120,7 +121,7 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   public void onMapReady(@NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    mapboxMap.setStyle(Style.LIGHT, this::enableLocationComponent);
+    mapboxMap.setStyle(Style.OUTDOORS, this::enableLocationComponent);
   }
 
   @SuppressWarnings({"MissingPermission"})

@@ -24,9 +24,12 @@ import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.repository.RunRepository;
 import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;
+import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.annotations.Controller;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import com.mapbox.android.core.location.LocationEngine;
+import com.survivingwithandroid.weather.lib.WeatherClient;
+import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import java.util.List;
 
@@ -157,6 +160,15 @@ public class ActivityViewModel extends ViewModel {
     return null;
   }
 
+  @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
+      RunRepository.class})
+  public RunCoordinates getRunCoordinates(WeatherClassifier weatherClassifier, int id) {
+    // Look in cache. Guaranteed to have it, because call is made from inside the BrowseRunDetailsActivity,
+    // which means that run was previously located in cache by id.
+    Cursor c = getCachedRunById(weatherClassifier, id);
+    return RunCoordinates.fromByteArray(c.getBlob(8));
+  }
+
   /**
    * @param context with which database query is made
    * @return Cursor containing all the runs of the given weatherClassifier type
@@ -266,6 +278,17 @@ public class ActivityViewModel extends ViewModel {
 
   private void getRunById(int id, Context context) {
     runRepository.fetchRunAsyncById(id, context);
+  }
+
+  private Cursor getCachedRunById(WeatherClassifier weatherClassifier, int id) {
+    Cursor c = runCursors.get(weatherClassifier.getValue()).getValue();
+    c.moveToFirst();
+    do {
+      if (c.getInt(0) == id) {
+        break;
+      }
+    } while (c.moveToNext());
+    return c;
   }
 
 }

@@ -46,7 +46,8 @@
   <!-- Layout -->
 
   <string name="hello_blank_fragment">Hello blank fragment</string>
-  <string name="delete_run">Delete run</string>
+  <string name="delete_run">Delete Run</string>
+  <string name="save_tag">Save Tag</string>
   <string name="save">Save</string>
   <string name="pace">Pace</string>
   <string name="duration">Duration</string>
@@ -57,8 +58,8 @@
   <string name="menu">Menu</string>
   <string name="location">Location</string>
   <string name="weather">Weather</string>
-  <string name="user_profile">user profile</string>
-  <string name="settings">settings</string>
+  <string name="user_profile">User Profile</string>
+  <string name="settings">Settings</string>
   <string name="settings_camel_case">Settings</string>
   <string name="by_weather">by weather</string>
   <string name="performance">Performance</string>
@@ -87,4 +88,5 @@
   <string name="location_formatted">Location:</string>
   <string name="pace_formatted">Pace:</string>
   <string name="runningimage">RunningImage</string>
+  <string name="exercise">Exercise</string>
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/coordinatorLayout3"
@@ -9,275 +9,319 @@
   android:orientation="vertical"
   tools:context=".android.activity.BrowseRunDetailsActivity">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar6"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="?attr/actionBarTheme"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar5"
-    android:layout_width="0dp"
-    android:layout_height="38dp"
-    android:layout_marginTop="18dp"
-    android:background="@color/colorPrimaryDark"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="?attr/actionBarTheme"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv6" />
-  <TextView
-    android:id="@+id/activityView"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:textColor="#FFFFFF"
-    android:textSize="30sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/toolbar6"
-    tools:layout_conversion_absoluteHeight="41dp"
-    tools:layout_conversion_absoluteWidth="411dp"
-    tools:text="Placeholder" />
-  <TextView
-    android:id="@+id/textView17"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:text="@string/performance"
-    android:textColor="#FFFFFF"
-    android:textSize="24sp"
-    app:layout_constraintBottom_toBottomOf="@+id/toolbar5"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/toolbar5"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="138dp" />
-  <TextView
-    android:id="@+id/tv1"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/location"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar6"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/tv5"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/weather"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/tv6"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/temperature"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv5"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/tv"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/date"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv1"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/tv4"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/type"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar5"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/tv2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/distance"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv4"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/tv3"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/duration"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv2"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/tv7"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:text="@string/pace"
-    android:textColor="#000000"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv3"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="93dp" />
-  <TextView
-    android:id="@+id/locationView"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="170dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="8dp"
-    android:textSize="24sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar6"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="275dp" />
-  <TextView
-    android:id="@+id/dateView"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="170dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="8dp"
-    android:textSize="24sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv1"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="275dp" />
-  <TextView
-    android:id="@+id/weatherView"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="170dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="8dp"
-    android:textSize="24sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/dateView"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="275dp" />
-  <TextView
-    android:id="@+id/temperatureView"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="170dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="8dp"
-    android:textSize="24sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/weatherView"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="275dp" />
-  <TextView
-    android:id="@+id/distanceView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="140dp"
-    android:layout_marginTop="8dp"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/activityList"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="275dp" />
-  <TextView
-    android:id="@+id/durationView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="140dp"
-    android:layout_marginTop="16dp"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/distanceView"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="275dp" />
-  <TextView
-    android:id="@+id/paceView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="140dp"
-    android:layout_marginTop="16dp"
-    android:textSize="24sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/durationView"
-    tools:layout_conversion_absoluteHeight="32dp"
-    tools:layout_conversion_absoluteWidth="275dp" />
-  <Spinner
-    android:id="@+id/activityList"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="140dp"
-    android:layout_marginTop="16dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
-  <Button
-    android:id="@+id/button"
-    android:layout_width="44dp"
-    android:layout_height="31dp"
-    android:layout_marginStart="2dp"
-    android:layout_marginTop="24dp"
-    android:onClick="onSave"
-    android:text="@string/save"
-    android:textSize="8sp"
-    app:layout_constraintStart_toEndOf="@+id/activityList"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
-  <Button
-    android:id="@+id/button2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:onClick="onDelete"
-    android:text="@string/delete_run"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tv7" />
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+      android:id="@+id/myRectangleView"
+      android:layout_width="0dp"
+      android:layout_height="50dp"
+      android:background="@drawable/rectangle_base"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+      android:id="@+id/activityView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:text="Exercise #"
+      android:textColor="#FFFFFF"
+      android:textSize="30sp"
+      app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="2">
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1">
+
+      <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/location"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+      <TextView
+        android:id="@+id/locationView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/location"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv1" />
+      <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/date"
+        android:textColor="#000000"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationView" />
+      <TextView
+        android:id="@+id/dateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/date"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1">
+      <TextView
+        android:id="@+id/temperatureView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00.00°C"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureImage" />
+      <ImageView
+        android:id="@+id/temperatureImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/warm_icon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </LinearLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+      android:id="@+id/myRectangleView3"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_marginTop="16dp"
+      android:background="@drawable/rectangle_narrow"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+      android:id="@+id/textView20"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:text="@string/performance"
+      android:textAllCaps="false"
+      android:textColor="#FFFFFF"
+      android:textSize="24sp"
+      app:layout_constraintBottom_toBottomOf="@+id/myRectangleView3"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/myRectangleView3" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+      android:id="@+id/tv2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:text="@string/pace"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+      android:id="@+id/tv5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="8dp"
+      android:text="@string/duration"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tv3" />
+    <TextView
+      android:id="@+id/tv4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="16dp"
+      android:text="@string/type"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tv5" />
+    <TextView
+      android:id="@+id/tv3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="8dp"
+      android:text="@string/distance"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tv2" />
+    <Spinner
+      android:id="@+id/activityList"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="10dp"
+      android:layout_weight="1"
+      app:layout_constraintStart_toEndOf="@+id/tv4"
+      app:layout_constraintTop_toBottomOf="@+id/durationView" />
+    <TextView
+      android:id="@+id/paceView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_weight="1"
+      android:text="6.44km/h"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="@+id/tv2"
+      app:layout_constraintStart_toEndOf="@+id/tv2" />
+    <TextView
+      android:id="@+id/distanceView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_weight="1"
+      android:text="100 metres"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="@+id/tv3"
+      app:layout_constraintStart_toEndOf="@+id/tv3" />
+    <TextView
+      android:id="@+id/durationView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_weight="1"
+      android:text="00:00:00"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="@+id/tv5"
+      app:layout_constraintStart_toEndOf="@+id/tv5" />
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="0dp"
+      android:layout_marginEnd="4dp"
+      android:orientation="vertical"
+      android:weightSum="2"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.0">
+      <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="#F9FBE7"
+        android:onClick="onDelete"
+        android:text="@string/delete_run"
+        android:textAllCaps="false"
+        android:textSize="20sp" />
+      <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="#F9FBE7"
+        android:onClick="onSave"
+        android:text="@string/save_tag"
+        android:textAllCaps="false"
+        android:textSize="20sp" />
+    </LinearLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <View
+      android:id="@+id/myRectangleView2"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:background="@drawable/rectangle_narrow"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+      android:id="@+id/textView19"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:text="Path"
+      android:textAllCaps="false"
+      android:textColor="#FFFFFF"
+      android:textSize="24sp"
+      app:layout_constraintBottom_toBottomOf="@+id/myRectangleView2"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/myRectangleView2" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <com.mapbox.mapboxsdk.maps.MapView
+    android:id="@+id/mapView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+</LinearLayout>

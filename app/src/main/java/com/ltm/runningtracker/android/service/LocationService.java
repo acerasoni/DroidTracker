@@ -27,6 +27,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -36,6 +37,7 @@ import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.RunActivity;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.RunCoordinates;
+import com.ltm.runningtracker.util.RunCoordinates.Coordinate;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -60,9 +62,9 @@ public class LocationService extends LifecycleService {
   private boolean isUserRunning;
 
   // Location variables
-  private float startLat, startLon, endLat, endLon;
   private double distance;
   private Location currentLocation;
+  private RunCoordinates runCoordinates;
 
   // Weather
   private String temperature;
@@ -140,12 +142,24 @@ public class LocationService extends LifecycleService {
       return isUserRunning;
     }
 
+    public boolean userDeleted() {
+      boolean runningState = isUserRunning;
+      if (isUserRunning) {
+        // Revert to background service
+        stopForeground(true);
+        onRunEnd(false);
+        isUserRunning = false;
+      }
+
+      return runningState;
+    }
+
     // Receive a toggle run command from RunActivity
     public boolean toggleRun() {
       if (isUserRunning) {
         // Revert to background service
         stopForeground(true);
-        onRunEnd();
+        onRunEnd(true);
         isUserRunning = false;
       } else {
         // Convert to foreground service
@@ -167,9 +181,12 @@ public class LocationService extends LifecycleService {
     // Time elapsed since run started
     time = 0;
     distance = 0;
-    startLat = (float) getLocationRepository().getLocation().getLatitude();
-    startLon = (float) getLocationRepository().getLocation().getLongitude();
 
+    runCoordinates = new RunCoordinates();
+    float x1 = (float) getLocationRepository().getLocation().getLatitude();
+    float y1 = (float) getLocationRepository().getLocation().getLongitude();
+
+    runCoordinates.addCoordinate(new Coordinate(x1, y1, false));
     currentLocation = getLocationRepository().getLocation();
 
     // Start time update thread
@@ -182,7 +199,6 @@ public class LocationService extends LifecycleService {
 
       intent.setAction(TIME_UPDATE_ACTION);
       sendBroadcast(intent);
-
     };
 
     // Begin execution of worker thread
@@ -194,6 +210,11 @@ public class LocationService extends LifecycleService {
     // Observe the location repo for changes
     getLocationRepository().getLocationLiveData()
         .observe(this, location -> {
+          // Set new coordinate
+          float x2 = (float) location.getLatitude();
+          float y2 = (float) location.getLongitude();
+          runCoordinates.addCoordinate(new Coordinate(x2, y2, false));
+
           // Dynamically increases the distance covered rather than calculating distance between point A and point B
           distance += location.distanceTo(currentLocation);
 
@@ -209,7 +230,7 @@ public class LocationService extends LifecycleService {
         });
   }
 
-  private void onRunEnd() {
+  private void onRunEnd(boolean shouldSave) {
     // Stop time updates
     timeScheduledExecutorService.shutdownNow();
 
@@ -224,36 +245,47 @@ public class LocationService extends LifecycleService {
 
       @Override
       protected Void doInBackground(Void... voids) {
-        temperature = getWeatherRepository().getTemperature();
+        if (shouldSave) {
+          temperature = getWeatherRepository().getTemperature();
 
-        endLat = (float) getLocationRepository().getLocation().getLatitude();
-        endLon = (float) getLocationRepository().getLocation().getLongitude();
-        byte[] runCoordinates = RunCoordinates
-            .toByteArray(new RunCoordinates(startLat, startLon, endLat, endLon));
+          byte[] rc = RunCoordinates
+              .toByteArray(runCoordinates);
+          contentValues.put(RUN_COORDINATES, rc);
+          contentValues.put(TEMPERATURE, temperature);
+          contentValues.put(DURATION, time);
+          contentValues.put(DISTANCE, distance);
+          contentValues.put(DATE, System.currentTimeMillis());
+          getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
+        }
 
-        contentValues.put(RUN_COORDINATES, runCoordinates);
-        contentValues.put(TEMPERATURE, temperature);
-        contentValues.put(DURATION, time);
-        contentValues.put(DISTANCE, distance);
-        contentValues.put(DATE, System.currentTimeMillis());
-        getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
         return null;
       }
 
       @Override
       protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Toast.makeText(getApplicationContext(), "Run saved", Toast.LENGTH_LONG).show();
 
-        // Asynchronously tell activity that run has been saved
-        Intent intent = new Intent();
-        intent.setAction(RUN_END_ACTION);
-        sendBroadcast(intent);
+        if (shouldSave) {
+          // Asynchronously tell activity that run has been saved
+          Intent intent = new Intent();
+          intent.setAction(RUN_END_ACTION);
+          sendBroadcast(intent);
+        }
+
+        // Flush local run coordinates object
+        runCoordinates = null;
       }
     }
 
     // Save run
     new SaveRun().execute();
+    if (shouldSave) {
+      Toast.makeText(getApplicationContext(), "User saved", Toast.LENGTH_LONG).show();
+    } else {
+      Toast.makeText(getApplicationContext(), "User deleted - run aborted", Toast.LENGTH_LONG)
+          .show();
+    }
+
   }
 
   private void startLocationThread() {
