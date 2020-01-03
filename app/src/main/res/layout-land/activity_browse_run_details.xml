@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/coordinatorLayout3"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/backgroundColor"
+  android:orientation="vertical"
+  tools:context=".android.activity.BrowseRunDetailsActivity">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+      android:id="@+id/myRectangleView"
+      android:layout_width="0dp"
+      android:layout_height="50dp"
+      android:background="@drawable/rectangle_base"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+      android:id="@+id/activityView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:text="Exercise #"
+      android:textColor="#FFFFFF"
+      android:textSize="30sp"
+      app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+      android:id="@+id/distanceView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginBottom="2dp"
+      android:layout_weight="1"
+      android:text="100 metres"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="@+id/tv3"
+      app:layout_constraintStart_toEndOf="@+id/tv3" />
+    <TextView
+      android:id="@+id/dateView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:text="@string/date"
+      android:textSize="20sp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tv" />
+    <TextView
+      android:id="@+id/tv3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:text="@string/distance"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintStart_toStartOf="@+id/tv5"
+      app:layout_constraintTop_toBottomOf="@+id/tv5" />
+    <TextView
+      android:id="@+id/tv"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="32dp"
+      android:text="@string/date"
+      android:textColor="#000000"
+      android:textSize="26sp"
+      android:textStyle="bold"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/locationView" />
+    <TextView
+      android:id="@+id/tv5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:layout_marginEnd="320dp"
+      android:layout_marginBottom="1dp"
+      android:text="@string/duration"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintBottom_toBottomOf="@+id/tv1"
+      app:layout_constraintEnd_toStartOf="@+id/temperatureImage"
+      app:layout_constraintTop_toBottomOf="@+id/myRectangleView" />
+    <TextView
+      android:id="@+id/locationView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:text="@string/location"
+      android:textSize="20sp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tv1" />
+    <TextView
+      android:id="@+id/tv1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:text="@string/location"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="26sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/myRectangleView" />
+    <Button
+      android:id="@+id/button2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="32dp"
+      android:layout_weight="1"
+      android:backgroundTint="@color/secondaryButtonColor"
+      android:onClick="onDelete"
+      android:text="@string/delete_run"
+      android:textAllCaps="false"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toStartOf="@+id/temperatureImage"
+      app:layout_constraintStart_toEndOf="@+id/distanceView"
+      app:layout_constraintTop_toBottomOf="@+id/myRectangleView" />
+    <TextView
+      android:id="@+id/tv4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:text="@string/type"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintStart_toStartOf="@+id/tv2"
+      app:layout_constraintTop_toBottomOf="@+id/tv2" />
+    <TextView
+      android:id="@+id/paceView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginBottom="2dp"
+      android:layout_weight="1"
+      android:text="6.44km/h"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="@+id/tv2"
+      app:layout_constraintStart_toEndOf="@+id/tv2" />
+    <TextView
+      android:id="@+id/tv2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:text="@string/pace"
+      android:textAllCaps="false"
+      android:textColor="#000000"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:typeface="normal"
+      app:layout_constraintStart_toStartOf="@+id/tv3"
+      app:layout_constraintTop_toBottomOf="@+id/tv3" />
+    <ImageView
+      android:id="@+id/temperatureImage"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/myRectangleView"
+      app:srcCompat="@drawable/warm_icon" />
+    <TextView
+      android:id="@+id/temperatureView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="23dp"
+      android:text="00.00°C"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/temperatureImage"
+      app:layout_constraintTop_toBottomOf="@+id/temperatureImage" />
+    <Spinner
+      android:id="@+id/activityList"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginBottom="8dp"
+      android:layout_weight="1"
+      app:layout_constraintBottom_toTopOf="@+id/myRectangleView2"
+      app:layout_constraintStart_toEndOf="@+id/tv4" />
+    <TextView
+      android:id="@+id/durationView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginBottom="2dp"
+      android:layout_weight="1"
+      android:text="00:00:00"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="@+id/tv5"
+      app:layout_constraintStart_toEndOf="@+id/tv5" />
+    <Button
+      android:id="@+id/button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="32dp"
+      android:layout_weight="1"
+      android:backgroundTint="@color/secondaryButtonColor"
+      android:onClick="onSave"
+      android:text="@string/save_tag"
+      android:textAllCaps="false"
+      android:textSize="20sp"
+      app:layout_constraintBottom_toTopOf="@+id/myRectangleView2"
+      app:layout_constraintStart_toStartOf="@+id/button2" />
+    <View
+      android:id="@+id/myRectangleView2"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_marginTop="12dp"
+      android:background="@drawable/rectangle_narrow"
+      app:layout_constraintTop_toBottomOf="@+id/tv4" />
+    <TextView
+      android:id="@+id/textView19"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:text="Path"
+      android:textAllCaps="false"
+      android:textColor="#FFFFFF"
+      android:textSize="24sp"
+      app:layout_constraintBottom_toBottomOf="@+id/myRectangleView2"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/myRectangleView2" />
+    <com.mapbox.mapboxsdk.maps.MapView
+      android:id="@+id/mapView"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/myRectangleView2" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

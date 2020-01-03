@@ -11,6 +11,7 @@ import com.ltm.runningtracker.R;
 /**
  * Simple adapter for recycler views.
  * Taken from lecture code.
+ * Adapted for my list view items.
  */
 public class SimpleRecyclerViewAdapter extends RecyclerView.Adapter<SimpleRecyclerViewAdapter.ViewHolder> {
 

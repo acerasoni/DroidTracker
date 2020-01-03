@@ -8,7 +8,7 @@ public class Constants {
   public static final String USER_CREATED = "User created";
   public static final String USER_DELETED = "User deleted";
   public static final String SETUP_REQUIRED = "User setup required";
-  public static final String FETCHING_LOCATION = "Fetching location...";
+  public static final String FETCHING_LOCATION = "Fetching location/weather...";
   public static final String FETCHING_TEMPERATURE = "Fetching temperature...";
   public static final String FETCHING_TIME = "Fetching time...";
   public static final String RUN_FIRST = "Complete a run to access performance";

@@ -5,120 +5,161 @@
   android:id="@+id/coordinatorLayout4"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:backgroundTint="@color/secondaryButtonColor"
   android:orientation="vertical"
-  tools:context=".android.activity.SettingsActivity" >
-  <Button
-    android:id="@+id/hotRuns"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="16dp"
-    android:text="@string/delete_hot_runs"
+  tools:context=".android.activity.SettingsActivity">
+  <View
+    android:id="@+id/myRectangleView11"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:layout_marginTop="48dp"
+    android:background="@drawable/rectangle_narrow"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintHorizontal_bias="1.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/warmRuns" />
-  <Button
-    android:id="@+id/warmRuns"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="16dp"
-    android:text="@string/delete_warm_runs"
+    app:layout_constraintTop_toTopOf="parent" />
+  <View
+    android:id="@+id/myRectangleView10"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/rectangle_base"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintHorizontal_bias="1.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/mildRuns" />
-  <Button
-    android:id="@+id/mildRuns"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="16dp"
-    android:text="@string/delete_mild_runs"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/coldRuns" />
-  <Button
-    android:id="@+id/coldRuns"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="16dp"
-    android:text="@string/delete_cold_runs"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/freezingRuns" />
-  <Button
-    android:id="@+id/freezingRuns"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="16dp"
-    android:text="@string/delete_freezing_runs"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/allRuns" />
+    app:layout_constraintTop_toTopOf="parent" />
   <TextView
     android:id="@+id/textView18"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
     android:text="@string/settings_camel_case"
     android:textColor="#FFFFFF"
     android:textColorHint="#FFFFFF"
     android:textSize="30sp"
+    app:layout_constraintBottom_toBottomOf="@+id/myRectangleView10"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-  <Button
-    android:id="@+id/userButton"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="16dp"
-    android:text="@string/delete_user_and_all_runs_associated"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/textView20" />
+    app:layout_constraintTop_toTopOf="@+id/myRectangleView10" />
   <TextView
     android:id="@+id/textView20"
     android:layout_width="0dp"
     android:layout_height="31dp"
     android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
     android:text="@string/user"
     android:textColor="#FFFFFF"
     android:textSize="18sp"
+    app:layout_constraintBottom_toBottomOf="@+id/myRectangleView11"
     app:layout_constraintStart_toStartOf="parent"
-    tools:layout_editor_absoluteY="64dp" />
-  <TextView
-    android:id="@+id/textView21"
-    android:layout_width="0dp"
-    android:layout_height="31dp"
-    android:layout_marginStart="8dp"
-    android:text="@string/runs"
-    android:textColor="#FFFFFF"
-    android:textSize="18sp"
-    app:layout_constraintStart_toStartOf="parent"
-    tools:layout_editor_absoluteY="183dp" />
-  <Button
-    android:id="@+id/allRuns"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:text="@string/delete_all_runs"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    tools:layout_editor_absoluteY="229dp" />
+    app:layout_constraintTop_toTopOf="@+id/myRectangleView11" />
+  <androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    android:fillViewport="true"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/myRectangleView11"
+    tools:layout_editor_absoluteX="-36dp">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+      <Button
+        android:id="@+id/userButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:text="@string/delete_user_and_all_runs_associated" />
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+          android:id="@+id/myRectangleView12"
+          android:layout_width="match_parent"
+          android:layout_height="35dp"
+          android:layout_marginTop="12dp"
+          android:background="@drawable/rectangle_narrow"
+          app:layout_constraintTop_toTopOf="parent"
+          tools:layout_editor_absoluteX="0dp" />
+        <TextView
+          android:id="@+id/textView21"
+          android:layout_width="0dp"
+          android:layout_height="31dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="6dp"
+          android:text="@string/runs"
+          android:textColor="#FFFFFF"
+          android:textSize="18sp"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="@+id/myRectangleView12" />
+      </androidx.constraintlayout.widget.ConstraintLayout>
+      <Button
+        android:id="@+id/allRuns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:text="@string/delete_all_runs" />
+      <Button
+        android:id="@+id/freezingRuns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:text="@string/delete_freezing_runs" />
+      <Button
+        android:id="@+id/coldRuns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:text="@string/delete_cold_runs" />
+      <Button
+        android:id="@+id/mildRuns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:text="@string/delete_mild_runs" />
+      <Button
+        android:id="@+id/warmRuns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:text="@string/delete_warm_runs" />
+      <Button
+        android:id="@+id/hotRuns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:text="@string/delete_hot_runs" />
+    </LinearLayout>
+  </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
