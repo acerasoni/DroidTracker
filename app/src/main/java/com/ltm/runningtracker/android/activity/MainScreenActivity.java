@@ -63,7 +63,9 @@ public class MainScreenActivity extends AppCompatActivity {
   public static final int SETTINGS_MODIFICATION_REQUEST = 3;
   public static final int RUN_ACTIVITY_REQUEST = 4;
 
-  private TextView weatherTextField, locationTextField;
+
+  private TextView weatherTextField;
+  private TextView locationTextField;
   private Button runButton;
   private Button performanceButton;
   private Button userProfileButton;

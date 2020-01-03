@@ -7,6 +7,25 @@
   android:layout_height="match_parent"
   android:background="@color/backgroundColor"
   tools:context=".android.activity.UserProfileActivity">
+  <View
+    android:id="@+id/myRectangleView13"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:layout_marginTop="48dp"
+    android:background="@drawable/rectangle_narrow"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+  <View
+    android:id="@+id/myRectangleView14"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/rectangle_base"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
   <TextView
     android:id="@+id/walkingPaceField"
     android:layout_width="0dp"
@@ -19,6 +38,15 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/textView3" />
+  <View
+    android:id="@+id/myRectangleView16"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:background="@drawable/rectangle_narrow"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:layout_editor_absoluteY="360dp" />
   <TextView
     android:id="@+id/joggingPaceField"
     android:layout_width="0dp"
@@ -55,41 +83,8 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/runningPaceField" />
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar3"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="?attr/actionBarTheme"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
 
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar2"
-    android:layout_width="0dp"
-    android:layout_height="38dp"
-    android:background="@color/colorPrimaryDark"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="?attr/actionBarTheme"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar4"
-    android:layout_width="0dp"
-    android:layout_height="38dp"
-    android:layout_marginTop="302dp"
-    android:background="@color/colorPrimaryDark"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="?attr/actionBarTheme"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
   <TextView
     android:id="@+id/textView9"
     android:layout_width="wrap_content"
@@ -99,7 +94,7 @@
     android:layout_marginEnd="12dp"
     android:text="@string/weight_in_kg"
     android:textColor="#000000"
-    android:textSize="24sp"
+    android:textSize="20sp"
     app:layout_constraintEnd_toStartOf="@+id/weightField"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +108,7 @@
     android:layout_marginEnd="17dp"
     android:text="@string/height_in_cm"
     android:textColor="#000000"
-    android:textSize="24sp"
+    android:textSize="20sp"
     app:layout_constraintEnd_toStartOf="@+id/heightField"
     app:layout_constraintHorizontal_bias="0.1"
     app:layout_constraintStart_toStartOf="parent"
@@ -124,11 +119,9 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="34dp"
-    android:layout_marginBottom="11dp"
     android:text="@string/bmi"
     android:textColor="#000000"
     android:textSize="24sp"
-    app:layout_constraintBottom_toTopOf="@+id/toolbar4"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/textView10" />
   <EditText
@@ -136,14 +129,14 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="160dp"
-    android:layout_marginTop="22dp"
+    android:layout_marginTop="24dp"
     android:layout_marginEnd="32dp"
     android:ems="10"
     android:inputType="textPersonName"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+    app:layout_constraintTop_toBottomOf="@+id/myRectangleView13" />
   <EditText
     android:id="@+id/weightField"
     android:layout_width="0dp"
@@ -183,42 +176,38 @@
     app:layout_constraintEnd_toStartOf="@+id/nameField"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+    app:layout_constraintTop_toBottomOf="@+id/myRectangleView13" />
   <TextView
     android:id="@+id/textView"
     android:layout_width="0dp"
     android:layout_height="31dp"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="27dp"
+    android:layout_marginTop="4dp"
     android:text="@string/profile"
     android:textColor="#FFFFFF"
     android:textSize="18sp"
-    app:layout_constraintBottom_toTopOf="@+id/textView7"
+    app:layout_constraintBottom_toBottomOf="@+id/myRectangleView13"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
+    app:layout_constraintTop_toBottomOf="@+id/myRectangleView14" />
   <TextView
     android:id="@+id/textView3"
     android:layout_width="0dp"
     android:layout_height="31dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
     android:text="@string/average_pace"
     android:textColor="#FFFFFF"
     android:textSize="18sp"
-    app:layout_constraintStart_toStartOf="@+id/toolbar4"
-    app:layout_constraintTop_toTopOf="@+id/toolbar4" />
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="366dp" />
   <TextView
     android:id="@+id/textView4"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="24dp"
     android:text="@string/walking"
     android:textColor="#000000"
     android:textSize="24sp"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar4" />
+    tools:layout_editor_absoluteY="420dp" />
   <TextView
     android:id="@+id/textView5"
     android:layout_width="wrap_content"
@@ -255,30 +244,26 @@
   <Button
     android:id="@+id/saveButton"
     android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_marginStart="24dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="32dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="70dp"
     android:onClick="onSaveButton"
     android:text="@string/save"
-    app:layout_constraintBottom_toTopOf="@+id/toolbar4"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.545"
-    app:layout_constraintStart_toEndOf="@+id/weightField"
-    app:layout_constraintTop_toBottomOf="@+id/nameField" />
+    app:layout_constraintTop_toBottomOf="@+id/nameField"
+    tools:layout_editor_absoluteX="307dp" />
   <TextView
     android:id="@+id/textView15"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
     android:text="@string/user"
     android:textColor="#FFFFFF"
     android:textColorHint="#FFFFFF"
     android:textSize="30sp"
-    app:layout_constraintStart_toStartOf="@+id/toolbar3"
-    app:layout_constraintTop_toTopOf="@+id/toolbar3" />
+    app:layout_constraintBottom_toTopOf="@+id/myRectangleView13"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/myRectangleView14" />
   <TextView
     android:id="@+id/bmiField"
     android:layout_width="wrap_content"
@@ -286,10 +271,8 @@
     android:layout_marginStart="160dp"
     android:layout_marginTop="28dp"
     android:layout_marginEnd="150dp"
-    android:layout_marginBottom="11dp"
     android:ems="10"
     android:textSize="18sp"
-    app:layout_constraintBottom_toTopOf="@+id/toolbar4"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/heightField" />

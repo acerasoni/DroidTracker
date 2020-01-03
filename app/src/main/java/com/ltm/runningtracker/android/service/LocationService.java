@@ -30,7 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -59,9 +58,9 @@ import org.jetbrains.annotations.NotNull;
  * LifecycleService is to allow the Service to observe LiveData objects, which requires the
  * observing class to be a LifecycleOwner.
  *
- * The run can be paused. This functionality is controlled by RunActivity via Binder interface.
- * When paused the time and distance will be frozen and no more coordinates are added to the RunCoordinates
- * container. The current state is rendered in the notification.
+ * The run can be paused. This functionality is controlled by RunActivity via Binder interface. When
+ * paused the time and distance will be frozen and no more coordinates are added to the
+ * RunCoordinates container. The current state is rendered in the notification.
  *
  * Note that even when the run is paused, the map on and both location and temperature TextViews in
  * RunActivity will update. This has been done purposely.
@@ -90,7 +89,6 @@ public class LocationService extends LifecycleService {
   private ScheduledFuture<?> scheduledFuture;
 
   private ContentValues contentValues;
-
 
   @Override
   public void onCreate() {
@@ -193,10 +191,11 @@ public class LocationService extends LifecycleService {
     }
 
     public boolean togglePause() {
-      if(runPaused) {
+      if (runPaused) {
         // Resume updating time
         scheduledFuture =
-            timeScheduledExecutorService.scheduleAtFixedRate(timeUpdateTask, 0, 1L, TimeUnit.SECONDS);
+            timeScheduledExecutorService
+                .scheduleAtFixedRate(timeUpdateTask, 0, 1L, TimeUnit.SECONDS);
 
         // Update notification
         updateNotification(RUN_ONGOING);
@@ -401,7 +400,8 @@ public class LocationService extends LifecycleService {
   public void updateNotification(String newMessage) {
     Notification notification = generateNotification(newMessage);
 
-    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManager mNotificationManager = (NotificationManager) getSystemService(
+        Context.NOTIFICATION_SERVICE);
     mNotificationManager.notify(NOTIFICATION_ID, notification);
   }
 
