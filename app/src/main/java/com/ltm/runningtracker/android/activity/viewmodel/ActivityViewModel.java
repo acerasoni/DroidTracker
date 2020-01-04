@@ -25,7 +25,7 @@ import com.ltm.runningtracker.repository.RunRepository;
 import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
-import com.ltm.runningtracker.util.annotations.Controller;
+import com.ltm.runningtracker.util.annotations.Presenter;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import com.mapbox.android.core.location.LocationEngine;
 import com.survivingwithandroid.weather.lib.WeatherClient;
@@ -38,11 +38,11 @@ import java.util.List;
  * this pattern. It does so by exposing LiveData repositories which Activities can observe.
  * Activities can then react to changes made to the Model objects.
  *
- * This coursework implements the Model-View-Controller pattern. In addition to being a ViewModel as
- * outlined above, this class also acts as the controller in this pattern. Methods tagged with
+ * This coursework implements the Model-View-Presenter pattern. In addition to being a ViewModel as
+ * outlined above, this class also acts as the presenter in this pattern. Methods tagged with
  *
  * @observer are used by Activities to directly retrieve data. This tag requires to specify which
- * Activities access the method, and which repositories the methods depends on. The controller
+ * Activities access the method, and which repositories the methods depends on. The presenter
  * ultimately determines where the data comes from (cache or asynchronous call to the Database), and
  * in what form.
  *
@@ -54,12 +54,12 @@ import java.util.List;
  *
  * 2. Views request data stored in the Model without the Model changing. Data is fetched from cache,
  * validated and returned. The Data retrieval on the UI thread is made synchronously and through
- * inspecting the cache. This use case requires the Model-View-Controller.
+ * inspecting the cache. This use case requires the Model-View-Presenter.
  *
  * 3. Views request data stored in the Model without the Model changing. Data is not found in the
  * cache. An asynchronous call to the database is made in the background, and the value is cached.
  * The View is then setup to observe the cache and update it's UI when cache is populated. This use
- * case requires both Model-View-ViewModel, and Model-View-Controller patterns.
+ * case requires both Model-View-ViewModel, and Model-View-Presenter patterns.
  */
 public class ActivityViewModel extends ViewModel {
 
@@ -91,7 +91,7 @@ public class ActivityViewModel extends ViewModel {
     weatherLiveData = weatherRepository.getLiveDataWeather();
   }
 
-  // <-- Model-View-ViewModel compliant exposure of LiveData objects -->
+  // <-- Model-View-ViewModel exposure of LiveData objects -->
 
   public LiveData<Location> getLocation() {
     return locationLiveData;
@@ -117,15 +117,15 @@ public class ActivityViewModel extends ViewModel {
     return weatherLiveData;
   }
 
-  // <-- Implementation of Model-View-Control pattern -->
+  // <-- Implementation of Model-View-Presenter pattern -->
 
-  @Controller(usedBy = {RunActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {RunActivity.class}, repositoriesAccessed = {
       LocationRepository.class})
   public LocationEngine getLocationEngine() {
     return locationRepository.getLocationEngine();
   }
 
-  @Controller(usedBy = {UserProfileActivity.class}, repositoriesAccessed = {RunRepository.class})
+  @Presenter(usedBy = {UserProfileActivity.class}, repositoriesAccessed = {RunRepository.class})
   public Float[] getUserAveragePaces(Context context) {
     return runRepository.calculatateAveragePaces(context);
   }
@@ -136,7 +136,7 @@ public class ActivityViewModel extends ViewModel {
    * @param context for the asynchronous call to the database if the cache was empty
    * @return Cursor with one row which contains the run requested.
    */
-  @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public Cursor getRunById(int id, WeatherClassifier weatherClassifier, Context context) {
     // Check if cached has the row we need
@@ -160,7 +160,7 @@ public class ActivityViewModel extends ViewModel {
     return null;
   }
 
-  @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public RunCoordinates getRunCoordinates(WeatherClassifier weatherClassifier, int id) {
     // Look in cache. Guaranteed to have it, because call is made from inside the BrowseRunDetailsActivity,
@@ -173,18 +173,18 @@ public class ActivityViewModel extends ViewModel {
    * @param context with which database query is made
    * @return Cursor containing all the runs of the given weatherClassifier type
    */
-  @Controller(usedBy = {PerformanceFragment.class}, repositoriesAccessed = {RunRepository.class})
+  @Presenter(usedBy = {PerformanceFragment.class}, repositoriesAccessed = {RunRepository.class})
   public Cursor getRunsByWeather(WeatherClassifier weatherClassifier, Context context) {
     return runRepository.getRunsAsync(context, weatherClassifier);
   }
 
-  @Controller(usedBy = {MainScreenActivity.class, SettingsActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {MainScreenActivity.class, SettingsActivity.class}, repositoriesAccessed = {
       UserRepository.class})
   public boolean doesUserExist() {
     return userRepository.getUser() != null;
   }
 
-  @Controller(usedBy = {MainScreenActivity.class,
+  @Presenter(usedBy = {MainScreenActivity.class,
       PerformanceFragment.class}, repositoriesAccessed = {RunRepository.class})
   public boolean doRunsExist(Context context) {
     return runRepository.doRunsExist(context);
@@ -199,7 +199,7 @@ public class ActivityViewModel extends ViewModel {
    * @param context with which database query is made
    * @return boolean[] containing result of the queries outlined above
    */
-  @Controller(usedBy = {SettingsActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public boolean[] determineWhichRunTypesExist(Context context) {
     boolean[] runsExist = new boolean[6];
@@ -212,7 +212,7 @@ public class ActivityViewModel extends ViewModel {
     return runsExist;
   }
 
-  @Controller(usedBy = {UserProfileActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {UserProfileActivity.class}, repositoriesAccessed = {
       UserRepository.class})
   public void saveUser(Context context, boolean creatingUser, String name, String weight,
       String height) {
@@ -226,34 +226,34 @@ public class ActivityViewModel extends ViewModel {
     }
   }
 
-  @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public void updateTypeOfRun(int id, int pos, Context context) {
     runRepository.updateTypeOfRun(id, pos, context);
   }
 
-  @Controller(usedBy = {SettingsActivity.class}, repositoriesAccessed = {UserRepository.class})
+  @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {UserRepository.class})
   public void deleteUser(Context context) {
     userRepository.deleteUser(context);
   }
 
-  @Controller(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
+  @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
   public void deleteRuns(Context context) {
     runRepository.deleteRuns(context);
   }
 
-  @Controller(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public void deleteRun(WeatherClassifier weatherClassifier, Context context, int id) {
     runRepository.deleteRun(weatherClassifier, context, id);
   }
 
-  @Controller(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
+  @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
   public void deleteRunsByType(Uri uri, Context context, WeatherClassifier weatherClassifier) {
     runRepository.deleteRunsByType(uri, context, weatherClassifier);
   }
 
-  @Controller(usedBy = {MainScreenActivity.class}, repositoriesAccessed = {
+  @Presenter(usedBy = {MainScreenActivity.class}, repositoriesAccessed = {
       LocationRepository.class, UserRepository.class, WeatherRepository.class, RunRepository.class})
   public void initRepos() {
     getPropertyManager();

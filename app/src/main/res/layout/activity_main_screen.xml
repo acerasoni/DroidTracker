@@ -138,6 +138,7 @@
           android:drawablePadding="-32sp"
           android:text="@string/run"
           android:textAllCaps="false"
+          android:textStyle="bold"
           tools:ignore="NestedWeights" />
         <Button
           android:id="@+id/performanceButton"
@@ -147,7 +148,8 @@
           android:backgroundTint="@color/mainButtonColor"
           android:drawableStart="@drawable/graph_image"
           android:text="@string/performance"
-          android:textAllCaps="false" />
+          android:textAllCaps="false"
+          android:textStyle="bold" />
       </LinearLayout>
       <LinearLayout
         android:layout_width="match_parent"
@@ -161,7 +163,8 @@
           android:backgroundTint="@color/mainButtonColor"
           android:drawableStart="@drawable/profile_image"
           android:text="@string/user_profile"
-          android:textAllCaps="false" />
+          android:textAllCaps="false"
+          android:textStyle="bold" />
         <Button
           android:id="@+id/settingsButton"
           android:layout_width="0dp"
@@ -171,7 +174,8 @@
           android:drawableStart="@drawable/settings_image"
           android:drawablePadding="-32sp"
           android:text="@string/settings"
-          android:textAllCaps="false" />
+          android:textAllCaps="false"
+          android:textStyle="bold" />
       </LinearLayout>
     </LinearLayout>
   </androidx.constraintlayout.widget.ConstraintLayout>

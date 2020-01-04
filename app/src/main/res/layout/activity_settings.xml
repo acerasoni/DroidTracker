@@ -74,7 +74,8 @@
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
-        android:text="@string/delete_user_and_all_runs_associated" />
+        android:text="@string/delete_user_and_all_runs_associated"
+        android:textStyle="bold" />
       <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -109,7 +110,8 @@
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
-        android:text="@string/delete_all_runs" />
+        android:text="@string/delete_all_runs"
+        android:textStyle="bold" />
       <Button
         android:id="@+id/freezingRuns"
         android:layout_width="match_parent"
@@ -119,7 +121,8 @@
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
-        android:text="@string/delete_freezing_runs" />
+        android:text="@string/delete_freezing_runs"
+        android:textStyle="bold" />
       <Button
         android:id="@+id/coldRuns"
         android:layout_width="match_parent"
@@ -129,7 +132,8 @@
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
-        android:text="@string/delete_cold_runs" />
+        android:text="@string/delete_cold_runs"
+        android:textStyle="bold" />
       <Button
         android:id="@+id/mildRuns"
         android:layout_width="match_parent"
@@ -139,7 +143,8 @@
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
-        android:text="@string/delete_mild_runs" />
+        android:text="@string/delete_mild_runs"
+        android:textStyle="bold" />
       <Button
         android:id="@+id/warmRuns"
         android:layout_width="match_parent"
@@ -149,7 +154,8 @@
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
-        android:text="@string/delete_warm_runs" />
+        android:text="@string/delete_warm_runs"
+        android:textStyle="bold" />
       <Button
         android:id="@+id/hotRuns"
         android:layout_width="match_parent"
@@ -159,7 +165,8 @@
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
-        android:text="@string/delete_hot_runs" />
+        android:text="@string/delete_hot_runs"
+        android:textStyle="bold" />
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

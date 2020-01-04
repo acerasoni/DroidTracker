@@ -1,6 +1,5 @@
 package com.ltm.runningtracker.util;
 
-import android.content.ServiceConnection;
 import android.util.Log;
 import androidx.room.TypeConverter;
 import com.mapbox.mapboxsdk.geometry.LatLng;

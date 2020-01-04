@@ -90,14 +90,11 @@ public abstract class PerformanceFragment extends Fragment {
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     AsyncTask.execute(() -> {
-          onPopulateList(weatherClassifierOfFragment);
+      onPopulateList(weatherClassifierOfFragment);
       adapter = new SimpleRecyclerViewAdapter(getActivity(), c);
       adapter.setClickListener(new RunItemClickListener());
       getActivity().runOnUiThread(() -> recyclerView.setAdapter(adapter));
         });
-
-
-
 
     return view;
   }

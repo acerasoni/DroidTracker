@@ -1,6 +1,5 @@
 package com.ltm.runningtracker.database.model;
 
-import android.content.ContentValues;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

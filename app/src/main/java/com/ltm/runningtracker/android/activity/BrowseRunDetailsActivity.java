@@ -1,6 +1,5 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.repository.LocationRepository.getCounty;
 import static com.ltm.runningtracker.util.Constants.REQUESTING_PERMISSION;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
@@ -9,7 +8,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.AdapterView;
@@ -28,37 +26,24 @@ import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.RunCoordinates.Coordinate;
-import com.ltm.runningtracker.util.annotations.Controller;
 import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import com.mapbox.android.core.permissions.PermissionsListener;
-import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.Polyline;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.LocationComponentOptions;
 import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener;
 import com.mapbox.mapboxsdk.location.OnLocationClickListener;
-import com.mapbox.mapboxsdk.location.modes.CameraMode;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.plugins.annotation.Line;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
-import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -129,6 +114,8 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     setupMaxbox(savedInstanceState);
   }
 
+  // <-- Activity lifecycle operations required by MapBox-->
+
   @Override
   protected void onResume() {
     super.onResume();
@@ -169,6 +156,42 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   public void onLowMemory() {
     super.onLowMemory();
     mapView.onLowMemory();
+  }
+
+
+  @Override
+  public void onExplanationNeeded(List<String> permissionsToExplain) {
+    Toast.makeText(this, REQUESTING_PERMISSION, Toast.LENGTH_LONG).show();
+  }
+
+  @Override
+  public void onPermissionResult(boolean granted) {
+
+  }
+
+  @Override
+  public void onMapReady(@NonNull MapboxMap mapboxMap) {
+    this.mapboxMap = mapboxMap;
+    setupStyle(runCoordinates);
+  }
+
+  @SuppressWarnings({"MissingPermission"})
+  @Override
+  public void onLocationComponentClick() {
+  }
+
+  @Override
+  public void onCameraTrackingDismissed() {
+  }
+
+  @Override
+  public void onCameraTrackingChanged(int currentMode) {
+    // Empty on purpose
+  }
+
+  @SuppressWarnings({"MissingPermission"})
+  private void enableLocationComponent(@NonNull Style loadedMapStyle) {
+    drawLine(loadedMapStyle);
   }
 
   public void onSave(@Nullable View v) {
@@ -268,41 +291,6 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
-  }
-
-  @Override
-  public void onExplanationNeeded(List<String> permissionsToExplain) {
-    Toast.makeText(this, REQUESTING_PERMISSION, Toast.LENGTH_LONG).show();
-  }
-
-  @Override
-  public void onPermissionResult(boolean granted) {
-
-  }
-
-  @Override
-  public void onMapReady(@NonNull MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
-    setupStyle(runCoordinates);
-  }
-
-  @SuppressWarnings({"MissingPermission"})
-  @Override
-  public void onLocationComponentClick() {
-  }
-
-  @Override
-  public void onCameraTrackingDismissed() {
-  }
-
-  @Override
-  public void onCameraTrackingChanged(int currentMode) {
-    // Empty on purpose
-  }
-
-  @SuppressWarnings({"MissingPermission"})
-  private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-    drawLine(loadedMapStyle);
   }
 
   private void drawLine(Style style) {

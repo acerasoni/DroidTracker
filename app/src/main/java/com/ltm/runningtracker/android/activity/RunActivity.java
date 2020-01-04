@@ -106,7 +106,6 @@ public class RunActivity extends AppCompatActivity implements
   private TextView distanceView;
   private TextView temperatureView;
   private TextView durationView;
-
   private Button pauseResumeButton;
   private Button toggleRunButton;
 
