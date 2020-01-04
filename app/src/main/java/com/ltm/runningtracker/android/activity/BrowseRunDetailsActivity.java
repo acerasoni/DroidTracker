@@ -317,7 +317,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
     // Draw line
     LineOptions lineOptions = new LineOptions().withLatLngs(coordinates)
-        .withLineWidth(6f).withLineColor("orange");
+        .withLineWidth(6f).withLineColor("red");
     lineManager.create(lineOptions);
 
     // Bound the box
