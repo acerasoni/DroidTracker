@@ -9,6 +9,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
+import com.ltm.runningtracker.util.Serializer;
 import com.ltm.runningtracker.util.parser.WeatherParser;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -95,7 +96,7 @@ public class Run {
      * Fails if serialization of coordinate fails
      */
     public Builder withRunCoordinates(byte[] runCoordinates) {
-      this.runCoordinates = RunCoordinates.fromByteArray(runCoordinates);
+      this.runCoordinates = Serializer.runCoordinatesFromByteArray(runCoordinates);
       return this;
     }
 

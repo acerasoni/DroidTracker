@@ -19,6 +19,7 @@ import static com.ltm.runningtracker.util.Constants.NAME;
 import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
 import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
+import static com.ltm.runningtracker.util.Constants.USER_ID;
 import static com.ltm.runningtracker.util.Constants.WEIGHT;
 
 import android.content.ContentProvider;
@@ -34,6 +35,7 @@ import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
+import com.ltm.runningtracker.util.Serializer;
 import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
@@ -102,9 +104,10 @@ public class DroidContentProvider extends ContentProvider {
         var = ContentUris.withAppendedId(uri, runId);
         break;
       case USER:
-        User user = getParsedUserBuilder(Objects.requireNonNull(contentValues)).build();
-        // Cache
-        getUserRepository().setUserAsync(user);
+        // Retrieve from Content Values and deserialize
+        User user = Serializer.fromByteArray(contentValues.getAsByteArray(USER_ID));
+
+        // Insert in Room
         long userId = userDao.insert(user);
         var = ContentUris.withAppendedId(uri, userId);
         break;
@@ -218,18 +221,6 @@ public class DroidContentProvider extends ContentProvider {
         .capitalizeFirstLetter(RunTypeClassifier.valueOf(runTypeId).toString());
 
     return builder.withRunType(runType);
-  }
-
-  /**
-   * Method's purpose similar to above, appropriately implemented for the User Model. see {@link
-   * #getParsedUserBuilder(ContentValues)}
-   *
-   * @param contentValues containing name, weight and height
-   */
-  private User.Builder getParsedUserBuilder(ContentValues contentValues) {
-    return new User.Builder(contentValues.getAsString(NAME))
-        .withWeight(contentValues.getAsInteger(WEIGHT))
-        .withHeight(contentValues.getAsInteger(HEIGHT));
   }
 
 }

@@ -122,6 +122,9 @@ public class RunRepository {
     }
   }
 
+  /**
+   * Resets the long-living cache on all weather-specific cached cursors.
+   */
   public void flushCache() {
     for (WeatherClassifier wc : WeatherClassifier.values()) {
       flushCacheByWeather(wc);

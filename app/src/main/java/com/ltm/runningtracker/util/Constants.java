@@ -54,4 +54,5 @@ public class Constants {
   public static final String RUN_COORDINATES = "runCoordinates";
 
   public static final String CHANNEL_ID = "channelId";
+  public static final String USER_ID = "userId";
 }

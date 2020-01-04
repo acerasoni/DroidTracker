@@ -5,6 +5,7 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.USER_URI;
 import static com.ltm.runningtracker.util.Constants.HEIGHT;
 import static com.ltm.runningtracker.util.Constants.NAME;
+import static com.ltm.runningtracker.util.Constants.USER_ID;
 import static com.ltm.runningtracker.util.Constants.WEIGHT;
 
 import android.annotation.SuppressLint;
@@ -15,6 +16,8 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.database.model.User;
+import com.ltm.runningtracker.util.Serializer;
+import java.util.Objects;
 
 /**
  * Repository responsible for exposing, storing and modifying the user's LiveData object which acts
@@ -78,10 +81,17 @@ public class UserRepository {
    * the User object and assign it to the user repository (cache) and database (memory)
    */
   public void createUser(String name, int weight, int height, Context context) {
+    // Build user
+    User user = getParsedUserBuilder(name, weight, height).build();
+
+    // We must set the cache here because because the Content Provider must not know
+    // or have a dependency on previous levels of abstraction
+    setUserAsync(user);
+
+    // Serialize and send to Content Provider
     ContentValues contentValues = new ContentValues();
-    contentValues.put(NAME, name);
-    contentValues.put(WEIGHT, weight);
-    contentValues.put(HEIGHT, height);
+    contentValues.put(USER_ID, Serializer.toByteArray(user));
+
     AsyncTask.execute(
         () -> context.getContentResolver().insert(USER_URI, contentValues));
   }
@@ -134,6 +144,19 @@ public class UserRepository {
 
     return new User.Builder(name).withWeight(weight)
         .withHeight(height).build();
+  }
+
+  /**
+   * Method's purpose is to build a User object from input Content Values, appropriately implemented
+   * for the User Model.
+   *
+   * @return User object
+   * @see com.ltm.runningtracker.android.contentprovider.DroidContentProvider
+   */
+  private User.Builder getParsedUserBuilder(String name, int weight, int height) {
+    return new User.Builder(name)
+        .withWeight(weight)
+        .withHeight(height);
   }
 
 }

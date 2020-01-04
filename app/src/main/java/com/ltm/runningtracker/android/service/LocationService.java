@@ -40,6 +40,7 @@ import com.ltm.runningtracker.android.activity.RunActivity;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.RunCoordinates.Coordinate;
+import com.ltm.runningtracker.util.Serializer;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -237,7 +238,7 @@ public class LocationService extends LifecycleService {
     float x1 = (float) getLocationRepository().getLocation().getLatitude();
     float y1 = (float) getLocationRepository().getLocation().getLongitude();
 
-    runCoordinates.addCoordinate(new Coordinate(x1, y1, false));
+    runCoordinates.addCoordinate(new Coordinate(x1, y1));
     currentLocation = getLocationRepository().getLocation();
 
     // Start time update thread
@@ -278,8 +279,8 @@ public class LocationService extends LifecycleService {
         if (shouldSave) {
           temperature = getWeatherRepository().getTemperature();
 
-          byte[] rc = RunCoordinates
-              .toByteArray(runCoordinates);
+          byte[] rc = Serializer
+              .runCoordinatesToByteArray(runCoordinates);
           contentValues.put(RUN_COORDINATES, rc);
           contentValues.put(TEMPERATURE, temperature);
           contentValues.put(DURATION, time);
@@ -340,7 +341,7 @@ public class LocationService extends LifecycleService {
           // Set new coordinate
           float x2 = (float) location.getLatitude();
           float y2 = (float) location.getLongitude();
-          runCoordinates.addCoordinate(new Coordinate(x2, y2, false));
+          runCoordinates.addCoordinate(new Coordinate(x2, y2));
 
           // Dynamically increases the distance covered rather than calculating distance between point A and point B
           distance += location.distanceTo(currentLocation);

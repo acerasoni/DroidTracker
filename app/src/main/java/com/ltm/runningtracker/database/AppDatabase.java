@@ -8,6 +8,7 @@ import androidx.room.TypeConverters;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.RunCoordinates;
+import com.ltm.runningtracker.util.Serializer;
 
 /**
  * Database class as defined in the Android Jetpack architectural standards
@@ -16,8 +17,8 @@ import com.ltm.runningtracker.util.RunCoordinates;
  * Jetpack documentation</a>
  */
 // Database instantiated in the app's constructor
-@Database(entities = {Run.class, User.class}, version = 202, exportSchema = false)
-@TypeConverters(RunCoordinates.class)
+@Database(entities = {Run.class, User.class}, version = 203, exportSchema = false)
+@TypeConverters(Serializer.class)
 public abstract class AppDatabase extends RoomDatabase {
 
   private static final String DB_NAME = "tracker_db";

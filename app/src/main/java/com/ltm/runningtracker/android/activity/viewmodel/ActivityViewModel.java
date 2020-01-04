@@ -25,6 +25,7 @@ import com.ltm.runningtracker.repository.RunRepository;
 import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
+import com.ltm.runningtracker.util.Serializer;
 import com.ltm.runningtracker.util.annotations.Presenter;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import com.mapbox.android.core.location.LocationEngine;
@@ -166,7 +167,7 @@ public class ActivityViewModel extends ViewModel {
     // Look in cache. Guaranteed to have it, because call is made from inside the BrowseRunDetailsActivity,
     // which means that run was previously located in cache by id.
     Cursor c = getCachedRunById(weatherClassifier, id);
-    return RunCoordinates.fromByteArray(c.getBlob(8));
+    return Serializer.runCoordinatesFromByteArray(c.getBlob(8));
   }
 
   /**
