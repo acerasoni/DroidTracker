@@ -106,8 +106,8 @@ public abstract class PerformanceFragment extends Fragment {
   }
 
   protected void onUpdateList(WeatherClassifier weatherClassifier) {
-    runsByWeather = performanceViewModel
-        .getRunsByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
+      runsByWeather = performanceViewModel
+          .getRunsByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
     Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
       adapter.swapRuns(runsByWeather);
     });

@@ -2,6 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   package="com.ltm.runningtracker">
+
+  <permission
+    android:name="com.ltm.runningtracker.WRITE"
+    android:label="@string/perm_write"
+    android:protectionLevel="normal" />
+
+  <permission
+    android:name="com.ltm.runningtracker.READ"
+    android:label="@string/perm_write"
+    android:protectionLevel="dangerous" />
+
   <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -71,7 +82,9 @@
       android:name=".android.contentprovider.DroidContentProvider"
       android:authorities="com.ltm.runningtracker.android.contentprovider.DroidContentProvider"
       android:enabled="true"
-      android:exported="false" />
+      android:exported="true"
+      android:writePermission="com.ltm.runningtracker.WRITE"
+      android:readPermission="com.ltm.runningtracker.READ" />
 
   </application>
 

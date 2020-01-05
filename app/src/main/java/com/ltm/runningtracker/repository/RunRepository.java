@@ -46,14 +46,19 @@ import java.util.function.Predicate;
  */
 public class RunRepository {
 
-  // Enum provides us with index of run types
-  // Set because we don't want duplicate runs in cache
+  /*
+   Cache of runs - set because we don't want duplicate runs in cache AND is
+   O(1) for access, whereas an ArrayList is O(1). It will store cached runs
+   unordered but that is not an issue.
+   */
   private Set<Run> runsCache;
   private MutableLiveData<Run> shortLivingRunCache;
 
   public RunRepository() {
     // Initialise empty cache
     runsCache = new HashSet<>();
+
+    // Initialize the short living observable cache
     shortLivingRunCache = new MutableLiveData<>();
   }
 
@@ -61,7 +66,12 @@ public class RunRepository {
     return shortLivingRunCache;
   }
 
-  public boolean doRunsExist(Context context) {
+  /**
+   * Synchronised read of cache run and subsequent query to database
+   *
+   * @return true if runs exist
+   */
+  public synchronized boolean doRunsExist(Context context) {
     Cursor c;
 
     if (runsCache.size() > 0) {
@@ -69,11 +79,11 @@ public class RunRepository {
     }
 
     // Check DB
-    // Necessary as run cursors are cached only when looking at performance
+    // Necessary as run cursors are cached only when looking at performance - could be empty
     c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
 
     if (c != null && c.moveToFirst()) {
-      // Cache all runs returned
+      // Cache all runs returned for future use
       do {
         Run run = Run.fromCursorToRun(c);
         runsCache.add(run);
@@ -89,7 +99,7 @@ public class RunRepository {
   /**
    * Called asynchronously from a background thread in Location Service
    *
-   * @see
+   * @see com.ltm.runningtracker.android.service.LocationService
    */
   public void createRun(Double distance, int time, long date, float temperature,
       RunCoordinates runCoordinates) {
@@ -106,32 +116,14 @@ public class RunRepository {
     flushCache();
   }
 
+  /**
+   * Asynchronously deleted all runs in the database
+   */
   public void deleteRuns(Context context) {
     AsyncTask.execute(() -> {
       context.getContentResolver().delete(RUNS_URI, null, null);
       getRunRepository().flushCache();
     });
-  }
-
-  public boolean doRunsExistByWeather(Context context, WeatherClassifier weatherClassifier) {
-    List<Run> runList = getRunsSyncByWeather(weatherClassifier);
-
-    // Check cache
-    if (runList.size() > 0) {
-      return true;
-    }
-
-    // Query db
-    else {
-      // Will update the cache
-      getRunsAsyncByWeather(context, weatherClassifier);
-      // Check cache again
-      if (runList.size() > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
   }
 
   public void populateShortLivingCache(Run run) {
@@ -141,7 +133,7 @@ public class RunRepository {
   /**
    * Resets the long-living cache on all weather-specific cached cursors.
    */
-  public void flushCache() {
+  public synchronized void flushCache() {
     // delete long-living cache
     runsCache = new HashSet<>();
 
@@ -153,7 +145,13 @@ public class RunRepository {
     return getRunsAsync(context, RUNS_URI);
   }
 
-  public List<Run> getRunsAsync(Context context, Uri uri) {
+  /**
+   * Gets all runs stored in the database. Must be called asynchronously. As this method sets the
+   * cache, it requires synchronised access.
+   *
+   * @return List<Run> of all runs in the database
+   */
+  public synchronized List<Run> getRunsAsync(Context context, Uri uri) {
     List<Run> returnedList = new ArrayList<>();
 
     Cursor c;
@@ -164,6 +162,7 @@ public class RunRepository {
       do {
         Run run = Run.fromCursorToRun(c);
         returnedList.add(run);
+
         // Cache run. Set will ignore duplicates.
         runsCache.add(run);
       } while (c.moveToNext());
@@ -174,7 +173,7 @@ public class RunRepository {
 
   // Called if cache exists
   // Only useful to check if runs of certain weather type exist
-  public List<Run> getRunsSyncByWeather(WeatherClassifier weatherClassifier) {
+  public synchronized List<Run> getRunsSyncByWeather(WeatherClassifier weatherClassifier) {
     Predicate<Run> byWeatherType = run -> WeatherClassifier
         .valueOf(run.weatherType).equals(weatherClassifier);
 
@@ -190,25 +189,27 @@ public class RunRepository {
     // ping the DB
     Uri uri = Uri
         .withAppendedPath(RUNS_URI, weatherClassifier.toString());
-   return getRunsAsync(context, uri);
+    return getRunsAsync(context, uri);
   }
 
   /**
    * Gets run by id. If not found, makes async call to DB which updates short living cache.
-   * @param id
-   * @param context
+   *
    * @return run if retrieved, null if cache empty
    */
-  public Run getRunById(int id, Context context) {
+  public synchronized Run getRunById(int id, Context context) {
     // Check cache
-    for(Run run : runsCache) {
-      if(run._id == id) return run;
+    for (Run run : runsCache) {
+      if (run._id == id) {
+        return run;
+      }
     }
 
     // If not found in cache, ping DB async
     getRunByIdAsync(id, context);
     return null;
   }
+
   /**
    * Fetches run by id asynchronously. If found, populates the short living cache.
    *
@@ -216,7 +217,7 @@ public class RunRepository {
    * @param context with which to make database call
    */
   @SuppressLint("DefaultLocale")
-  public void getRunByIdAsync(int id, Context context) {
+  public synchronized void getRunByIdAsync(int id, Context context) {
     Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + id);
     Cursor c = context.getContentResolver().query(customUri, null, null, null, null);
 
@@ -348,7 +349,8 @@ public class RunRepository {
    */
   private Run.Builder getParsedRunBuilder(Double distance, int time, long date, float temperature,
       RunCoordinates runCoordinates) {
-    return new Run.Builder(getFormattedDate(date), distance, getFormattedTime(time), calculatePace(distance, time))
+    return new Run.Builder(getFormattedDate(date), distance, getFormattedTime(time),
+        calculatePace(distance, time))
         .withTemperature(temperature).withRunCoordinates(runCoordinates)
         .withRunType(ActivityViewModel
             .capitalizeFirstLetter(RunTypeClassifier.UNTAGGED.toString()));
