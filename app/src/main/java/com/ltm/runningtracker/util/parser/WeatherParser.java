@@ -52,6 +52,7 @@ public class WeatherParser {
     public String toString() {
       return weatherDefinition;
     }
+
   }
 
   /**

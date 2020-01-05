@@ -25,10 +25,30 @@ public class DroidProviderContract {
         Uri.parse(runsBuilder.append("/runs").toString());
   }
 
+  // <-- Static access variables for column names -->
   public static final String ID = "_id";
   public static final String LOCATION = "location";
   public static final String DATE = "date";
   public static final String RUN_TYPE = "runType";
   public static final String PACE = "pace";
 
+  // <-- Static access variables for column positions within the cursor -->
+
+  // Generic
+  public static final int ID_COL = 0;
+  public static final int NAME_COL = 1;
+
+  // User-specific
+  public static final int WEIGHT_COL = 2;
+  public static final int HEIGHT_COL = 3;
+
+  // Run-specific
+  public static final int DATE_COL = 2;
+  public static final int TYPE_COL = 3;
+  public static final int DISTANCE_COL = 4;
+  public static final int DURATION_COL = 5;
+  public static final int WEATHER_COL = 6;
+  public static final int TEMPERATURE_COL = 7;
+  public static final int COORDINATES_COL = 8;
+  public static final int PACE_COL = 9;
 }

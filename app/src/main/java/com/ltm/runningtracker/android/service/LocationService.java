@@ -1,7 +1,9 @@
 package com.ltm.runningtracker.android.service;
 
+import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
+import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 import static com.ltm.runningtracker.util.Constants.CHANNEL_ID;
 import static com.ltm.runningtracker.util.Constants.DATE;
@@ -35,6 +37,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.RunActivity;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
@@ -81,7 +84,7 @@ public class LocationService extends LifecycleService {
   private RunCoordinates runCoordinates;
 
   // Weather
-  private String temperature;
+  private float temperature;
 
   // Time
   private int time;
@@ -244,13 +247,12 @@ public class LocationService extends LifecycleService {
     // Start time update thread
     timeUpdateTask = () -> {
       time++;
-      Intent intent = new Intent();
+      Intent intent = new Intent(TIME_UPDATE_ACTION);
       Bundle bundle = new Bundle();
       bundle.putInt(getResources().getString(R.string.time), time);
       intent.putExtras(bundle);
 
-      intent.setAction(TIME_UPDATE_ACTION);
-      sendBroadcast(intent);
+      sendUpdateBroadcast(intent);
     };
 
     // Begin execution of worker thread
@@ -278,15 +280,9 @@ public class LocationService extends LifecycleService {
       protected Void doInBackground(Void... voids) {
         if (shouldSave) {
           temperature = getWeatherRepository().getTemperature();
+          long date = System.currentTimeMillis();
 
-          byte[] rc = Serializer
-              .runCoordinatesToByteArray(runCoordinates);
-          contentValues.put(RUN_COORDINATES, rc);
-          contentValues.put(TEMPERATURE, temperature);
-          contentValues.put(DURATION, time);
-          contentValues.put(DISTANCE, distance);
-          contentValues.put(DATE, System.currentTimeMillis());
-          getContentResolver().insert(DroidProviderContract.RUNS_URI, contentValues);
+          getRunRepository().createRun(distance, time, date, temperature, runCoordinates);
         }
 
         return null;
@@ -298,9 +294,8 @@ public class LocationService extends LifecycleService {
 
         if (shouldSave) {
           // Asynchronously tell activity that run has been saved
-          Intent intent = new Intent();
-          intent.setAction(RUN_END_ACTION);
-          sendBroadcast(intent);
+          Intent intent = new Intent(RUN_END_ACTION);
+          sendUpdateBroadcast(intent);
         }
 
         // Flush local run coordinates object
@@ -346,13 +341,12 @@ public class LocationService extends LifecycleService {
           // Dynamically increases the distance covered rather than calculating distance between point A and point B
           distance += location.distanceTo(currentLocation);
 
-          Intent intent = new Intent();
+          Intent intent = new Intent(DISTANCE_UPDATE_ACTION);
           Bundle bundle = new Bundle();
           bundle.putDouble(DISTANCE, distance);
           intent.putExtras(bundle);
 
-          intent.setAction(DISTANCE_UPDATE_ACTION);
-          sendBroadcast(intent);
+          sendUpdateBroadcast(intent);
 
           currentLocation = location;
         });
@@ -404,6 +398,10 @@ public class LocationService extends LifecycleService {
     NotificationManager mNotificationManager = (NotificationManager) getSystemService(
         Context.NOTIFICATION_SERVICE);
     mNotificationManager.notify(NOTIFICATION_ID, notification);
+  }
+
+  private void sendUpdateBroadcast(Intent intent) {
+    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
   }
 
 }

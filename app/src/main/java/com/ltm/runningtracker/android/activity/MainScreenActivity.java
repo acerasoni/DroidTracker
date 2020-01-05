@@ -1,7 +1,9 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.util.Constants.APP_REQUIRES_ACCESS;
 import static com.ltm.runningtracker.util.Constants.FETCHING_LOCATION;
 import static com.ltm.runningtracker.util.Constants.FETCHING_TEMPERATURE;
+import static com.ltm.runningtracker.util.Constants.PERMISSION_NOT_GRANTED;
 import static com.ltm.runningtracker.util.Constants.RUN_FIRST;
 import static com.ltm.runningtracker.util.Constants.SETUP_REQUIRED;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
@@ -134,7 +136,11 @@ public class MainScreenActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode,
       @NotNull String[] permissions, @NotNull int[] grantResults) {
-    setup();
+    if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
+      Toast.makeText(this, APP_REQUIRES_ACCESS, Toast.LENGTH_LONG).show();
+    } else {
+      setup();
+    }
   }
 
   private void requestPermission() {

@@ -34,9 +34,8 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
     return weatherMutableLiveData;
   }
 
-  public String getTemperature() {
-    return Float
-        .toString(Objects.requireNonNull(weatherMutableLiveData.getValue()).temperature.getTemp());
+  public float getTemperature() {
+    return Objects.requireNonNull(weatherMutableLiveData.getValue()).temperature.getTemp();
   }
 
   @Override

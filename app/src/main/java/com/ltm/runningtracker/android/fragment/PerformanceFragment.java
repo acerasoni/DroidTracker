@@ -25,9 +25,11 @@ import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
 import com.ltm.runningtracker.android.activity.PerformanceActivity;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.util.SimpleRecyclerViewAdapter;
 import com.ltm.runningtracker.util.SimpleRecyclerViewAdapter.ItemClickListener;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -41,26 +43,10 @@ public abstract class PerformanceFragment extends Fragment {
 
   public static final int BROWSE_RUN_REQUEST_CODE = 0;
 
-  private static final String[] RUN_DISPLAYED_DATA = new String[]{
-      DroidProviderContract.ID,
-      DroidProviderContract.DATE,
-      DroidProviderContract.LOCATION,
-      DroidProviderContract.RUN_TYPE,
-      DroidProviderContract.PACE
-  };
-
-  private static final int[] COLUMNS_RESULT_IDS = new int[]{
-      R.id.id,
-      R.id.date,
-      R.id.location,
-      R.id.type,
-      R.id.pace
-  };
-
   private RecyclerView recyclerView;
   private SimpleRecyclerViewAdapter adapter;
   private ActivityViewModel performanceViewModel;
-  private Cursor c;
+  private List<Run> runsByWeather;
   private Class thisClass = this.getClass();
 
   // Set in child fragments. Needs to be protected in order to be accessed in child class
@@ -74,11 +60,9 @@ public abstract class PerformanceFragment extends Fragment {
 
   /**
    * Inflating the fragment's view and updating its UI state is more appropriate in onCreateView
-   * rather than onCreate. This is because, due to Android's Fragment's lifecycle, onCreateView
-   * is always called after onCreate but also after onDestroyView.
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
+   * rather than onCreate. This is because, due to Android's Fragment's lifecycle, onCreateView is
+   * always called after onCreate but also after onDestroyView.
+   *
    * @return inflated View
    */
   @Override
@@ -91,10 +75,10 @@ public abstract class PerformanceFragment extends Fragment {
 
     AsyncTask.execute(() -> {
       onPopulateList(weatherClassifierOfFragment);
-      adapter = new SimpleRecyclerViewAdapter(getActivity(), c);
+      adapter = new SimpleRecyclerViewAdapter(getActivity(), runsByWeather);
       adapter.setClickListener(new RunItemClickListener());
       getActivity().runOnUiThread(() -> recyclerView.setAdapter(adapter));
-        });
+    });
 
     return view;
   }
@@ -109,7 +93,7 @@ public abstract class PerformanceFragment extends Fragment {
             Objects.requireNonNull(getActivity()).finish();
           } else {
             // Type was changed or run deleted, refresh cache and update UI
-            onPopulateList(weatherClassifierOfFragment);
+            onUpdateList(weatherClassifierOfFragment);
           }
         });
       }
@@ -117,16 +101,16 @@ public abstract class PerformanceFragment extends Fragment {
   }
 
   protected void onPopulateList(WeatherClassifier weatherClassifier) {
-      c = performanceViewModel
-          .getRunsByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
-      Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-        // Must do the following sequentially to ensure correct behaviour
-        // - fetch cursor from database asynchronously
-        // - Swap data adaptor's cursor with new one on UI thread
-        // - Notify data adapter on UI thread
+    runsByWeather = performanceViewModel
+        .getRunsByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
+  }
 
-        adapter.swapCursor(c);
-      });
+  protected void onUpdateList(WeatherClassifier weatherClassifier) {
+    runsByWeather = performanceViewModel
+        .getRunsByWeather(weatherClassifier, Objects.requireNonNull(getContext()));
+    Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+      adapter.swapRuns(runsByWeather);
+    });
   }
 
   private class RunItemClickListener implements SimpleRecyclerViewAdapter.ItemClickListener {
@@ -135,22 +119,22 @@ public abstract class PerformanceFragment extends Fragment {
     public void onItemClick(View view, int position) {
       // Start details activity when item is clicked
       // recyclerView.s((parent, view1, position, id) -> {
-        Intent intent = new Intent(getActivity(), BrowseRunDetailsActivity.class);
-        Bundle bundle = new Bundle();
+      Intent intent = new Intent(getActivity(), BrowseRunDetailsActivity.class);
+      Bundle bundle = new Bundle();
 
-        // Get ID of run
-        ViewGroup viewGroup = (ViewGroup) view;
-        TextView idView = viewGroup.findViewById(R.id.id);
+      // Get ID of run
+      ViewGroup viewGroup = (ViewGroup) view;
+      TextView idView = viewGroup.findViewById(R.id.id);
 
-        int runId = Integer.parseInt(idView.getText().toString());
-        bundle.putInt(getResources().getString(R.string.run_id), runId);
+      int runId = Integer.parseInt(idView.getText().toString());
+      bundle.putInt(getResources().getString(R.string.run_id), runId);
 
-        // Determine from which fragment so we can fetch the cursor from the right cache index
-        bundle.putInt(getResources().getString(R.string.from_fragment),
-            FRAGMENT_TO_ID.get(thisClass));
+      // Determine from which fragment so we can fetch the cursor from the right cache index
+      bundle.putInt(getResources().getString(R.string.from_fragment),
+          FRAGMENT_TO_ID.get(thisClass));
 
-        intent.putExtras(bundle);
-        startActivityForResult(intent, BROWSE_RUN_REQUEST_CODE);
+      intent.putExtras(bundle);
+      startActivityForResult(intent, BROWSE_RUN_REQUEST_CODE);
     }
   }
 

@@ -11,6 +11,7 @@ class DroidUriMatcher {
 
   static final UriMatcher URI_MATCHER;
 
+  // Unified static access variables for matching URI's in switch statements
   static final int RUNS = 0;
   static final int FREEZING_RUNS = 1;
   static final int COLD_RUNS = 2;

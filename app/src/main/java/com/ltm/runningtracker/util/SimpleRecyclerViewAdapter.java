@@ -1,4 +1,5 @@
 package com.ltm.runningtracker.util;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -7,22 +8,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ltm.runningtracker.R;
+import com.ltm.runningtracker.database.model.Run;
+import java.util.List;
 
 /**
- * Simple adapter for recycler views.
- * Taken from lecture code.
- * Adapted for my list view items.
+ * Simple adapter for recycler views. Taken from lecture code. Adapted for my list view items.
  */
-public class SimpleRecyclerViewAdapter extends RecyclerView.Adapter<SimpleRecyclerViewAdapter.ViewHolder> {
+public class SimpleRecyclerViewAdapter extends
+    RecyclerView.Adapter<SimpleRecyclerViewAdapter.ViewHolder> {
 
   private LayoutInflater inflater;
   private ItemClickListener clickListener;
+  private List<Run> runs;
 
-  Cursor cursor;
-
-  public SimpleRecyclerViewAdapter(Context context, Cursor cursor) {
+  public SimpleRecyclerViewAdapter(Context context, List<Run> runs) {
     this.inflater = LayoutInflater.from(context);
-    this.cursor = cursor;
+    this.runs = runs;
   }
 
   @Override
@@ -33,28 +34,28 @@ public class SimpleRecyclerViewAdapter extends RecyclerView.Adapter<SimpleRecycl
 
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
-    cursor.moveToPosition(position);
-    String id = cursor.getString(0);
-    String location = cursor.getString(1);
-    String date = cursor.getString(2);
-    String type = cursor.getString(3);
-    String pace = cursor.getString(9);
+    Run run = runs.get(position);
 
-    holder.idView.setText(id);
+    int id = run._id;
+    String location = run.location;
+    String date = run.date;
+    String type = run.runType;
+    float pace = run.pace;
+
+    holder.idView.setText(Integer.toString(id));
     holder.locationView.setText(location);
     holder.dateView.setText(date);
     holder.typeView.setText(type);
-    holder.paceView.setText(pace);
-
+    holder.paceView.setText(Float.toString(pace));
   }
 
   @Override
   public int getItemCount() {
-    return cursor.getCount();
+    return runs.size();
   }
 
-  public void swapCursor(Cursor c) {
-    this.cursor = c;
+  public void swapRuns(List<Run> runs) {
+    this.runs = runs;
     notifyDataSetChanged();
   }
 
@@ -79,8 +80,9 @@ public class SimpleRecyclerViewAdapter extends RecyclerView.Adapter<SimpleRecycl
 
     @Override
     public void onClick(View view) {
-      if (clickListener != null)
+      if (clickListener != null) {
         clickListener.onItemClick(view, getAdapterPosition());
+      }
     }
   }
 
@@ -89,6 +91,7 @@ public class SimpleRecyclerViewAdapter extends RecyclerView.Adapter<SimpleRecycl
   }
 
   public interface ItemClickListener {
+
     void onItemClick(View view, int position);
   }
 }

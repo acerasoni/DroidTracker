@@ -65,8 +65,6 @@ Mapp/src/main/java/com/ltm/runningtracker/android/service/LocationService.java,
 Zapp/src/main/java/com/ltm/runningtracker/android/activity/viewmodel/ActivityViewModel.java,5\0\504f3b80326b9c9025434ed96260be0e34b5a2ce
 ‹
 [app/src/main/java/com/ltm/runningtracker/android/fragment/impl/WarmPerformanceFragment.java,e\7\e7764b42acce7daa944d218ed02f83262007100f
-y
-Iapp/src/main/java/com/ltm/runningtracker/util/annotations/Controller.java,8\a\8adcba98a00ed3f80f1883c37c24648afa2f2ee4
 w
 Gapp/src/main/java/com/ltm/runningtracker/util/parser/WeatherParser.java,7\9\792209bfcbe0dfc9d4c67c80565e2f454ba48e9e
 w
@@ -87,3 +85,7 @@ m
 =app/src/test/java/com/ltm/runningtracker/ExampleUnitTest.java,f\b\fbe0ea148bb21f2759f60d655edef9bd128c3090
 |
 Lapp/src/main/java/com/ltm/runningtracker/util/SimpleRecyclerViewAdapter.java,a\9\a959eba4b4d649321f330132202d84208d1bc65f
+x
+Happ/src/main/java/com/ltm/runningtracker/util/annotations/Presenter.java,a\8\a89d3939ce90e651f5502ebcc04fd01e564bda01
+m
+=app/src/main/java/com/ltm/runningtracker/util/Serializer.java,7\5\75943e669a94f49f5b850db22255506e904a8568

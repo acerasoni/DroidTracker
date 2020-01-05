@@ -17,55 +17,54 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.Serializer;
-import java.util.Objects;
 
 /**
- * Repository responsible for exposing, storing and modifying the user's LiveData object which acts
+ * Repository responsible for exposing, storing and modifying the userCache's LiveData object which acts
  * as cache to the database.
  */
 public class UserRepository {
 
   // Cache
-  private MutableLiveData<User> user;
+  private MutableLiveData<User> userCache;
 
   public UserRepository() {
-    user = new MutableLiveData<>();
+    userCache = new MutableLiveData<>();
     fetchUser();
   }
 
   public LiveData<User> getUserLiveData() {
-    return user;
+    return userCache;
   }
 
-  public User getUser() {
-    return user.getValue();
+  public User getUserCache() {
+    return userCache.getValue();
   }
 
 
   /**
-   * Allows setting a new user asynchronously from a background thread.
+   * Allows setting a new userCache asynchronously from a background thread.
    *
    * @param user object to be set.
    */
   public void setUserAsync(User user) {
-    this.user.postValue(user);
+    this.userCache.postValue(user);
   }
 
   /**
-   * Allows setting a new user synchronously from the UI thread.
+   * Allows setting a new userCache synchronously from the UI thread.
    *
-   * @param user object to be set.
+   * @param userCache object to be set.
    */
-  public void setUser(User user) {
-    this.user.setValue(user);
+  public void setUserCache(User userCache) {
+    this.userCache.setValue(userCache);
   }
 
   public void flushCache() {
-    user.postValue(null);
+    userCache.postValue(null);
   }
 
   /**
-   * Will asynchronously delete the user. Can be safely called from a background thread.
+   * Will asynchronously delete the userCache. Can be safely called from a background thread.
    *
    * @param context from which to call the content provider from
    */
@@ -78,10 +77,10 @@ public class UserRepository {
 
   /**
    * This method is called from the UI thread. It will call the db asynchronously which will create
-   * the User object and assign it to the user repository (cache) and database (memory)
+   * the User object and assign it to the userCache repository (cache) and database (memory)
    */
   public void createUser(String name, int weight, int height, Context context) {
-    // Build user
+    // Build userCache
     User user = getParsedUserBuilder(name, weight, height).build();
 
     // We must set the cache here because because the Content Provider must not know
@@ -97,14 +96,14 @@ public class UserRepository {
   }
 
   /**
-   * Will asynchronously create a new user object and insert it into the underlying Room database.
+   * Will asynchronously create a new userCache object and insert it into the underlying Room database.
    * This method is called from the UI thread.
    */
   public void updateUser(String name, int weight, int height, Context context) {
     // Update cache
-    user.getValue().name = name;
-    user.getValue().weight = weight;
-    user.getValue().height = height;
+    userCache.getValue().name = name;
+    userCache.getValue().weight = weight;
+    userCache.getValue().height = height;
 
     ContentValues contentValues = new ContentValues();
     contentValues.put(NAME, name);
@@ -118,7 +117,7 @@ public class UserRepository {
   }
 
   /**
-   * This method retrieves the user cursor from the database, if exists, and builds a user cache
+   * This method retrieves the userCache cursor from the database, if exists, and builds a userCache cache
    * from memory. {@link #buildUserFromMemory(Cursor)}
    */
   @SuppressLint("Recycle")
@@ -137,13 +136,7 @@ public class UserRepository {
    * @return User object built from the Cursor via Builder pattern
    */
   private User buildUserFromMemory(Cursor cursor) {
-    cursor.moveToFirst();
-    String name = cursor.getString(1);
-    int weight = cursor.getInt(2);
-    int height = cursor.getInt(3);
-
-    return new User.Builder(name).withWeight(weight)
-        .withHeight(height).build();
+    return User.fromCursorToUser(cursor, 0);
   }
 
   /**

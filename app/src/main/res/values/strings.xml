@@ -70,7 +70,7 @@
   <string name="delete_cold_runs">Delete runs in cold weather</string>
   <string name="delete_freezing_runs">Delete runs in freezing weather</string>
   <string name="delete_user_and_all_runs_associated">Delete User (And All Runs Associated)</string>
-  <string name="user">User</string>
+  <string name="userCache">User</string>
   <string name="runs">Runs</string>
   <string name="delete_all_runs">Delete all runs</string>
   <string name="weight_in_kg">Weight (kg)</string>

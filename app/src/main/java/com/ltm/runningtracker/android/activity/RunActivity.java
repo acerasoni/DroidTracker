@@ -33,6 +33,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.service.LocationService;
@@ -197,7 +198,8 @@ public class RunActivity extends AppCompatActivity implements
 
     // Bind to location service
     bindService(intent, connection, Context.BIND_AUTO_CREATE);
-    registerReceiver(runUpdateReceiver, runUpdateFilter);
+
+    LocalBroadcastManager.getInstance(this).registerReceiver(runUpdateReceiver, runUpdateFilter);
     mapView.onStart();
     super.onStart();
   }
@@ -205,7 +207,7 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   protected void onDestroy() {
     if (mBound) {
-      unregisterReceiver(runUpdateReceiver);
+      LocalBroadcastManager.getInstance(this).unregisterReceiver(runUpdateReceiver);
       unbindService(connection);
     }
     mapView.onDestroy();

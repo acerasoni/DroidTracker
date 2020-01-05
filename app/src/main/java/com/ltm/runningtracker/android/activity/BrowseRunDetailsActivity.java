@@ -1,5 +1,12 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DATE_COL;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DISTANCE_COL;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DURATION_COL;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.NAME_COL;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.PACE_COL;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TEMPERATURE_COL;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TYPE_COL;
 import static com.ltm.runningtracker.util.Constants.REQUESTING_PERMISSION;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
@@ -24,6 +31,7 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
+import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.RunCoordinates.Coordinate;
 import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
@@ -101,16 +109,17 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
     // If the synchronous inspection of cache fails, make another effort to observe short living cache
     // populated by the asynchronous database call
-    browseDetailsActivityViewModel.getShortLivingCache().observe(this, cursor -> {
-      if (cursor != null) {
-        updateUI(cursor);
+    browseDetailsActivityViewModel.getShortLivingCache().observe(this, run -> {
+      if (run != null) {
+        updateUI(run);
       }
-      browseDetailsActivityViewModel.getRunCursorByWeather(weatherClassifier).removeObservers(this);
+      browseDetailsActivityViewModel.getShortLivingCache().removeObservers(this);
     });
 
-    browseDetailsActivityViewModel
-        .getRunById(runId, weatherClassifier, this);
+    Run run = browseDetailsActivityViewModel
+        .getRunById(runId, this);
 
+    updateUI(run);
     setupMaxbox(savedInstanceState);
   }
 
@@ -225,35 +234,34 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   /**
    * This method populates the UI with the details from the run in the Cursor.
    *
-   * @param cursor already moved to the correct row position
+   * @param run
    */
   @SuppressLint({"SetTextI18n", "DefaultLocale"})
-  public void updateUI(Cursor cursor) {
+  public void updateUI(Run run) {
     runOnUiThread(() -> {
       StringBuilder sb;
 
       sb = new StringBuilder(getResources().getString(R.string.exercise)).append(" #")
           .append(runId);
       activityView.setText(sb.toString());
-      locationView.setText(cursor.getString(1));
-      dateView.setText(cursor.getString(2));
+      locationView.setText(run.location);
+      dateView.setText(run.date);
 
-      String runType = cursor.getString(3).toUpperCase();
+      String runType = run.runType.toUpperCase();
       spinner.setSelection(RunTypeClassifier.valueOf(runType).getValue());
 
-      sb = new StringBuilder(Integer.toString((int) cursor.getFloat(4))).append(" ")
+      sb = new StringBuilder(Integer.toString((int) run.distance)).append(" ")
           .append(getResources().getString(R.string.metres));
       distanceView.setText(sb.toString());
-      durationView.setText(cursor.getString(5));
 
-      // Change imageView here
+      durationView.setText(run.duration);
 
       sb = new StringBuilder(
-          String.format(getResources().getString(R.string.two_decimals_format), cursor.getFloat(7)))
+          String.format(getResources().getString(R.string.two_decimals_format), run.temperature))
           .append(getResources().getString(R.string.degrees_celsius));
       temperatureView.setText(sb.toString());
 
-      float pace = cursor.getFloat(9);
+      float pace = run.pace;
       String paceString = String
           .format(getResources().getString(R.string.two_decimals_format), pace);
       sb = new StringBuilder(paceString).append(" ")

@@ -5,7 +5,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import com.ltm.runningtracker.database.model.Run;
-import com.ltm.runningtracker.util.RunCoordinates;
 
 @Dao
 public interface RunDao {
@@ -18,9 +17,6 @@ public interface RunDao {
 
   @Query("SELECT * FROM run WHERE weatherType=:type")
   Cursor getByWeather(int type);
-
-  @Query("SELECT runCoordinates FROM run WHERE _id=:id")
-  RunCoordinates getRunCoordinates(int id);
 
   @Insert
   long insert(Run run);

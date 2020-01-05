@@ -5,6 +5,8 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManage
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.ID_COL;
+import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,6 +21,7 @@ import com.ltm.runningtracker.android.activity.RunActivity;
 import com.ltm.runningtracker.android.activity.SettingsActivity;
 import com.ltm.runningtracker.android.activity.UserProfileActivity;
 import com.ltm.runningtracker.android.fragment.PerformanceFragment;
+import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.repository.RunRepository;
@@ -29,10 +32,9 @@ import com.ltm.runningtracker.util.Serializer;
 import com.ltm.runningtracker.util.annotations.Presenter;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import com.mapbox.android.core.location.LocationEngine;
-import com.survivingwithandroid.weather.lib.WeatherClient;
-import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This coursework implements the Model-View-ViewModel pattern. This class acts as the View Model in
@@ -73,8 +75,7 @@ public class ActivityViewModel extends ViewModel {
   // LiveData objects
   private LiveData<Location> locationLiveData;
   private LiveData<String> countyLiveData;
-  private LiveData<Cursor> shortLivingCache;
-  private List<LiveData<Cursor>> runCursors;
+  private LiveData<Run> shortLivingCache;
   private LiveData<User> userLiveData;
   private LiveData<Weather> weatherLiveData;
 
@@ -86,8 +87,7 @@ public class ActivityViewModel extends ViewModel {
 
     locationLiveData = locationRepository.getLocationLiveData();
     countyLiveData = locationRepository.getCountyLiveData();
-    shortLivingCache = runRepository.getShortLivingCache();
-    runCursors = runRepository.getRunCursorsLiveData();
+    shortLivingCache = runRepository.getShortLivingRunCache();
     userLiveData = userRepository.getUserLiveData();
     weatherLiveData = weatherRepository.getLiveDataWeather();
   }
@@ -102,12 +102,8 @@ public class ActivityViewModel extends ViewModel {
     return countyLiveData;
   }
 
-  public LiveData<Cursor> getShortLivingCache() {
+  public LiveData<Run> getShortLivingCache() {
     return shortLivingCache;
-  }
-
-  public LiveData<Cursor> getRunCursorByWeather(WeatherClassifier weatherClassifier) {
-    return runCursors.get(weatherClassifier.getValue());
   }
 
   public LiveData<User> getUser() {
@@ -133,32 +129,14 @@ public class ActivityViewModel extends ViewModel {
 
   /**
    * @param id of the requested run
-   * @param weatherClassifier of the run, for optimisation purposes
    * @param context for the asynchronous call to the database if the cache was empty
    * @return Cursor with one row which contains the run requested.
    */
   @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
-  public Cursor getRunById(int id, WeatherClassifier weatherClassifier, Context context) {
-    // Check if cached has the row we need
-    // Start by getting all runs associated with the weather
-    Cursor c = getRunByWeather(weatherClassifier);
-    if (c != null) {
-      // Search for our ID in cursor
-      c.moveToFirst();
-      for (int x = 0; x < c.getCount(); x++) {
-        if (c.getInt(0) == id) {
-          // Correct row has been found
-          c.moveToPosition(x);
-          runRepository.populateShortLivingCache(c);
-        }
-      }
-    }
-
-    // If cache is empty query DB asynchronously
-    AsyncTask.execute(() -> getRunById(id, context));
-
-    return null;
+  public Run getRunById(int id, Context context) {
+    Run run = runRepository.getRunById(id, context);
+    return run;
   }
 
   @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
@@ -166,8 +144,8 @@ public class ActivityViewModel extends ViewModel {
   public RunCoordinates getRunCoordinates(WeatherClassifier weatherClassifier, int id) {
     // Look in cache. Guaranteed to have it, because call is made from inside the BrowseRunDetailsActivity,
     // which means that run was previously located in cache by id.
-    Cursor c = getCachedRunById(weatherClassifier, id);
-    return Serializer.runCoordinatesFromByteArray(c.getBlob(8));
+    Run run = getCachedRunById(weatherClassifier, id);
+    return run.runCoordinates;
   }
 
   /**
@@ -175,14 +153,14 @@ public class ActivityViewModel extends ViewModel {
    * @return Cursor containing all the runs of the given weatherClassifier type
    */
   @Presenter(usedBy = {PerformanceFragment.class}, repositoriesAccessed = {RunRepository.class})
-  public Cursor getRunsByWeather(WeatherClassifier weatherClassifier, Context context) {
-    return runRepository.getRunsAsync(context, weatherClassifier);
+  public List<Run> getRunsByWeather(WeatherClassifier weatherClassifier, Context context) {
+    return runRepository.getRunsAsyncByWeather(context, weatherClassifier);
   }
 
   @Presenter(usedBy = {MainScreenActivity.class, SettingsActivity.class}, repositoriesAccessed = {
       UserRepository.class})
   public boolean doesUserExist() {
-    return userRepository.getUser() != null;
+    return userRepository.getUserCache() != null;
   }
 
   @Presenter(usedBy = {MainScreenActivity.class,
@@ -202,28 +180,19 @@ public class ActivityViewModel extends ViewModel {
    */
   @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
-  public boolean[] determineWhichRunTypesExist(Context context) {
-    boolean[] runsExist = new boolean[6];
-    runsExist[0] = runRepository.doRunsExistByWeather(context, WeatherClassifier.FREEZING);
-    runsExist[1] = runRepository.doRunsExistByWeather(context, WeatherClassifier.COLD);
-    runsExist[2] = runRepository.doRunsExistByWeather(context, WeatherClassifier.MILD);
-    runsExist[3] = runRepository.doRunsExistByWeather(context, WeatherClassifier.WARM);
-    runsExist[4] = runRepository.doRunsExistByWeather(context, WeatherClassifier.HOT);
-    runsExist[5] = runsExist[0] || runsExist[1] || runsExist[2] || runsExist[3] || runsExist[4];
-    return runsExist;
+  public List<Run> getAllRuns(Context context) {
+    return runRepository.getAllRuns(context);
   }
 
   @Presenter(usedBy = {UserProfileActivity.class}, repositoriesAccessed = {
       UserRepository.class})
-  public void saveUser(Context context, boolean creatingUser, String name, String weight,
-      String height) {
+  public void saveUser(Context context, boolean creatingUser, String name, int weight,
+      int height) {
     if (creatingUser) {
       userRepository
-          .createUser(name.trim(), Integer.parseInt(weight.trim()),
-              Integer.parseInt(height.trim()), context);
+          .createUser(name, weight, height, context);
     } else {
-      userRepository.updateUser(name.trim(), Integer.parseInt(weight.trim()),
-          Integer.parseInt(height.trim()), context);
+      userRepository.updateUser(name, weight, height, context);
     }
   }
 
@@ -251,7 +220,7 @@ public class ActivityViewModel extends ViewModel {
 
   @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
   public void deleteRunsByType(Uri uri, Context context, WeatherClassifier weatherClassifier) {
-    runRepository.deleteRunsByType(uri, context, weatherClassifier);
+    runRepository.deleteRunsByType(uri, context);
   }
 
   @Presenter(usedBy = {MainScreenActivity.class}, repositoriesAccessed = {
@@ -273,23 +242,13 @@ public class ActivityViewModel extends ViewModel {
     return original.substring(0, 1).toUpperCase() + original.substring(1);
   }
 
-  private Cursor getRunByWeather(WeatherClassifier weatherClassifier) {
-    return runRepository.getRunsSync(weatherClassifier);
-  }
+  private Run getCachedRunById(WeatherClassifier weatherClassifier, int id) {
+    List<Run> runsByWeather = runRepository.getRunsSyncByWeather(weatherClassifier);
+    for(Run run : runsByWeather) {
+      if(run._id == id) return run;
+    }
 
-  private void getRunById(int id, Context context) {
-    runRepository.fetchRunAsyncById(id, context);
-  }
-
-  private Cursor getCachedRunById(WeatherClassifier weatherClassifier, int id) {
-    Cursor c = runCursors.get(weatherClassifier.getValue()).getValue();
-    c.moveToFirst();
-    do {
-      if (c.getInt(0) == id) {
-        break;
-      }
-    } while (c.moveToNext());
-    return c;
+    return null;
   }
 
 }

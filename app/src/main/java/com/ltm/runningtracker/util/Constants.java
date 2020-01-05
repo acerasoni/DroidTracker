@@ -55,4 +55,10 @@ public class Constants {
 
   public static final String CHANNEL_ID = "channelId";
   public static final String USER_ID = "userId";
+  public static final String RUN_ID = "runId";
+
+  public static final String ALL_FIELDS_INVALID = "Values for all input fields are invalid - try again";
+  public static final String WEIGHT_HEIGHT_INVALID_ERROR = "Values for weight or height are invalid - try again";
+  public static final String NAME_INVALID_ERROR = "Value for name is invalid - try again";
+  public static final String APP_REQUIRES_ACCESS = "DroidTracker requires access to location. Please re-launch the app.";
 }

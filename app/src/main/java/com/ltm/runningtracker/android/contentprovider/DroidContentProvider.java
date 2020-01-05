@@ -17,6 +17,7 @@ import static com.ltm.runningtracker.util.Constants.DURATION;
 import static com.ltm.runningtracker.util.Constants.HEIGHT;
 import static com.ltm.runningtracker.util.Constants.NAME;
 import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
+import static com.ltm.runningtracker.util.Constants.RUN_ID;
 import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 import static com.ltm.runningtracker.util.Constants.USER_ID;
@@ -99,8 +100,11 @@ public class DroidContentProvider extends ContentProvider {
 
     switch (URI_MATCHER.match(uri)) {
       case RUNS:
-        long runId = runDao
-            .insert(getParsedRunBuilder(Objects.requireNonNull(contentValues)).build());
+        // Retrieve from Content Values and deserialize
+        Run run = Serializer.fromByteArray(contentValues.getAsByteArray(RUN_ID));
+
+        // Insert in Room
+        long runId = runDao.insert(run);
         var = ContentUris.withAppendedId(uri, runId);
         break;
       case USER:
@@ -190,37 +194,6 @@ public class DroidContentProvider extends ContentProvider {
     }
 
     return contentType;
-  }
-
-  /**
-   * This method handles the absence of some values via builder pattern.
-   *
-   * @param contentValues containing Run data and meta-data
-   * @return Run.Builder object able to construct a Run object on-the-fly
-   */
-  private Run.Builder getParsedRunBuilder(ContentValues contentValues) {
-    Run.Builder builder = new Run.Builder(contentValues.getAsLong(DATE),
-        contentValues.getAsDouble(DISTANCE), contentValues.getAsInteger(DURATION));
-
-    if (contentValues.containsKey(TEMPERATURE)) {
-      builder = builder.withTemperature(contentValues.getAsFloat(TEMPERATURE));
-    }
-    if (contentValues.containsKey(RUN_COORDINATES)) {
-      builder = builder.withRunCoordinates(contentValues.getAsByteArray(RUN_COORDINATES));
-    }
-
-    int runTypeId;
-
-    if (contentValues.containsKey(RUN_TYPE)) {
-      runTypeId = contentValues.getAsInteger(RUN_TYPE);
-    } else {
-      runTypeId = 0;
-    }
-
-    String runType = ActivityViewModel
-        .capitalizeFirstLetter(RunTypeClassifier.valueOf(runTypeId).toString());
-
-    return builder.withRunType(runType);
   }
 
 }

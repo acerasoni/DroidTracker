@@ -47,7 +47,7 @@
     android:layout_height="31dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
-    android:text="@string/user"
+    android:text="@string/userCache"
     android:textColor="#FFFFFF"
     android:textSize="18sp"
     app:layout_constraintBottom_toBottomOf="@+id/myRectangleView11"

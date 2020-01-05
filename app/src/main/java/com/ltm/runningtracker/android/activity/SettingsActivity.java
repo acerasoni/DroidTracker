@@ -20,7 +20,11 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
+import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This Activity allows the user to complete the following operations:
@@ -28,6 +32,8 @@ import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
  * 1. Delete user & all runs associated 2. Delete all runs 3. Delete runs only by weather type
  */
 public class SettingsActivity extends AppCompatActivity {
+
+  private Map<Integer, Button> weatherClassifierToButton;
 
   // Views
   private Button userButton;
@@ -78,50 +84,48 @@ public class SettingsActivity extends AppCompatActivity {
 
   // Only enable weather-specific button if runs of that type exist
   private void enableRunButtonsIfAppropriate() {
-    boolean[] runsExist = settingsActivityViewModel
-        .determineWhichRunTypesExist(this);
-    boolean doRunsExist = runsExist[5];
+    boolean[] doRunsExist = new boolean[]{false, false, false, false, false};
 
-    boolean doFreezing = runsExist[0];
-    boolean doCold = runsExist[1];
-    boolean doMild = runsExist[2];
-    boolean doWarm = runsExist[3];
-    boolean doHot = runsExist[4];
+    List<Run> runs = settingsActivityViewModel.getAllRuns(this);
 
-    if (doRunsExist) {
+    for (Run run : runs) {
+      int weatherClassifier = run.weatherType;
+      doRunsExist[weatherClassifier] = true;
+    }
+
+    if (runs.size() > 0) {
       enableRunsButton();
     } else {
       runsButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
     }
 
-    enableButton(doFreezing, freezingButton, WeatherClassifier.FREEZING,
-        new StringBuilder("/").append(FREEZING_STRING).toString());
-    enableButton(doCold, coldButton, WeatherClassifier.COLD,
-        new StringBuilder("/").append(COLD_STRING).toString());
-    enableButton(doMild, mildButton, WeatherClassifier.MILD,
-        new StringBuilder("/").append(MILD_STRING).toString());
-    enableButton(doWarm, warmButton, WeatherClassifier.WARM,
-        new StringBuilder("/").append(WARM_STRING).toString());
-    enableButton(doHot, hotButton, WeatherClassifier.HOT,
-        new StringBuilder("/").append(HOT_STRING).toString());
-  }
-
-  private void enableButton(boolean doRun, Button button,
-      @NonNull WeatherClassifier weatherClassifier,
-      @NonNull String segment) {
-    if (doRun) {
-      button.setOnClickListener(v -> {
-        Uri uri = Uri
-            .withAppendedPath(DroidProviderContract.RUNS_URI, segment);
-
-        button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-        button.setOnClickListener(null);
-        settingsActivityViewModel.deleteRunsByType(uri, this, weatherClassifier);
-      });
-    } else {
-      button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+    for (int i = 0; i < doRunsExist.length; i++) {
+      if (doRunsExist[i]) {
+        enableButton(weatherClassifierToButton.get(i),
+            WeatherClassifier.valueOf(i),
+            new StringBuilder("/").append(WeatherClassifier.valueOf(i)).toString());
+      } else {
+        disableButton(weatherClassifierToButton.get(i));
+      }
     }
 
+  }
+
+  private void enableButton(Button button,
+      @NonNull WeatherClassifier weatherClassifier,
+      @NonNull String segment) {
+    button.setOnClickListener(v -> {
+      Uri uri = Uri
+          .withAppendedPath(DroidProviderContract.RUNS_URI, segment);
+
+      button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+      button.setOnClickListener(null);
+      settingsActivityViewModel.deleteRunsByType(uri, this, weatherClassifier);
+    });
+  }
+
+  private void disableButton(Button button) {
+    button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
   }
 
   private void enableRunsButton() {
@@ -160,6 +164,16 @@ public class SettingsActivity extends AppCompatActivity {
     mildButton = findViewById(R.id.mildRuns);
     warmButton = findViewById(R.id.warmRuns);
     hotButton = findViewById(R.id.hotRuns);
+
+    weatherClassifierToButton = new HashMap<Integer, Button>() {
+      {
+        put(0, freezingButton);
+        put(1, coldButton);
+        put(2, mildButton);
+        put(3, warmButton);
+        put(4, hotButton);
+      }
+    };
   }
 
 }

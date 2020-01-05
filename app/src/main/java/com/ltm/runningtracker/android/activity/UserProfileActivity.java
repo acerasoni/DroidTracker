@@ -1,5 +1,9 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.util.Constants.ALL_FIELDS_INVALID;
+import static com.ltm.runningtracker.util.Constants.NAME_INVALID_ERROR;
+import static com.ltm.runningtracker.util.Constants.WEIGHT_HEIGHT_INVALID_ERROR;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -7,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
@@ -62,9 +67,33 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   public void onSaveButton(View v) {
+    boolean weightAndHeightInvalid = false;
+    boolean nameInvalid = false;
+
+    try {
+      height = Integer.parseInt(heightField.getText().toString());
+      weight = Integer.parseInt(weightField.getText().toString());
+    }// I height or weight blank show error and return from method - allowing the user to try again
+    catch (NumberFormatException e) {
+      weightAndHeightInvalid = true;
+    }
+
+    // If name blank show error and return from method - allowing the user to try again
     String name = nameField.getText().toString();
-    String height = heightField.getText().toString();
-    String weight = weightField.getText().toString();
+    if (name.equals("")) {
+      nameInvalid = true;
+    }
+
+    if (weightAndHeightInvalid && nameInvalid) {
+      Toast.makeText(this, ALL_FIELDS_INVALID, Toast.LENGTH_LONG).show();
+      return;
+    } else if (weightAndHeightInvalid) {
+      Toast.makeText(this, WEIGHT_HEIGHT_INVALID_ERROR, Toast.LENGTH_LONG).show();
+      return;
+    } else if (nameInvalid) {
+      Toast.makeText(this, NAME_INVALID_ERROR, Toast.LENGTH_LONG).show();
+      return;
+    }
 
     userProfileActivityViewModel.saveUser(this, creatingUser, name, weight, height);
 

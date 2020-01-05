@@ -21,7 +21,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
-    android:text="@string/user"
+    android:text="@string/userCache"
     android:textColor="#FFFFFF"
     android:textColorHint="#FFFFFF"
     android:textSize="30sp"
