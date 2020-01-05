@@ -27,7 +27,6 @@ import com.ltm.runningtracker.database.model.User;
  * runs are 'untagged', they don't influence the average pace of any run type. However, once they
  * are tagged in the BrowseRunDetailsActivity, they will be accounted for when computing averages.
  *
- * An additional text field will display the BMI computed from the weight and height inserted.
  */
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -39,7 +38,6 @@ public class UserProfileActivity extends AppCompatActivity {
   private TextView joggingPaceField;
   private TextView runningPaceField;
   private TextView sprintingPaceField;
-  private TextView bmiField;
 
   // User-related
   private boolean creatingUser;
@@ -54,7 +52,6 @@ public class UserProfileActivity extends AppCompatActivity {
     setContentView(R.layout.activity_user_profile);
 
     initialiseViews();
-    setupBmiListeners();
 
     creatingUser =
         getIntent().getIntExtra(getResources().getString(R.string.request), -1)
@@ -128,55 +125,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
   private void populateViews() {
     User user = userProfileActivityViewModel.getUser().getValue();
-    float bmi = calculateBMI(user.weight, user.height);
 
     nameField.setText(user.name);
     weightField.setText(Integer.toString(user.weight));
     heightField.setText(Integer.toString(user.height));
-    bmiField.setText(Float.toString(bmi));
-  }
-
-  /**
-   * This method will setup listeners to determine when the user clicks away from weight or height
-   * fields. It will then read the values off both fields, compute the BMI and display it below.
-   */
-  private void setupBmiListeners() {
-    weightField.setOnFocusChangeListener((v, hasFocus) -> {
-      if (!hasFocus) {
-        String text = weightField.getText().toString();
-        if (!text.equals("")) {
-          weight = Integer.parseInt(text);
-          if (height > 0) {
-            bmiField.setText(Float.toString(calculateBMI(weight, height)));
-          }
-        }
-      }
-    });
-
-    heightField.setOnFocusChangeListener((v, hasFocus) -> {
-      if (!hasFocus) {
-        String text = heightField.getText().toString();
-        if (!text.equals("")) {
-          height = Integer.parseInt(text);
-          if (weight > 0) {
-            bmiField.setText(Float.toString(calculateBMI(weight, height)));
-          }
-        }
-
-      }
-    });
-  }
-
-  /**
-   * https://www.cdc.gov/healthyweight/assessing/bmi/childrens_bmi/childrens_bmi_formula.html
-   *
-   * @param weight in kg for
-   * @param height in cm for
-   */
-  private float calculateBMI(int weight, int height) {
-    float metres = height / 100;
-    metres *= 2;
-    return weight / metres;
   }
 
   private void initialiseViews() {
@@ -189,6 +141,5 @@ public class UserProfileActivity extends AppCompatActivity {
     joggingPaceField = findViewById(R.id.joggingPaceField);
     runningPaceField = findViewById(R.id.runningPaceField);
     sprintingPaceField = findViewById(R.id.sprintingPaceField);
-    bmiField = findViewById(R.id.bmiField);
   }
 }
