@@ -12,6 +12,7 @@ import static com.ltm.runningtracker.database.model.Run.getFormattedTime;
 import static com.ltm.runningtracker.repository.LocationRepository.calculatePace;
 import static com.ltm.runningtracker.util.Constants.RUN_ID;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
+import static com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier.*;
 import static java.util.stream.Collectors.*;
 
 import android.annotation.SuppressLint;
@@ -20,6 +21,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build.VERSION_CODES;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -31,9 +34,11 @@ import com.ltm.runningtracker.util.Serializer;
 import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 
 /**
@@ -47,16 +52,23 @@ import java.util.function.Predicate;
 public class RunRepository {
 
   /*
-   Cache of runs - set because we don't want duplicate runs in cache AND is
-   O(1) for access, whereas an ArrayList is O(1). It will store cached runs
-   unordered but that is not an issue.
+   Cache of runs. We use a Sorted Map which maps id -> Run because we want to
+   retrieve runs by id in O(logn).
    */
-  private Set<Run> runsCache;
+  private SortedMap<Integer, Run> runsCache;
   private MutableLiveData<Run> shortLivingRunCache;
 
+  @RequiresApi(api = VERSION_CODES.O)
   public RunRepository() {
-    // Initialise empty cache
-    runsCache = new HashSet<>();
+
+    /*
+    Instantiate map as TreeMap (implementation of SortedSet)
+    Maintain the TreeSet sorted by ascending order of key (_id)
+    "If multiple threads access a tree map concurrently, and at least one of the threads modifies the map, it must be synchronized externally."
+    https://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html
+     */
+    runsCache = Collections.synchronizedNavigableMap(new TreeMap<>((Object o1, Object o2) ->
+        ((int) o1) - ((int) o2)));
 
     // Initialize the short living observable cache
     shortLivingRunCache = new MutableLiveData<>();
@@ -71,22 +83,24 @@ public class RunRepository {
    *
    * @return true if runs exist
    */
-  public synchronized boolean doRunsExist(Context context) {
+  public boolean doRunsExist(Context context) {
     Cursor c;
 
     if (runsCache.size() > 0) {
       return true;
     }
 
-    // Check DB
-    // Necessary as run cursors are cached only when looking at performance - could be empty
+    /*
+     Check DB
+     Necessary as run cursors are cached only when looking at performance - could be empty
+     */
     c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
 
     if (c != null && c.moveToFirst()) {
       // Cache all runs returned for future use
       do {
         Run run = Run.fromCursorToRun(c);
-        runsCache.add(run);
+        runsCache.put(run._id, run);
       } while (c.moveToNext());
 
       // Runs exist - return true
@@ -117,7 +131,7 @@ public class RunRepository {
   }
 
   /**
-   * Asynchronously deleted all runs in the database
+   * Asynchronously delete all runs in the database
    */
   public void deleteRuns(Context context) {
     AsyncTask.execute(() -> {
@@ -126,7 +140,7 @@ public class RunRepository {
     });
   }
 
-  public void populateShortLivingCache(Run run) {
+  public synchronized void populateShortLivingCache(Run run) {
     shortLivingRunCache.postValue(run);
   }
 
@@ -135,7 +149,7 @@ public class RunRepository {
    */
   public synchronized void flushCache() {
     // delete long-living cache
-    runsCache = new HashSet<>();
+    runsCache.clear();
 
     // delete short-living cache
     shortLivingRunCache.postValue(null);
@@ -146,8 +160,7 @@ public class RunRepository {
   }
 
   /**
-   * Gets all runs stored in the database. Must be called asynchronously. As this method sets the
-   * cache, it requires synchronised access.
+   * Gets all runs stored in the database. Must be called asynchronously.
    *
    * @return List<Run> of all runs in the database
    */
@@ -164,29 +177,34 @@ public class RunRepository {
         returnedList.add(run);
 
         // Cache run. Set will ignore duplicates.
-        runsCache.add(run);
+        runsCache.put(run._id, run);
       } while (c.moveToNext());
     }
 
     return returnedList;
   }
 
-  // Called if cache exists
-  // Only useful to check if runs of certain weather type exist
-  public synchronized List<Run> getRunsSyncByWeather(WeatherClassifier weatherClassifier) {
+  /*
+   Called if cache exists
+   Only useful to check if runs of certain weather type exist
+   Return as List to allow for more graceful iteration in ViewModel
+   */
+  public List<Run> getRunsSyncByWeather(WeatherClassifier weatherClassifier) {
     Predicate<Run> byWeatherType = run -> WeatherClassifier
         .valueOf(run.weatherType).equals(weatherClassifier);
 
-    List<Run> result = runsCache.stream().filter(byWeatherType)
+    List<Run> result = runsCache.values().stream().filter(byWeatherType)
         .collect(toList());
 
     return result;
   }
 
-  // Called if cache does not exist
-  // List because needs to be an ordered for custom ListViewAdapter
+  /*
+   Called if cache does not exist
+   List because needs to be an ordered for custom ListViewAdapter
+   */
   public List<Run> getRunsAsyncByWeather(Context context, WeatherClassifier weatherClassifier) {
-    // ping the DB
+    // Ping the DB
     Uri uri = Uri
         .withAppendedPath(RUNS_URI, weatherClassifier.toString());
     return getRunsAsync(context, uri);
@@ -197,12 +215,13 @@ public class RunRepository {
    *
    * @return run if retrieved, null if cache empty
    */
-  public synchronized Run getRunById(int id, Context context) {
-    // Check cache
-    for (Run run : runsCache) {
-      if (run._id == id) {
-        return run;
-      }
+  public Run getRunById(int id, Context context) {
+    /*
+     Check cache
+     Operation is O(logn)
+     */
+    if (runsCache.containsKey(id)) {
+      return runsCache.get(id);
     }
 
     // If not found in cache, ping DB async
@@ -217,7 +236,7 @@ public class RunRepository {
    * @param context with which to make database call
    */
   @SuppressLint("DefaultLocale")
-  public synchronized void getRunByIdAsync(int id, Context context) {
+  public void getRunByIdAsync(int id, Context context) {
     Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + id);
     Cursor c = context.getContentResolver().query(customUri, null, null, null, null);
 
@@ -226,7 +245,7 @@ public class RunRepository {
       Run run = Run.fromCursorToRun(c);
 
       // Cache
-      runsCache.add(run);
+      runsCache.put(run._id, run);
 
       // Set short living cache to cursor
       getRunRepository().populateShortLivingCache(run);
@@ -253,11 +272,11 @@ public class RunRepository {
     // Flush cache
     flushCache();
 
-    //UPDATE DB
+    // Update db
     Uri uri = Uri
         .withAppendedPath(DroidProviderContract.RUNS_URI, "/" + id);
     ContentValues contentValues = new ContentValues();
-    String newType = capitalizeFirstLetter(RunTypeClassifier.valueOf(pos).toString());
+    String newType = capitalizeFirstLetter(valueOf(pos).toString());
     contentValues.put(RUN_TYPE, newType);
     AsyncTask.execute(() -> context.getContentResolver().update(uri, contentValues, null, null));
   }
@@ -278,27 +297,23 @@ public class RunRepository {
   }
 
   /**
-   * Calculates the average pace for all tagged runsCache. Return array will contain following
-   * values: [0] = walking pace, or null if no walks exist [1] = jogging pace, or null if no jogs
-   * exist [2] = running pace, or null if no runsCache exist [3] = sprinting pace, or null if no
-   * sprints exist
-   *
-   * Must request all runs from the DB as cache might be empty (populated only when visiting the
-   * Performance tab
+   * Calculates the average pace for all tagged runsCache Must request all runs from the DB as cache
+   * might be empty (populated only when visiting the Performance tab
    *
    * @param context with which to query the database.
-   * @return Float[] as outlined above.
+   * @return EnumMap mapping RunTypeClassifier -> Average Pace
    */
-  public Float[] calculatateAveragePaces(Context context) {
+  public EnumMap<RunTypeClassifier, Float> calculatateAveragePaces(Context context) {
     Float walkingPace = null;
     Float joggingPace = null;
     Float runningPace = null;
     Float sprintingPace = null;
 
+    // Retrieve all runs
     Cursor c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
     if (c != null && c.moveToFirst()) {
       do {
-        switch (RunTypeClassifier.valueOf(c.getString(TYPE_COL).toUpperCase())) {
+        switch (valueOf(c.getString(TYPE_COL).toUpperCase())) {
           case UNTAGGED:
             break;
           case WALK:
@@ -328,12 +343,22 @@ public class RunRepository {
 
           default:
             throw new IllegalStateException(
-                UNEXPECTED_VALUE + RunTypeClassifier.valueOf(c.getString(TYPE_COL).toUpperCase()));
+                UNEXPECTED_VALUE + valueOf(c.getString(TYPE_COL).toUpperCase()));
         }
       } while (c.moveToNext());
     }
 
-    return new Float[]{walkingPace, joggingPace, runningPace, sprintingPace};
+    /*
+    Enumerator map more appropriate for enum-type keys. Enum maps are internally
+    represented as arrays, and are extremely compact and efficient.
+    */
+    EnumMap<RunTypeClassifier, Float> returnedMap = new EnumMap<>(RunTypeClassifier.class);
+    returnedMap.put(WALK, walkingPace);
+    returnedMap.put(JOG, joggingPace);
+    returnedMap.put(RUN, runningPace);
+    returnedMap.put(SPRINT, sprintingPace);
+
+    return returnedMap;
   }
 
   private Float calculateAverage(float a, float b) {
@@ -353,7 +378,7 @@ public class RunRepository {
         calculatePace(distance, time))
         .withTemperature(temperature).withRunCoordinates(runCoordinates)
         .withRunType(ActivityViewModel
-            .capitalizeFirstLetter(RunTypeClassifier.UNTAGGED.toString()));
+            .capitalizeFirstLetter(UNTAGGED.toString()));
   }
 
 }

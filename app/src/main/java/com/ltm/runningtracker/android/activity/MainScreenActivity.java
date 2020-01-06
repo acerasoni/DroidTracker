@@ -3,7 +3,6 @@ package com.ltm.runningtracker.android.activity;
 import static com.ltm.runningtracker.util.Constants.APP_REQUIRES_ACCESS;
 import static com.ltm.runningtracker.util.Constants.FETCHING_LOCATION;
 import static com.ltm.runningtracker.util.Constants.FETCHING_TEMPERATURE;
-import static com.ltm.runningtracker.util.Constants.PERMISSION_NOT_GRANTED;
 import static com.ltm.runningtracker.util.Constants.RUN_FIRST;
 import static com.ltm.runningtracker.util.Constants.SETUP_REQUIRED;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
@@ -40,8 +39,10 @@ import org.jetbrains.annotations.NotNull;
  * This Activity presents the user with four buttons which allow him to navigate to the respective
  * Run, Performance, User Profile and Settings Activities.
  *
- * It will prompt the user for FINE_ACCESS location permission if not previously granted. Then, it
- * handles the following scenarios and adjusts its UI accordingly:
+ * It will prompt the user for FINE_ACCESS location permission if not previously granted. If denied,
+ * it will request the user to relaunch the app.
+ *
+ * Then, it handles the following scenarios and adjusts its UI accordingly:
  *
  * - If no user has been setup, Run and Performance tabs are disabled - If user is setup, but no
  * runs exist, disable the Performance tab
@@ -53,10 +54,6 @@ import org.jetbrains.annotations.NotNull;
  * It will start the Location service, which in turn starts the Weather service, and binds to them.
  * However, it does not utilise the binder to retrieve data; rather, it observes the LiveData
  * objects modified by the service itself.
- *
- * Once all activities unbind from the location service, this will be killed from the OS. However,
- * this only occurs if the user is not on a run, in which case it will keep running as a foreground
- * service.
  */
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -65,6 +62,7 @@ public class MainScreenActivity extends AppCompatActivity {
   public static final int SETTINGS_MODIFICATION_REQUEST = 3;
   public static final int RUN_ACTIVITY_REQUEST = 4;
 
+  // Views
   private TextView weatherTextField;
   private TextView locationTextField;
   private Button runButton;
@@ -125,7 +123,9 @@ public class MainScreenActivity extends AppCompatActivity {
 
   }
 
-  // Recompute UI state following onCreate event and when returning from an Activity
+  /**
+   * Recompute UI state following onCreate event and when returning from an Activity
+   */
   @Override
   public void onStart() {
     super.onStart();
@@ -136,7 +136,7 @@ public class MainScreenActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode,
       @NotNull String[] permissions, @NotNull int[] grantResults) {
-    if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
+    if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
       Toast.makeText(this, APP_REQUIRES_ACCESS, Toast.LENGTH_LONG).show();
     } else {
       setup();
@@ -261,8 +261,10 @@ public class MainScreenActivity extends AppCompatActivity {
     // Initialise repositories
     mainActivityViewModel.initRepos();
 
-    // Start weather and location service
-    // Acts as a callback
+    /*
+    Start weather and location service
+    Acts as a callback
+    */
     Intent locationIntent = new Intent(this, LocationService.class);
     startService(locationIntent);
     serviceConnection = new ServiceConnection() {

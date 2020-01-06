@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.model.User;
-import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.Serializer;
 
 /**

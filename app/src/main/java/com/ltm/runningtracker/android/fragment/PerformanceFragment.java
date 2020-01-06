@@ -4,11 +4,8 @@ import static android.app.Activity.RESULT_OK;
 import static com.ltm.runningtracker.android.activity.PerformanceActivity.FRAGMENT_TO_ID;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,20 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
-import com.ltm.runningtracker.android.activity.PerformanceActivity;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
-import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.util.SimpleRecyclerViewAdapter;
-import com.ltm.runningtracker.util.SimpleRecyclerViewAdapter.ItemClickListener;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Abstract Performance fragment extended by weather-specific fragments. Behaviour between all child
- * fragments is shared, as they all contain a ListView formatted in the same way. The only different
- * is the input Cursor utilised to populate it.
+ * Abstract Performance fragment extended by weather-specific fragments, which defines shared
+ * behaviour and attributed of all children. These all contain a ListView formatted in the
+ * same way. The only different is the input Run list utilised to populate it.
  *
  * @see package com.ltm.runningtracker.android.fragment.impl
  */
@@ -118,7 +112,6 @@ public abstract class PerformanceFragment extends Fragment {
     @Override
     public void onItemClick(View view, int position) {
       // Start details activity when item is clicked
-      // recyclerView.s((parent, view1, position, id) -> {
       Intent intent = new Intent(getActivity(), BrowseRunDetailsActivity.class);
       Bundle bundle = new Bundle();
 

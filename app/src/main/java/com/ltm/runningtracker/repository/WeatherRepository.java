@@ -34,12 +34,12 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
     return weatherMutableLiveData;
   }
 
-  public float getTemperature() {
+  public synchronized float getTemperature() {
     return Objects.requireNonNull(weatherMutableLiveData.getValue()).temperature.getTemp();
   }
 
   @Override
-  public void onWeatherRetrieved(CurrentWeather weather) {
+  public synchronized void onWeatherRetrieved(CurrentWeather weather) {
     setWeather(weather.weather);
   }
 
@@ -53,14 +53,18 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
 
   }
 
-  // Weather request builder method
+  /**
+   * This method will build a weather request specific to the ccurrent latitude and longitude
+   */
   public static WeatherRequest buildWeatherRequest() {
     return new WeatherRequest(
         getLocationRepository().getLongitude(),
         getLocationRepository().getLatitude());
   }
 
-  // Weather client builder method
+  /**
+   * This method will build the HTTP client which hits the OpenWeatherAPI endpoint
+   */
   public static WeatherClient buildWeatherClient() {
     WeatherConfig weatherConfig = new WeatherConfig();
     weatherConfig.ApiKey = getAppContext().getString(R.string.openweather_api_key);
@@ -78,7 +82,7 @@ public class WeatherRepository implements WeatherClient.WeatherEventListener {
     return null;
   }
 
-  private void setWeather(Weather weather) {
+  private synchronized void setWeather(Weather weather) {
     weatherMutableLiveData.setValue(weather);
   }
 

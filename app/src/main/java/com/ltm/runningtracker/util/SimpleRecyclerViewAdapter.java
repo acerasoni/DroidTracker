@@ -1,7 +1,6 @@
 package com.ltm.runningtracker.util;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,8 @@ import com.ltm.runningtracker.database.model.Run;
 import java.util.List;
 
 /**
- * Simple adapter for recycler views. Taken from lecture code. Adapted for my list view items.
+ * Simple adapter for recycler views. Taken from lecture code. Adapted for my list view items to
+ * take a List of runs rather than a Cursor.
  */
 public class SimpleRecyclerViewAdapter extends
     RecyclerView.Adapter<SimpleRecyclerViewAdapter.ViewHolder> {

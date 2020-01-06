@@ -38,19 +38,24 @@ public class LocationRepository implements LocationEngineCallback {
   private static Geocoder geocoder = new Geocoder(getAppContext(), Locale.getDefault());
 
   private MutableLiveData<Location> locationMutableLiveData;
-  private MutableLiveData<String> stringMutableLiveData;
+  private MutableLiveData<String> countyMutableLiveData;
 
-  // Static because there should be only one instance of this to allow synchronized
-  // read/write of locationMutableLiveData
+  /*
+  Although we can define the method's signature as synchronized,
+  synchronisation via lock object allows us to notify the WeatherRepository
+  when location is first retrieved
+  */
   private static final Object lock = new Object();
 
-  // Must be stored in repo because it is used by both the locationMutableLiveData service and passed
-  // to mapbox API in the run activity
+  /*
+  Must be stored in repo because it is used by both the locationMutableLiveData service and passed
+  to mapbox API in the run activity
+  */
   private LocationEngine locationEngine;
 
   public LocationRepository() {
     locationMutableLiveData = new MutableLiveData<>();
-    stringMutableLiveData = new MutableLiveData<>();
+    countyMutableLiveData = new MutableLiveData<>();
     locationEngine = LocationEngineProvider.getBestLocationEngine(getAppContext());
   }
 
@@ -64,25 +69,27 @@ public class LocationRepository implements LocationEngineCallback {
   public void onFailure(@NonNull Exception exception) {
   }
 
-  // Expose locationMutableLiveData as livedata object to make it immutable from outside the class
-  // Only the locationMutableLiveData engine change the value of locationMutableLiveData
+  /**
+   * Expose locationMutableLiveData as livedata object to make it immutable from outside the class
+   * Only the locationMutableLiveData engine change the value of locationMutableLiveData
+   */
   public LiveData<Location> getLocationLiveData() {
     return locationMutableLiveData;
   }
 
   public LiveData<String> getCountyLiveData() {
-    return stringMutableLiveData;
+    return countyMutableLiveData;
   }
 
-  public Location getLocation() {
+  public synchronized Location getLocation() {
     return locationMutableLiveData.getValue();
   }
 
-  public double getLatitude() {
+  public synchronized double getLatitude() {
     return Objects.requireNonNull(locationMutableLiveData.getValue()).getLatitude();
   }
 
-  public double getLongitude() {
+  public synchronized double getLongitude() {
     return Objects.requireNonNull(locationMutableLiveData.getValue()).getLongitude();
   }
 
@@ -146,14 +153,16 @@ public class LocationRepository implements LocationEngineCallback {
   }
 
   private void setLocation(Location location) {
-    // If this is the first time we set locationMutableLiveData, we can notify the temperature update service to start
-    // fetching temperature updates
+    /*
+     If this is the first time we set locationMutableLiveData, we can notify the temperature update service to start
+     fetching temperature updates
+     */
     synchronized (lock) {
       this.locationMutableLiveData.setValue(location);
 
       String county = getCounty(location);
       if (county != null) {
-        this.stringMutableLiveData.setValue(county);
+        this.countyMutableLiveData.setValue(county);
       }
       lock.notify();
     }

@@ -3,6 +3,7 @@ package com.ltm.runningtracker.android.activity;
 import static com.ltm.runningtracker.util.Constants.ALL_FIELDS_INVALID;
 import static com.ltm.runningtracker.util.Constants.NAME_INVALID_ERROR;
 import static com.ltm.runningtracker.util.Constants.WEIGHT_HEIGHT_INVALID_ERROR;
+import static com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier.*;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +18,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.database.model.User;
+import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
+import java.util.EnumMap;
 
 /**
  * This Activity allows the user to:
@@ -26,7 +29,6 @@ import com.ltm.runningtracker.database.model.User;
  * Additionally, it displays the average pace across all runs of any given type. As newly completed
  * runs are 'untagged', they don't influence the average pace of any run type. However, once they
  * are tagged in the BrowseRunDetailsActivity, they will be accounted for when computing averages.
- *
  */
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -103,13 +105,14 @@ public class UserProfileActivity extends AppCompatActivity {
    * Will populate the average pace fields.
    */
   private void calculatePaces() {
-    Float[] paces = userProfileActivityViewModel.getUserAveragePaces(this);
+    EnumMap<RunTypeClassifier, Float> paces = userProfileActivityViewModel
+        .getUserAveragePaces(this);
 
     StringBuilder sb = new StringBuilder();
-    populatePace(walkingPaceField, paces[0], sb);
-    populatePace(joggingPaceField, paces[1], sb);
-    populatePace(runningPaceField, paces[2], sb);
-    populatePace(sprintingPaceField, paces[3], sb);
+    populatePace(walkingPaceField, paces.get(WALK), sb);
+    populatePace(joggingPaceField, paces.get(JOG), sb);
+    populatePace(runningPaceField, paces.get(RUN), sb);
+    populatePace(sprintingPaceField, paces.get(SPRINT), sb);
   }
 
   private void populatePace(TextView textView, Float pace, StringBuilder sb) {

@@ -16,9 +16,9 @@ public class Serializer {
 
   /**
    * Used by Room DB as TypeConverter, in RunActivity to serialize coordinates to be passed in
-   * ContentValue object, and in Run database abstraction type conversion.
-   * We required this wrapper method around generic type converter because Room cannot use unbound generics
-   * in Type Converters.
+   * ContentValue object, and in Run database abstraction type conversion. We required this wrapper
+   * method around generic type converter because Room cannot use unbound generics in Type
+   * Converters.
    *
    * @return serialized byte[]
    */
@@ -34,8 +34,8 @@ public class Serializer {
   }
 
   /**
-   * Used by type converters, and to serialize User objects to be passed to Content
-   * Provider. This operation works with unbound generics.
+   * Used by type converters, and to serialize User objects to be passed to Content Provider. This
+   * operation works with unbound generics.
    *
    * @param object to be serialized
    * @return a stream of bytes
@@ -63,8 +63,8 @@ public class Serializer {
   }
 
   /**
-   * Used by TypeConverter to deserialize a stream of bytes into a RunCoordinates object.
-   * Used natively by the Content Provider to derive User objects from Content Values.
+   * Used by TypeConverter to deserialize a stream of bytes into a RunCoordinates object. Used
+   * natively by the Content Provider to derive User objects from Content Values.
    *
    * @param bytes to be deserialized
    * @return RunCoordinates object

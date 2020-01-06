@@ -43,10 +43,6 @@ public class WeatherParser {
       return value;
     }
 
-    public static int getNum() {
-      return WeatherClassifier.values().length;
-    }
-
     @NotNull
     @Override
     public String toString() {

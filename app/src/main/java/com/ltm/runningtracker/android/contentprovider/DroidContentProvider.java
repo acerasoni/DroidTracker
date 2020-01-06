@@ -1,6 +1,5 @@
 package com.ltm.runningtracker.android.contentprovider;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUN_TYPE;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.COLD_RUNS;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.FREEZING_RUNS;
@@ -11,14 +10,9 @@ import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.RUN
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.URI_MATCHER;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.USER;
 import static com.ltm.runningtracker.android.contentprovider.DroidUriMatcher.WARM_RUNS;
-import static com.ltm.runningtracker.util.Constants.DATE;
-import static com.ltm.runningtracker.util.Constants.DISTANCE;
-import static com.ltm.runningtracker.util.Constants.DURATION;
 import static com.ltm.runningtracker.util.Constants.HEIGHT;
 import static com.ltm.runningtracker.util.Constants.NAME;
-import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
 import static com.ltm.runningtracker.util.Constants.RUN_ID;
-import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 import static com.ltm.runningtracker.util.Constants.USER_ID;
 import static com.ltm.runningtracker.util.Constants.WEIGHT;
@@ -30,14 +24,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.ltm.runningtracker.android.activity.viewmodel.ActivityViewModel;
 import com.ltm.runningtracker.database.AppDatabase;
 import com.ltm.runningtracker.database.model.Run;
 import com.ltm.runningtracker.database.RunDao;
 import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.database.UserDao;
 import com.ltm.runningtracker.util.Serializer;
-import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import java.util.Objects;
 
@@ -46,7 +38,9 @@ import java.util.Objects;
  * new Runs and User objects 2. Updating of Run and User objects 3. Deletion of Run and User
  * objects
  *
- * It utilises a ContentProviderContract for its operations.
+ * It utilises a ContentProviderContract for its operations. It does not have any dependencies on
+ * previous layers of data abstraction. It is exposed to external applications, but read operations
+ * require 'dangerous' android security-level permission.
  *
  * @see DroidProviderContract
  */

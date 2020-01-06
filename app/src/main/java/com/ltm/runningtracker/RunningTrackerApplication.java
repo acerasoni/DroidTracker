@@ -2,6 +2,8 @@ package com.ltm.runningtracker;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build.VERSION_CODES;
+import androidx.annotation.RequiresApi;
 import com.ltm.runningtracker.repository.RunRepository;
 import com.ltm.runningtracker.util.PropertyManager;
 import com.ltm.runningtracker.repository.LocationRepository;
@@ -62,6 +64,7 @@ public class RunningTrackerApplication extends Application {
     return userRepository;
   }
 
+  @RequiresApi(api = VERSION_CODES.O)
   public static synchronized RunRepository getRunRepository() {
     if (runRepository == null) {
       runRepository = new RunRepository();

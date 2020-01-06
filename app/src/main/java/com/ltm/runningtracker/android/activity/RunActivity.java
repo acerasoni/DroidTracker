@@ -54,7 +54,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -62,7 +61,7 @@ import org.jetbrains.annotations.NotNull;
  * then choose to begin a run. The map will continue tracking his location throughout the run. When
  * he decides to end the run, the activity is destroyed and the run saved to the database.
  *
- * There is no need for the user to manually insert any information. The location, weather, and all
+ * There is no need for the user to manually input any information. The location, weather, and all
  * other data associated to the run are either fetched from third-party API's or computed
  * on-the-fly, and inserted in the database as columns of the run's row.
  *

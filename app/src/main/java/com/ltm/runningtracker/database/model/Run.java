@@ -6,11 +6,9 @@ import static com.ltm.runningtracker.android.contentprovider.DroidProviderContra
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DISTANCE_COL;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DURATION_COL;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.ID_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.NAME_COL;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.PACE_COL;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TEMPERATURE_COL;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TYPE_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.WEATHER_COL;
 import static com.ltm.runningtracker.util.Constants.TIME_FORMAT;
 
 import android.annotation.SuppressLint;
@@ -19,10 +17,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.Serializer;
-import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser;
 import java.io.Serializable;
 import java.text.DateFormat;

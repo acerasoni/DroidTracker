@@ -33,5 +33,4 @@ public interface RunDao {
   @Query("DELETE FROM run WHERE weatherType=:type")
   int deleteByWeather(int type);
 
-
 }

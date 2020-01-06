@@ -19,8 +19,8 @@ import com.ltm.runningtracker.database.model.User;
 import com.ltm.runningtracker.util.Serializer;
 
 /**
- * Repository responsible for exposing, storing and modifying the userCache's LiveData object which acts
- * as cache to the database.
+ * Repository responsible for exposing, storing and modifying the userCache's LiveData object which
+ * acts as cache to the database.
  */
 public class UserRepository {
 
@@ -40,26 +40,16 @@ public class UserRepository {
     return userCache.getValue();
   }
 
-
   /**
    * Allows setting a new userCache asynchronously from a background thread.
    *
    * @param user object to be set.
    */
-  public void setUserAsync(User user) {
+  public synchronized void setUserAsync(User user) {
     this.userCache.postValue(user);
   }
 
-  /**
-   * Allows setting a new userCache synchronously from the UI thread.
-   *
-   * @param userCache object to be set.
-   */
-  public void setUserCache(User userCache) {
-    this.userCache.setValue(userCache);
-  }
-
-  public void flushCache() {
+  public synchronized void flushCache() {
     userCache.postValue(null);
   }
 
@@ -79,12 +69,14 @@ public class UserRepository {
    * This method is called from the UI thread. It will call the db asynchronously which will create
    * the User object and assign it to the userCache repository (cache) and database (memory)
    */
-  public void createUser(String name, int weight, int height, Context context) {
+  public synchronized void createUser(String name, int weight, int height, Context context) {
     // Build userCache
     User user = getParsedUserBuilder(name, weight, height).build();
 
-    // We must set the cache here because because the Content Provider must not know
-    // or have a dependency on previous levels of abstraction
+    /*
+     We must set the cache here because because the Content Provider must not know
+     or have a dependency on previous levels of abstraction
+     */
     setUserAsync(user);
 
     // Serialize and send to Content Provider
@@ -96,10 +88,10 @@ public class UserRepository {
   }
 
   /**
-   * Will asynchronously create a new userCache object and insert it into the underlying Room database.
-   * This method is called from the UI thread.
+   * Will asynchronously create a new userCache object and insert it into the underlying Room
+   * database. This method is called from the UI thread.
    */
-  public void updateUser(String name, int weight, int height, Context context) {
+  public synchronized void updateUser(String name, int weight, int height, Context context) {
     // Update cache
     userCache.getValue().name = name;
     userCache.getValue().weight = weight;
@@ -117,11 +109,11 @@ public class UserRepository {
   }
 
   /**
-   * This method retrieves the userCache cursor from the database, if exists, and builds a userCache cache
-   * from memory. {@link #buildUserFromMemory(Cursor)}
+   * This method retrieves the userCache cursor from the database, if exists, and builds a userCache
+   * cache from memory. {@link #buildUserFromMemory(Cursor)}
    */
   @SuppressLint("Recycle")
-  public void fetchUser() {
+  public synchronized void fetchUser() {
     AsyncTask.execute(() -> {
       final Cursor[] c = new Cursor[1];
       c[0] = getAppContext().getContentResolver()

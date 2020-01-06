@@ -5,14 +5,10 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManage
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.ID_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
@@ -28,13 +24,13 @@ import com.ltm.runningtracker.repository.RunRepository;
 import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;
 import com.ltm.runningtracker.util.RunCoordinates;
-import com.ltm.runningtracker.util.Serializer;
 import com.ltm.runningtracker.util.annotations.Presenter;
+import com.ltm.runningtracker.util.parser.RunTypeParser.RunTypeClassifier;
 import com.ltm.runningtracker.util.parser.WeatherParser.WeatherClassifier;
 import com.mapbox.android.core.location.LocationEngine;
 import com.survivingwithandroid.weather.lib.model.Weather;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This coursework implements the Model-View-ViewModel pattern. This class acts as the View Model in
@@ -123,14 +119,14 @@ public class ActivityViewModel extends ViewModel {
   }
 
   @Presenter(usedBy = {UserProfileActivity.class}, repositoriesAccessed = {RunRepository.class})
-  public Float[] getUserAveragePaces(Context context) {
+  public EnumMap<RunTypeClassifier, Float> getUserAveragePaces(Context context) {
     return runRepository.calculatateAveragePaces(context);
   }
 
   /**
    * @param id of the requested run
-   * @param context for the asynchronous call to the database if the cache was empty
-   * @return Cursor with one row which contains the run requested.
+   * @param context for the asynchronous call to the database if the cache is empty
+   * @return Run requested
    */
   @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
@@ -150,7 +146,7 @@ public class ActivityViewModel extends ViewModel {
 
   /**
    * @param context with which database query is made
-   * @return Cursor containing all the runs of the given weatherClassifier type
+   * @return List containing all the runs of the given weatherClassifier type
    */
   @Presenter(usedBy = {PerformanceFragment.class}, repositoriesAccessed = {RunRepository.class})
   public List<Run> getRunsByWeather(WeatherClassifier weatherClassifier, Context context) {
@@ -169,21 +165,16 @@ public class ActivityViewModel extends ViewModel {
     return runRepository.doRunsExist(context);
   }
 
-  /**
-   * Queries the database to determine if at least one run of each given type exists. The returned
-   * array is defined as follows [0] is true if runs in freezing weather exist [1] is true if runs
-   * in cold weather exist [2] is true if runs in mild weather exist [3] is true if runs in warm
-   * weather exist [4] is true if runs in hot weather exist [5] is true if runs of any type exist
-   *
-   * @param context with which database query is made
-   * @return boolean[] containing result of the queries outlined above
-   */
   @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public List<Run> getAllRuns(Context context) {
     return runRepository.getAllRuns(context);
   }
 
+  /**
+   * Method which will save the user, distinguishing via parameter boolean if the user is newly
+   * created or an existing user is simply being updated.
+   */
   @Presenter(usedBy = {UserProfileActivity.class}, repositoriesAccessed = {
       UserRepository.class})
   public void saveUser(Context context, boolean creatingUser, String name, int weight,
@@ -244,8 +235,10 @@ public class ActivityViewModel extends ViewModel {
 
   private Run getCachedRunById(WeatherClassifier weatherClassifier, int id) {
     List<Run> runsByWeather = runRepository.getRunsSyncByWeather(weatherClassifier);
-    for(Run run : runsByWeather) {
-      if(run._id == id) return run;
+    for (Run run : runsByWeather) {
+      if (run._id == id) {
+        return run;
+      }
     }
 
     return null;

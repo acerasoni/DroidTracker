@@ -8,4 +8,5 @@ public class MildPerformanceFragment extends PerformanceFragment {
   public MildPerformanceFragment() {
     this.weatherClassifierOfFragment = WeatherClassifier.MILD;
   }
+
 }

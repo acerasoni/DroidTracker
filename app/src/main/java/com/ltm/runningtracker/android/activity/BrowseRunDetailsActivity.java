@@ -1,19 +1,11 @@
 package com.ltm.runningtracker.android.activity;
 
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DATE_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DISTANCE_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.DURATION_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.NAME_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.PACE_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TEMPERATURE_COL;
-import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.TYPE_COL;
 import static com.ltm.runningtracker.util.Constants.REQUESTING_PERMISSION;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 import android.annotation.SuppressLint;
-import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -107,8 +99,10 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     runCoordinates = browseDetailsActivityViewModel.getRunCoordinates(weatherClassifier, runId);
     renderWeatherIcon();
 
-    // If the synchronous inspection of cache fails, make another effort to observe short living cache
-    // populated by the asynchronous database call
+    /*
+    If the synchronous inspection of cache fails, make another effort to observe short living cache
+    populated by the asynchronous database call
+    */
     browseDetailsActivityViewModel.getShortLivingCache().observe(this, run -> {
       if (run != null) {
         updateUI(run);
@@ -223,7 +217,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   public void onItemSelected(AdapterView<?> parent, View view,
       int pos, long id) {
     newRunType = pos;
-    // Will cause listView in previous activity has to refresh its UI state
+    // Will cause recyclerViews in previous activity to refresh its UI state
     hasTagBeenModified = true;
   }
 
@@ -233,8 +227,6 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
 
   /**
    * This method populates the UI with the details from the run in the Cursor.
-   *
-   * @param run
    */
   @SuppressLint({"SetTextI18n", "DefaultLocale"})
   public void updateUI(Run run) {

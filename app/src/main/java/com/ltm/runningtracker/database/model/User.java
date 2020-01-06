@@ -10,7 +10,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import com.ltm.runningtracker.database.model.Run.Builder;
 import java.io.Serializable;
 
 @Entity
@@ -97,8 +96,7 @@ public class User implements Serializable {
    */
   @Ignore
   public static User fromCursorToUser(Cursor cursor, int position) {
-    // Use in repos and listadapter
-
+    // Used in repos and listadapter
     User user = null;
 
     if(cursor.moveToPosition(position)) {

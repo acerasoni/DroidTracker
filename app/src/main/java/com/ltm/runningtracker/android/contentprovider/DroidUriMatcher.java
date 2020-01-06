@@ -6,8 +6,10 @@ import android.content.UriMatcher;
 
 class DroidUriMatcher {
 
-  // <-- Purposely package private. Avoids other modules having access to the logic with which
-  // the content provider matches URI's, and access to the UriMatcher object -->
+  /*
+  Purposely package private. Avoids other modules having access to the logic with which
+  the content provider matches URI's, and access to the UriMatcher object
+  */
 
   static final UriMatcher URI_MATCHER;
 

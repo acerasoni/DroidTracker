@@ -41,21 +41,28 @@ public class WeatherService extends Service {
     weatherClient = buildWeatherClient();
     lock = LocationRepository.getLock();
 
-    // Weather update worker thread
-    // Reasons for this:
-    // 1. Need to wait for location service to fetch at least one valid location
-    // 2. Updating temperature and location must not happen concurrently as this could
-    // cause inconsistencies.
+    /*
+    Weather update worker thread
+    Reasons for this:
+     1. Need to wait for location service to fetch at least one valid location
+     2. Updating temperature and location must not happen concurrently as this could
+     cause inconsistencies.
+     */
     Runnable requestWeatherTask = () -> {
       try {
         synchronized (lock) {
           if (getLocationRepository().getLocation() == null) {
-            // This means location has not been fetched yet. Lock will wait until notified
-            // by location service - meaning at least one location was successfully retrieved.
+            /*
+             This means location has not been fetched yet. Lock will wait until notified
+             by location service - meaning at least one location was successfully retrieved.
+             */
+
             lock.wait();
           }
-          // Weather repository listeners for changes in weather (passed as a listener), hence
-          // no need to directly post value to repo
+          /*
+          Weather repository listeners for changes in weather (passed as a listener), hence
+          no need to directly post value to repo
+           */
           weatherClient
               .getCurrentCondition(buildWeatherRequest(), getWeatherRepository());
         }
@@ -72,8 +79,10 @@ public class WeatherService extends Service {
             TimeUnit.SECONDS);
   }
 
-  // No need to use callbacks as the worker thread updating our temperature client is already implemented
-  // we just call it periodically. Activities observe temperature object
+  /*
+   No need to use callbacks as the worker thread updating our temperature client is
+   already implemented we just call it periodically. Activities observe temperature object
+   */
   public class WeatherServiceBinder extends Binder implements IInterface {
 
     @Override

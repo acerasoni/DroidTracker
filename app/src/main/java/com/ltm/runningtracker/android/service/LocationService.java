@@ -1,20 +1,15 @@
 package com.ltm.runningtracker.android.service;
 
-import static com.ltm.runningtracker.RunningTrackerApplication.getAppContext;
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 import static com.ltm.runningtracker.util.Constants.CHANNEL_ID;
-import static com.ltm.runningtracker.util.Constants.DATE;
 import static com.ltm.runningtracker.util.Constants.DISTANCE;
 import static com.ltm.runningtracker.util.Constants.DISTANCE_UPDATE_ACTION;
-import static com.ltm.runningtracker.util.Constants.DURATION;
-import static com.ltm.runningtracker.util.Constants.RUN_COORDINATES;
 import static com.ltm.runningtracker.util.Constants.RUN_END_ACTION;
 import static com.ltm.runningtracker.util.Constants.RUN_ONGOING;
 import static com.ltm.runningtracker.util.Constants.RUN_PAUSED;
-import static com.ltm.runningtracker.util.Constants.TEMPERATURE;
 import static com.ltm.runningtracker.util.Constants.TIME_UPDATE_ACTION;
 
 import android.app.Notification;
@@ -40,10 +35,8 @@ import androidx.lifecycle.LifecycleService;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.ltm.runningtracker.R;
 import com.ltm.runningtracker.android.activity.RunActivity;
-import com.ltm.runningtracker.android.contentprovider.DroidProviderContract;
 import com.ltm.runningtracker.util.RunCoordinates;
 import com.ltm.runningtracker.util.RunCoordinates.Coordinate;
-import com.ltm.runningtracker.util.Serializer;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -68,6 +61,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * Note that even when the run is paused, the map on and both location and temperature TextViews in
  * RunActivity will update. This has been done purposely.
+
+ * Once all activities unbind from the location service, this will stopSelf(). However,
+ * this only occurs if the user is not on a run, in which case it will keep running as a foreground
+ * service.
  */
 public class LocationService extends LifecycleService {
 
@@ -101,8 +98,10 @@ public class LocationService extends LifecycleService {
     runPaused = false;
     contentValues = new ContentValues();
 
-    // Can make weather a started service, no need to bind as it's closely coupled to the lifecycle
-    // of the location service
+    /*
+     Can make weather a started service, no need to bind as it's closely coupled
+     to the lifecycle of the location service
+     */
     startService(new Intent(this, WeatherService.class));
     startLocationThread();
   }
@@ -316,12 +315,16 @@ public class LocationService extends LifecycleService {
 
   private void startLocationThread() {
     try {
-      // The following requestLocationUpdates call will spin up a background thread which we can listen to
-      // by implementing the LocationEngineCallback interface
+      /*
+       The following requestLocationUpdates call will spin up a background thread which
+       we can listen to by implementing the LocationEngineCallback interface
+       */
       LocationEngineRequest locationEngineRequest = new LocationEngineRequest.Builder(
           getPropertyManager().getMinTime()).build();
-      // Similar to weather service, we pass the location repository as listener and allow it
-      // to update itself when callback occurs
+      /*
+      Similar to weather service, we pass the location repository as listener and allow it
+      to update itself when callback occurs
+      */
       getLocationRepository().getLocationEngine()
           .requestLocationUpdates(locationEngineRequest, getLocationRepository(), null);
     } catch (SecurityException e) {
@@ -361,16 +364,20 @@ public class LocationService extends LifecycleService {
   private Notification generateNotification(String message) {
     NotificationManager notificationManager = (NotificationManager) getSystemService(
         NOTIFICATION_SERVICE);
-    // Create the NotificationChannel, but only on API 26+ because
-    // the NotificationChannel class is new and not in the support library
+    /*
+    Create the NotificationChannel, but only on API 26+ because
+    the NotificationChannel class is new and not in the support library
+    */
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       CharSequence name = "Channel name";
       String description = "channel description";
       int importance = NotificationManager.IMPORTANCE_DEFAULT;
       NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
       channel.setDescription(description);
-      // Register the channel with the system; you can't change the importance
-      // or other notification behaviors after this
+      /*
+      Register the channel with the system; you can't change the importance
+      or other notification behaviors after this
+      */
       notificationManager.createNotificationChannel(channel);
     }
 

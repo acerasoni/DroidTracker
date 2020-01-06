@@ -46,12 +46,7 @@ public class Constants {
   public static final String NAME = "name";
   public static final String WEIGHT = "weight";
   public static final String HEIGHT = "height";
-
-  public static final String DATE = "date";
   public static final String DISTANCE = "distance";
-  public static final String DURATION = "duration";
-  public static final String TEMPERATURE = "temperature";
-  public static final String RUN_COORDINATES = "runCoordinates";
 
   public static final String CHANNEL_ID = "channelId";
   public static final String USER_ID = "userId";
@@ -61,4 +56,5 @@ public class Constants {
   public static final String WEIGHT_HEIGHT_INVALID_ERROR = "Values for weight or height are invalid - try again";
   public static final String NAME_INVALID_ERROR = "Value for name is invalid - try again";
   public static final String APP_REQUIRES_ACCESS = "DroidTracker requires access to location. Please re-launch the app.";
+
 }

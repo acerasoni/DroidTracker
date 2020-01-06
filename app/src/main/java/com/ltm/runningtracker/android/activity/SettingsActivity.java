@@ -2,11 +2,6 @@ package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
-import static com.ltm.runningtracker.util.Constants.COLD_STRING;
-import static com.ltm.runningtracker.util.Constants.FREEZING_STRING;
-import static com.ltm.runningtracker.util.Constants.HOT_STRING;
-import static com.ltm.runningtracker.util.Constants.MILD_STRING;
-import static com.ltm.runningtracker.util.Constants.WARM_STRING;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;

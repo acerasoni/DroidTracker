@@ -26,15 +26,12 @@ public class DroidProviderContract {
   }
 
   // <-- Static access variables for column names -->
-  public static final String ID = "_id";
-  public static final String LOCATION = "location";
-  public static final String DATE = "date";
+
   public static final String RUN_TYPE = "runType";
-  public static final String PACE = "pace";
 
   // <-- Static access variables for column positions within the cursor -->
 
-  // Generic
+  // Shared
   public static final int ID_COL = 0;
   public static final int NAME_COL = 1;
 
