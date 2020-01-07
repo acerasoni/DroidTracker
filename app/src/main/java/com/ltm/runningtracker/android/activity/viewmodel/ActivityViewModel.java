@@ -9,6 +9,8 @@ import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherReposit
 import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build.VERSION_CODES;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import com.ltm.runningtracker.android.activity.BrowseRunDetailsActivity;
@@ -75,6 +77,7 @@ public class ActivityViewModel extends ViewModel {
   private LiveData<User> userLiveData;
   private LiveData<Weather> weatherLiveData;
 
+  @RequiresApi(api = VERSION_CODES.O)
   public ActivityViewModel() {
     locationRepository = getLocationRepository();
     runRepository = getRunRepository();

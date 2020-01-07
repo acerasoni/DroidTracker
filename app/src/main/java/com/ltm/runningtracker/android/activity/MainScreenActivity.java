@@ -87,12 +87,18 @@ public class MainScreenActivity extends AppCompatActivity {
     requestPermission();
   }
 
+  /*
+  The Activity needs to stay bound to the service so that the service doesn't misrepresent
+  the transition between MainScreenActivity and RunActivity as the user destroying all activities
+  (in which case destroying the service is necessary)
+   */
   @Override
   public void onDestroy() {
-    super.onDestroy();
     if (mBound) {
       unbindService(serviceConnection);
+      mBound = false;
     }
+    super.onDestroy();
   }
 
   @Override
@@ -128,9 +134,17 @@ public class MainScreenActivity extends AppCompatActivity {
    */
   @Override
   public void onStart() {
-    super.onStart();
     setupButtons();
     setupPerformance();
+    super.onStart();
+  }
+
+  /**
+   * Will unbind from the service when the Activity is stopped.
+   */
+  @Override
+  public void onStop() {
+    super.onStop();
   }
 
   @Override
@@ -261,12 +275,7 @@ public class MainScreenActivity extends AppCompatActivity {
     // Initialise repositories
     mainActivityViewModel.initRepos();
 
-    /*
-    Start weather and location service
-    Acts as a callback
-    */
-    Intent locationIntent = new Intent(this, LocationService.class);
-    startService(locationIntent);
+    // Instantiate service connection
     serviceConnection = new ServiceConnection() {
       @Override
       public void onServiceConnected(ComponentName name, IBinder service) {
@@ -281,7 +290,22 @@ public class MainScreenActivity extends AppCompatActivity {
       }
     };
 
-    bindService(locationIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+    /*
+    Start location service
+
+    We want to start and bind to the service here rather than in onStart() because we need
+    to wait for the user to grant permission to FINE_ACCESS_LOCATION.
+
+    There is no reason why we would start the service if the location cannot be retrieved.
+    This would be a waste of resources.
+
+    We keep the activity bound to the service even when it is stopped to avoid the service dying.
+    RunActivity also uses the same service, so no waste of resources occurs.
+    */
+    Intent locationIntent = new Intent(this, LocationService.class);
+    startService(locationIntent);
+    // No need for BIND_AUTO_CREATE, as we started the service explicitly already
+    bindService(locationIntent, serviceConnection, 0);
 
     // Observe location object
     mainActivityViewModel.getCounty().observe(this, county -> locationTextField.setText(county));

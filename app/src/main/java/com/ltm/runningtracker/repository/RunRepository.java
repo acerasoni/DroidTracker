@@ -235,6 +235,7 @@ public class RunRepository {
    * @param id of run
    * @param context with which to make database call
    */
+  @RequiresApi(api = VERSION_CODES.O)
   @SuppressLint("DefaultLocale")
   public void getRunByIdAsync(int id, Context context) {
     Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + id);

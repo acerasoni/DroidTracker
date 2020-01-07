@@ -116,6 +116,11 @@ public class WeatherService extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
+    /*
+    If the OS kills the service, we want it to start again.
+    It does not matter if the OS doesn't redeliver the original intent,
+    as it was empty.
+    */
     return Service.START_STICKY;
   }
 

@@ -87,12 +87,15 @@ public class RunActivity extends AppCompatActivity implements
 
   // Service-related
   private ActivityViewModel runActivityViewModel;
-  private IntentFilter runUpdateFilter;
   private Boolean isRunning = null;
   private Boolean isPaused = null;
+  private Context activity = this;
   boolean mBound;
+
+  // Broadcast receivers
   private RunUpdateReceiver runUpdateReceiver;
-  Context activity = this;
+  private IntentFilter batteryStatusFilter;
+  private IntentFilter runUpdateFilter;
 
   // Mapbox-related
   private MapboxMap mapboxMap;
@@ -114,7 +117,6 @@ public class RunActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_run);
 
-    initialiseBroadcastReceiver();
     initialiseViews();
     setupMaxbox(savedInstanceState);
   }
@@ -180,35 +182,63 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   @Override
-  protected void onStop() {
-    super.onStop();
-    mapView.onStop();
-  }
-
-  @Override
   protected void onSaveInstanceState(@NotNull Bundle outState) {
     super.onSaveInstanceState(outState);
     mapView.onSaveInstanceState(outState);
   }
 
+  /*
+  As onDestroy in not guaranteed to be called (moving to another activity),
+  RunActivity must registered and unregistered from receivers in onStart
+  and onStop to avoid memory leakage. The same concept is true for binding
+  and unbinding to the service.
+
+  "If you need to interact with the service only while your activity is visible,
+  you should bind during onStart() and unbind during onStop()."
+  https://developer.android.com/guide/components/bound-services
+   */
+
   @Override
   protected void onStart() {
+    /*
+    Bind to location service. Guaranteed to be running from MainScreenActivity,
+    hence we are going to use the flag 0 rather than BIND_AUTO_CREATE
+    */
     Intent intent = new Intent(this, LocationService.class);
+    bindService(intent, connection, 0);
 
-    // Bind to location service
-    bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    // Initialise broadcast receivers
+    runUpdateReceiver = new RunUpdateReceiver();
+    runUpdateFilter = new IntentFilter();
+    runUpdateFilter.addAction(DISTANCE_UPDATE_ACTION);
+    runUpdateFilter.addAction(TIME_UPDATE_ACTION);
+    runUpdateFilter.addAction(RUN_END_ACTION);
 
+    // Register activity to receivers
     LocalBroadcastManager.getInstance(this).registerReceiver(runUpdateReceiver, runUpdateFilter);
+
     mapView.onStart();
     super.onStart();
   }
 
   @Override
-  protected void onDestroy() {
+  protected void onStop() {
+    super.onStop();
+
+    // Unbind from location service
     if (mBound) {
-      LocalBroadcastManager.getInstance(this).unregisterReceiver(runUpdateReceiver);
       unbindService(connection);
+      mBound = false;
     }
+
+    // Unregister broadcast receiver
+    LocalBroadcastManager.getInstance(this).unregisterReceiver(runUpdateReceiver);
+
+    mapView.onStop();
+  }
+
+  @Override
+  protected void onDestroy() {
     mapView.onDestroy();
     super.onDestroy();
   }
@@ -248,15 +278,6 @@ public class RunActivity extends AppCompatActivity implements
     });
 
     toggleRunButton.setText(FETCHING_LOCATION);
-  }
-
-  private void initialiseBroadcastReceiver() {
-    runUpdateReceiver = new RunUpdateReceiver();
-
-    runUpdateFilter = new IntentFilter();
-    runUpdateFilter.addAction(DISTANCE_UPDATE_ACTION);
-    runUpdateFilter.addAction(TIME_UPDATE_ACTION);
-    runUpdateFilter.addAction(RUN_END_ACTION);
   }
 
   @SuppressWarnings({"MissingPermission"})
@@ -303,41 +324,6 @@ public class RunActivity extends AppCompatActivity implements
     } else {
       permissionsManager = new PermissionsManager(this);
       permissionsManager.requestLocationPermissions(this);
-    }
-  }
-
-  /**
-   * This implementation of a custom BroadcastReceiver allows the activity to react to time,
-   * distance and runEnd actions broadcasts sent by the Location service.
-   */
-  private class RunUpdateReceiver extends BroadcastReceiver {
-
-    @SuppressLint({"SetTextI18n", "DefaultLocale"})
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      String action = intent.getAction();
-      switch (Objects.requireNonNull(action)) {
-        case TIME_UPDATE_ACTION:
-          // In seconds
-          int time = intent.getIntExtra(getResources().getString(R.string.time), -1);
-          String formattedTime = getFormattedTime(time);
-          durationView.setText(formattedTime);
-          break;
-        case DISTANCE_UPDATE_ACTION:
-          double distance = intent.getDoubleExtra(DISTANCE, -1L);
-          int formattedDistance = (int) distance;
-          StringBuilder sb = new StringBuilder(Integer.toString(formattedDistance)).append(" ")
-              .append(getResources().getString(R.string.metres));
-          distanceView.setText(sb.toString());
-          break;
-        case RUN_END_ACTION:
-          AppCompatActivity a = (AppCompatActivity) activity;
-          a.setResult(RESULT_OK);
-          a.finish();
-          break;
-        default:
-          throw new IllegalStateException(UNEXPECTED_VALUE + Objects.requireNonNull(action));
-      }
     }
   }
 
@@ -409,6 +395,41 @@ public class RunActivity extends AppCompatActivity implements
       }
     }
   };
+
+  /**
+   * This implementation of a custom BroadcastReceiver allows the activity to react to time,
+   * distance and runEnd actions broadcasts sent by the Location service.
+   */
+  private class RunUpdateReceiver extends BroadcastReceiver {
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      String action = intent.getAction();
+      switch (Objects.requireNonNull(action)) {
+        case TIME_UPDATE_ACTION:
+          // In seconds
+          int time = intent.getIntExtra(getResources().getString(R.string.time), -1);
+          String formattedTime = getFormattedTime(time);
+          durationView.setText(formattedTime);
+          break;
+        case DISTANCE_UPDATE_ACTION:
+          double distance = intent.getDoubleExtra(DISTANCE, -1L);
+          int formattedDistance = (int) distance;
+          StringBuilder sb = new StringBuilder(Integer.toString(formattedDistance)).append(" ")
+              .append(getResources().getString(R.string.metres));
+          distanceView.setText(sb.toString());
+          break;
+        case RUN_END_ACTION:
+          AppCompatActivity a = (AppCompatActivity) activity;
+          a.setResult(RESULT_OK);
+          a.finish();
+          break;
+        default:
+          throw new IllegalStateException(UNEXPECTED_VALUE + Objects.requireNonNull(action));
+      }
+    }
+  }
 
   private void renderPauseButtonText(boolean isPaused) {
     if (isPaused) {

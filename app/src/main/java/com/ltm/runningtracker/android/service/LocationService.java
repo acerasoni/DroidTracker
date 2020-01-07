@@ -17,19 +17,23 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -61,10 +65,9 @@ import org.jetbrains.annotations.NotNull;
  *
  * Note that even when the run is paused, the map on and both location and temperature TextViews in
  * RunActivity will update. This has been done purposely.
-
- * Once all activities unbind from the location service, this will stopSelf(). However,
- * this only occurs if the user is not on a run, in which case it will keep running as a foreground
- * service.
+ *
+ * Once all activities unbind from the location service, this will stopSelf(). However, this only
+ * occurs if the user is not on a run, in which case it will keep running as a foreground service.
  */
 public class LocationService extends LifecycleService {
 
@@ -74,6 +77,10 @@ public class LocationService extends LifecycleService {
   private final IBinder binder = new LocationServiceBinder();
   private boolean isUserRunning;
   private boolean runPaused;
+
+  // Broadcast receiver
+  private ActionShutdownReceiver actionShutdownReceiver;
+  private IntentFilter actionShutdownFilter;
 
   // Location variables
   private Double distance;
@@ -97,6 +104,8 @@ public class LocationService extends LifecycleService {
     isUserRunning = false;
     runPaused = false;
     contentValues = new ContentValues();
+    actionShutdownFilter = new IntentFilter(Intent.ACTION_SHUTDOWN);
+    actionShutdownReceiver = new ActionShutdownReceiver();
 
     /*
      Can make weather a started service, no need to bind as it's closely coupled
@@ -138,6 +147,11 @@ public class LocationService extends LifecycleService {
   @Override
   public int onStartCommand(@NotNull Intent intent, int flags, int startId) {
     super.onStartCommand(intent, flags, startId);
+    /*
+    If the OS kills the service, we want it to start again.
+    It does not matter if the OS doesn't redeliver the original intent,
+    as it was empty.
+    */
     return Service.START_STICKY;
   }
 
@@ -181,11 +195,13 @@ public class LocationService extends LifecycleService {
       if (isUserRunning) {
         // Revert to background service
         stopForeground(true);
+        unregisterReceiver(actionShutdownReceiver);
         onRunEnd(true);
         isUserRunning = false;
       } else {
         // Convert to foreground service
         startForeground(NOTIFICATION_ID, generateNotification("Run ongoing"));
+        registerReceiver(actionShutdownReceiver, actionShutdownFilter);
         onRunStart();
         isUserRunning = true;
       }
@@ -268,13 +284,16 @@ public class LocationService extends LifecycleService {
 
     // Stop distance updates
     getLocationRepository().getLocationLiveData().removeObservers
-        (this);
+    (this);
 
     /**
-     * https://github.com/probelalkhan/android-room-database-example/blob/master/app/src/main/java/net/simplifiedcoding/mytodo/AddTaskActivity.java
+     * Code taken from StackOverflow and adapted for my use case
+     *
+     * @see <a href="https://github.com/probelalkhan/android-room-database-example/blob/master/app/src/main/java/net/simplifiedcoding/mytodo/AddTaskActivity.java">StackOverflow thread</a>
      */
     class SaveRun extends AsyncTask<Void, Void, Void> {
 
+      @RequiresApi(api = VERSION_CODES.O)
       @Override
       protected Void doInBackground(Void... voids) {
         if (shouldSave) {
@@ -405,6 +424,18 @@ public class LocationService extends LifecycleService {
     NotificationManager mNotificationManager = (NotificationManager) getSystemService(
         Context.NOTIFICATION_SERVICE);
     mNotificationManager.notify(NOTIFICATION_ID, notification);
+  }
+
+  private class ActionShutdownReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (Intent.ACTION_SHUTDOWN.equals(intent.getAction())) {
+        stopForeground(true);
+        onRunEnd(true);
+        isUserRunning = false;
+      }
+    }
   }
 
   private void sendUpdateBroadcast(Intent intent) {

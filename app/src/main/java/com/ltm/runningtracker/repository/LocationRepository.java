@@ -110,10 +110,6 @@ public class LocationRepository implements LocationEngineCallback {
   }
 
   /**
-   * https://developer.android.com/training/location/display-address
-   */
-
-  /**
    * @param location object
    * @return String representing County, or "No Man's Land" if no county available.
    * @see <a href="https://developer.android.com/training/location/display-address">Android
