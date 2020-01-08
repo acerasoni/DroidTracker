@@ -10,7 +10,7 @@
 
   <permission
     android:name="com.ltm.runningtracker.READ"
-    android:label="@string/perm_write"
+    android:label="@string/perm_read"
     android:protectionLevel="dangerous" />
 
   <!--
@@ -70,21 +70,24 @@
       android:theme="@style/AppTheme.NoActionBar">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
-
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
 
-    <service android:name=".android.service.LocationService" />
-    <service android:name=".android.service.WeatherService" />
+    <service
+      android:name=".android.service.LocationService"
+      android:exported="false" />
+    <service
+      android:name=".android.service.WeatherService"
+      android:exported="false" />
 
     <provider
       android:name=".android.contentprovider.DroidContentProvider"
       android:authorities="com.ltm.runningtracker.android.contentprovider.DroidContentProvider"
       android:enabled="true"
       android:exported="true"
-      android:writePermission="com.ltm.runningtracker.WRITE"
-      android:readPermission="com.ltm.runningtracker.READ" />
+      android:readPermission="com.ltm.runningtracker.READ"
+      android:writePermission="com.ltm.runningtracker.WRITE" />
 
   </application>
 

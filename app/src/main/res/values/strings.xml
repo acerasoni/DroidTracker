@@ -1,6 +1,7 @@
 <resources>
   <string name="app_name">DroidTracker</string>
   <string name="perm_write">Write permission for the database</string>
+  <string name="perm_read">Read permission for the database</string>
   <string name="openweather_api_key">678838031a4065f09e10bff3eda7bc65</string>
   <string name="title_activity_main">DroidTracker</string>
   <string name="app_properties">app.properties</string>
