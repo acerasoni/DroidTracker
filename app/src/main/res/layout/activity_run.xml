@@ -8,16 +8,58 @@
   android:background="@color/backgroundColor"
   tools:context=".android.activity.RunActivity">
 
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_base"
+    android:minHeight="?attr/actionBarSize"
+    android:theme="?attr/actionBarTheme"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+    <TextView
+      android:id="@+id/textView11"
+      android:layout_width="wrap_content"
+      android:layout_height="40dp"
+      android:text="@string/map"
+      android:textColor="#FFFFFF"
+      android:textSize="30sp"
+      tools:layout_editor_absoluteX="8dp"
+      tools:layout_editor_absoluteY="8dp" />
+    <TextView
+      android:id="@+id/countyView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="24dp"
+      android:layout_marginTop="22dp"
+      android:text="@string/location"
+      android:textColor="#FFFFFF"
+      android:textSize="18sp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/textView11" />
+    <TextView
+      android:id="@+id/temperatureView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="22dp"
+      android:text="@string/temperature"
+      android:textColor="#FFFFFF"
+      android:textSize="18sp"
+      app:layout_constraintBottom_toBottomOf="@id/textView11"
+      app:layout_constraintStart_toEndOf="@id/countyView" />
+  </androidx.appcompat.widget.Toolbar>
   <View
     android:id="@+id/myRectangleView5"
     android:layout_width="match_parent"
     android:layout_height="35dp"
-    android:layout_marginTop="48dp"
     android:background="@drawable/rectangle_narrow"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
   <View
     android:id="@+id/myRectangleView8"
     android:layout_width="match_parent"
@@ -28,15 +70,6 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent" />
-  <View
-    android:id="@+id/myRectangleView4"
-    android:layout_width="0dp"
-    android:layout_height="50dp"
-    android:background="@drawable/rectangle_base"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
   <com.mapbox.mapboxsdk.maps.MapView
     android:id="@+id/mapView"
     android:layout_width="0dp"
@@ -60,16 +93,6 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent" />
   <TextView
-    android:id="@+id/countyView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginBottom="2dp"
-    android:textColor="#FFFFFF"
-    android:textSize="18sp"
-    app:layout_constraintBottom_toBottomOf="@+id/textView11"
-    app:layout_constraintStart_toEndOf="@+id/textView11" />
-  <TextView
     android:id="@+id/distanceView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -78,16 +101,7 @@
     android:textColor="#FFFFFF"
     android:textSize="14sp"
     app:layout_constraintStart_toEndOf="@+id/timeView"
-    app:layout_constraintTop_toTopOf="@+id/myRectangleView5" />
-  <TextView
-    android:id="@+id/temperatureView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:textColor="#FFFFFF"
-    android:textSize="18sp"
-    app:layout_constraintBottom_toBottomOf="@+id/countyView"
-    app:layout_constraintStart_toEndOf="@+id/countyView" />
+    app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
   <TextView
     android:id="@+id/timeView"
     android:layout_width="wrap_content"
@@ -97,20 +111,7 @@
     android:textColor="#FFFFFF"
     android:textSize="14sp"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/myRectangleView5" />
-  <TextView
-    android:id="@+id/textView11"
-    android:layout_width="wrap_content"
-    android:layout_height="40dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:text="@string/map"
-    android:textColor="#FFFFFF"
-    android:textSize="30sp"
-    app:layout_constraintBottom_toBottomOf="@+id/myRectangleView4"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
   <Button
     android:id="@+id/pauseResumeButton"
     android:layout_width="wrap_content"
@@ -122,5 +123,5 @@
     android:textStyle="bold"
     app:layout_constraintBottom_toBottomOf="@+id/myRectangleView5"
     app:layout_constraintEnd_toEndOf="@+id/myRectangleView5"
-    app:layout_constraintTop_toBottomOf="@+id/myRectangleView4" />
+    app:layout_constraintTop_toTopOf="@+id/myRectangleView5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.android.activity.MainScreenActivity.setupToolbar;
 import static com.ltm.runningtracker.database.model.Run.getFormattedTime;
 import static com.ltm.runningtracker.repository.LocationRepository.getCounty;
 import static com.ltm.runningtracker.util.Constants.BEGIN_RUN_TO_DISPLAY;
@@ -257,6 +258,7 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   private void initialiseViews() {
+    setupToolbar(this, R.id.toolbar3);
     runActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
     countyView = findViewById(R.id.countyView);
     durationView = findViewById(R.id.timeView);

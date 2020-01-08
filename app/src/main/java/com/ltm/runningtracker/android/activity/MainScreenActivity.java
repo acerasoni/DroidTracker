@@ -24,8 +24,10 @@ import android.os.IBinder;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
@@ -321,6 +323,26 @@ public class MainScreenActivity extends AppCompatActivity {
         enableRun();
       }
     });
+  }
+
+  /**
+   * This utility method setups up the toolbar's action button
+   *
+   * @param id of the given toolbar
+   * @see <a href="https://developer.android.com/training/appbar/up-action#declare-parent">Android
+   * Documentation on setting up toolbars</a>
+   */
+  public static void setupToolbar(AppCompatActivity activity, int id) {
+    // my_child_toolbar is defined in the layout file
+    Toolbar myChildToolbar = activity.findViewById(id);
+    activity.setSupportActionBar(myChildToolbar);
+
+    // Get a support ActionBar corresponding to this toolbar
+    ActionBar ab = activity.getSupportActionBar();
+
+    // Enable the Up button
+    ab.setDisplayHomeAsUpEnabled(true);
+    ab.setDisplayShowTitleEnabled(false);
   }
 
 }

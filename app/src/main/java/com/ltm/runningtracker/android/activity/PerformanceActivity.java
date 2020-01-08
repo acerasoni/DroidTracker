@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.android.activity.MainScreenActivity.setupToolbar;
 import static com.ltm.runningtracker.util.Constants.UNEXPECTED_VALUE;
 
 import android.os.Bundle;
@@ -110,6 +111,7 @@ public class PerformanceActivity extends AppCompatActivity {
   }
 
   public void initialiseViews() {
+    setupToolbar(this, R.id.toolbar);
     SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(
         getSupportFragmentManager());
     ViewPager viewPager = findViewById(R.id.viewPager);

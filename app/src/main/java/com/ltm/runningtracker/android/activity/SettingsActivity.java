@@ -1,6 +1,7 @@
 package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
+import static com.ltm.runningtracker.android.activity.MainScreenActivity.setupToolbar;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
 
 import android.graphics.Color;
@@ -150,6 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   private void initialiseViews() {
+    setupToolbar(this, R.id.toolbar4);
     settingsActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     userButton = findViewById(R.id.userButton);

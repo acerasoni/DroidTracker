@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.android.activity.MainScreenActivity.setupToolbar;
 import static com.ltm.runningtracker.util.Constants.REQUESTING_PERMISSION;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
@@ -264,6 +265,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   }
 
   private void initialiseViews() {
+    setupToolbar(this, R.id.toolbar2);
     activityView = findViewById(R.id.activityView);
     locationView = findViewById(R.id.locationView);
     dateView = findViewById(R.id.dateView);

@@ -1,5 +1,6 @@
 package com.ltm.runningtracker.android.activity;
 
+import static com.ltm.runningtracker.android.activity.MainScreenActivity.setupToolbar;
 import static com.ltm.runningtracker.util.Constants.ALL_FIELDS_INVALID;
 import static com.ltm.runningtracker.util.Constants.NAME_INVALID_ERROR;
 import static com.ltm.runningtracker.util.Constants.WEIGHT_HEIGHT_INVALID_ERROR;
@@ -135,6 +136,7 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   private void initialiseViews() {
+    setupToolbar(this, R.id.toolbar5);
     userProfileActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     nameField = findViewById(R.id.nameField);

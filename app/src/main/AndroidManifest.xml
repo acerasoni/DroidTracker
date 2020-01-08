@@ -30,44 +30,67 @@
     android:label="@string/app_name"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
-    android:theme="@style/AppTheme"
+    android:theme="@style/AppTheme.NoActionBar"
     tools:ignore="GoogleAppIndexingWarning">
     <activity
       android:name=".android.activity.PerformanceActivity"
       android:label="@string/title_activity_weather_performance"
-      android:theme="@style/AppTheme.NoActionBar" />
+      android:parentActivityName="com.ltm.runningtracker.android.activity.MainScreenActivity">
+      <!-- Parent activity meta-data to support 4.0 and lower -->
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.ltm.runningtracker.android.activity.MainScreenActivity" />
+    </activity>
     <activity
       android:name=".android.activity.UserProfileActivity"
       android:label="@string/title_activity_user_setup"
-      android:theme="@style/AppTheme.NoActionBar" />
+      android:parentActivityName="com.ltm.runningtracker.android.activity.MainScreenActivity">
+      <!-- Parent activity meta-data to support 4.0 and lower -->
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.ltm.runningtracker.android.activity.MainScreenActivity" />
+    </activity>
     <activity
       android:name=".android.activity.SettingsActivity"
       android:label="@string/title_activity_user_settings"
-      android:theme="@style/AppTheme.NoActionBar" />
+      android:parentActivityName="com.ltm.runningtracker.android.activity.MainScreenActivity">
+      <!-- Parent activity meta-data to support 4.0 and lower -->
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.ltm.runningtracker.android.activity.MainScreenActivity" />
+    </activity>
     <activity
       android:name=".android.activity.BrowseRunDetailsActivity"
       android:label="@string/title_activity_browse_run_details"
-      android:theme="@style/AppTheme.NoActionBar" />
+      android:parentActivityName="com.ltm.runningtracker.android.activity.PerformanceActivity">
+      <!-- Parent activity meta-data to support 4.0 and lower -->
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.ltm.runningtracker.android.activity.PerformanceActivity" />
+    </activity>
     <activity
       android:name=".android.activity.RunActivity"
       android:label="@string/title_activity_run"
-      android:theme="@style/AppTheme.NoActionBar" />
-    <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
-    <meta-data
-      android:name="com.google.android.geo.API_KEY"
-      android:value="@string/google_maps_key" />
-
+      android:parentActivityName="com.ltm.runningtracker.android.activity.MainScreenActivity">
+      <!-- Parent activity meta-data to support 4.0 and lower -->
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.ltm.runningtracker.android.activity.MainScreenActivity" />
+      <!--
+               The API key for Google Maps-based APIs is defined as a string resource.
+               (See the file "res/values/google_maps_api.xml").
+               Note that the API key is linked to the encryption key used to sign the APK.
+               You need a different API key for each encryption key, including the release key that is used to
+               sign the APK for publishing.
+               You can define the keys for the debug and release targets in src/debug/ and src/release/.
+          -->
+      <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="@string/google_maps_key" />
+    </activity>
     <activity
       android:name=".android.activity.MainScreenActivity"
-      android:label="@string/title_activity_main"
-      android:theme="@style/AppTheme.NoActionBar">
+      android:label="@string/title_activity_main">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
