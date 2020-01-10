@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION_CODES;
+import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -84,31 +85,33 @@ public class RunRepository {
    * @return true if runs exist
    */
   public boolean doRunsExist(Context context) {
-    Cursor c;
-
     if (runsCache.size() > 0) {
       return true;
     }
 
     /*
-     Check DB
+     We now have to check DB the db.
      Necessary as run cursors are cached only when looking at performance - could be empty
+
+     We can use try-with-resource to automatically close the cursor.
+     We return true if runs exist but there was an exception while reading cursor data.
      */
-    c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
-
-    if (c != null && c.moveToFirst()) {
-      // Cache all runs returned for future use
-      do {
-        Run run = Run.fromCursorToRun(c);
-        runsCache.put(run._id, run);
-      } while (c.moveToNext());
-
-      // Runs exist - return true
-      return true;
+    boolean runsExist = false;
+    try (Cursor c = context.getContentResolver().
+        query(RUNS_URI, null, null, null, null)) {
+      if (c.moveToFirst()) {
+        runsExist = true;
+        do {
+          // Cache all runs returned for future reference
+          Run run = Run.fromCursorToRun(c);
+          runsCache.put(run._id, run);
+        } while (c.moveToNext());
+      }
+    } finally {
+      return runsExist;
     }
-
-    return false;
   }
+
 
   /**
    * Called asynchronously from a background thread in Location Service
@@ -133,6 +136,7 @@ public class RunRepository {
   /**
    * Asynchronously delete all runs in the database
    */
+  @RequiresApi(api = VERSION_CODES.O)
   public void deleteRuns(Context context) {
     AsyncTask.execute(() -> {
       context.getContentResolver().delete(RUNS_URI, null, null);
@@ -167,21 +171,23 @@ public class RunRepository {
   public synchronized List<Run> getRunsAsync(Context context, Uri uri) {
     List<Run> returnedList = new ArrayList<>();
 
-    Cursor c;
-    c = context.getContentResolver()
-        .query(uri, null, null, null, null, null);
-
-    if (c.moveToFirst()) {
-      do {
-        Run run = Run.fromCursorToRun(c);
-        returnedList.add(run);
-
-        // Cache run. Set will ignore duplicates.
-        runsCache.put(run._id, run);
-      } while (c.moveToNext());
+    /*
+    Try-with-resource allows to return a partially populated list if an exception occurs
+    while reading cursor data. It also allows to guarantee closing the cursor.
+     */
+    try (Cursor c = context.getContentResolver()
+        .query(uri, null, null, null, null, null)) {
+      if (c.moveToFirst()) {
+        do {
+          Run run = Run.fromCursorToRun(c);
+          returnedList.add(run);
+          // Cache run. Set will ignore duplicates.
+          runsCache.put(run._id, run);
+        } while (c.moveToNext());
+      }
+    } finally {
+      return returnedList;
     }
-
-    return returnedList;
   }
 
   /*
@@ -215,6 +221,7 @@ public class RunRepository {
    *
    * @return run if retrieved, null if cache empty
    */
+  @RequiresApi(api = VERSION_CODES.O)
   public Run getRunById(int id, Context context) {
     /*
      Check cache
@@ -239,19 +246,18 @@ public class RunRepository {
   @SuppressLint("DefaultLocale")
   public void getRunByIdAsync(int id, Context context) {
     Uri customUri = Uri.parse(RUNS_URI.toString() + "/" + id);
-    Cursor c = context.getContentResolver().query(customUri, null, null, null, null);
+    try (Cursor c = context.getContentResolver()
+        .query(customUri, null, null, null, null)) {
+      if (c.moveToFirst()) {
+        Run run = Run.fromCursorToRun(c);
 
-    if (c != null) {
-      c.moveToFirst();
-      Run run = Run.fromCursorToRun(c);
+        // Cache
+        runsCache.put(run._id, run);
 
-      // Cache
-      runsCache.put(run._id, run);
-
-      // Set short living cache to cursor
-      getRunRepository().populateShortLivingCache(run);
+        // Set short living cache to cursor
+        getRunRepository().populateShortLivingCache(run);
+      }
     }
-
   }
 
   public void deleteRun(WeatherClassifier weatherClassifier, Context context, int id) {
@@ -311,56 +317,58 @@ public class RunRepository {
     Float sprintingPace = null;
 
     // Retrieve all runs
-    Cursor c = context.getContentResolver().query(RUNS_URI, null, null, null, null);
-    if (c != null && c.moveToFirst()) {
-      do {
-        switch (valueOf(c.getString(TYPE_COL).toUpperCase())) {
-          case UNTAGGED:
-            break;
-          case WALK:
-            if (walkingPace == null) {
-              walkingPace = c.getFloat(PACE_COL);
-            }
-            walkingPace = calculateAverage(walkingPace, c.getFloat(PACE_COL));
-            break;
-          case JOG:
-            if (joggingPace == null) {
-              joggingPace = c.getFloat(PACE_COL);
-            }
-            joggingPace = calculateAverage(joggingPace, c.getFloat(PACE_COL));
-            break;
-          case RUN:
-            if (runningPace == null) {
-              runningPace = c.getFloat(PACE_COL);
-            }
-            runningPace = calculateAverage(runningPace, c.getFloat(PACE_COL));
-            break;
-          case SPRINT:
-            if (sprintingPace == null) {
-              sprintingPace = c.getFloat(PACE_COL);
-            }
-            sprintingPace = calculateAverage(sprintingPace, c.getFloat(PACE_COL));
-            break;
+    try (Cursor c = context.getContentResolver()
+        .query(RUNS_URI, null, null, null, null)) {
+      if (c.moveToFirst()) {
+        do {
+          switch (valueOf(c.getString(TYPE_COL).toUpperCase())) {
+            case UNTAGGED:
+              break;
+            case WALK:
+              if (walkingPace == null) {
+                walkingPace = c.getFloat(PACE_COL);
+              }
+              walkingPace = calculateAverage(walkingPace, c.getFloat(PACE_COL));
+              break;
+            case JOG:
+              if (joggingPace == null) {
+                joggingPace = c.getFloat(PACE_COL);
+              }
+              joggingPace = calculateAverage(joggingPace, c.getFloat(PACE_COL));
+              break;
+            case RUN:
+              if (runningPace == null) {
+                runningPace = c.getFloat(PACE_COL);
+              }
+              runningPace = calculateAverage(runningPace, c.getFloat(PACE_COL));
+              break;
+            case SPRINT:
+              if (sprintingPace == null) {
+                sprintingPace = c.getFloat(PACE_COL);
+              }
+              sprintingPace = calculateAverage(sprintingPace, c.getFloat(PACE_COL));
+              break;
 
-          default:
-            throw new IllegalStateException(
-                UNEXPECTED_VALUE + valueOf(c.getString(TYPE_COL).toUpperCase()));
-        }
-      } while (c.moveToNext());
+            default:
+              throw new IllegalStateException(
+                  UNEXPECTED_VALUE + valueOf(c.getString(TYPE_COL).toUpperCase()));
+          }
+        } while (c.moveToNext());
+      }
     }
 
-    /*
-    Enumerator map more appropriate for enum-type keys. Enum maps are internally
-    represented as arrays, and are extremely compact and efficient.
-    */
-    EnumMap<RunTypeClassifier, Float> returnedMap = new EnumMap<>(RunTypeClassifier.class);
-    returnedMap.put(WALK, walkingPace);
-    returnedMap.put(JOG, joggingPace);
-    returnedMap.put(RUN, runningPace);
-    returnedMap.put(SPRINT, sprintingPace);
+  /*
+  Enumerator map more appropriate for enum-type keys. Enum maps are internally
+  represented as arrays, and are extremely compact and efficient.
+  */
+  EnumMap<RunTypeClassifier, Float> returnedMap = new EnumMap<>(RunTypeClassifier.class);
+    returnedMap.put(WALK,walkingPace);
+    returnedMap.put(JOG,joggingPace);
+    returnedMap.put(RUN,runningPace);
+    returnedMap.put(SPRINT,sprintingPace);
 
     return returnedMap;
-  }
+}
 
   private Float calculateAverage(float a, float b) {
     return (a + b) / 2;

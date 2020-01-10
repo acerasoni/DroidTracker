@@ -13,6 +13,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.ltm.runningtracker.database.model.User;
@@ -115,11 +116,11 @@ public class UserRepository {
   @SuppressLint("Recycle")
   public synchronized void fetchUser() {
     AsyncTask.execute(() -> {
-      final Cursor[] c = new Cursor[1];
-      c[0] = getAppContext().getContentResolver()
-          .query(USER_URI, null, null, null, null, null);
-      if (c[0] != null && c[0].getCount() > 0) {
-        setUserAsync(buildUserFromMemory(c[0]));
+      try (Cursor c = getAppContext().getContentResolver()
+          .query(USER_URI, null, null, null, null, null)) {
+        if (c.getCount() > 0) {
+          setUserAsync(buildUserFromMemory(c));
+        }
       }
     });
   }

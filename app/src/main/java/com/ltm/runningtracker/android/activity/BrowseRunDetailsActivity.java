@@ -265,7 +265,6 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
   }
 
   private void initialiseViews() {
-    setupToolbar(this, R.id.toolbar2);
     activityView = findViewById(R.id.activityView);
     locationView = findViewById(R.id.locationView);
     dateView = findViewById(R.id.dateView);
@@ -286,6 +285,7 @@ public class BrowseRunDetailsActivity extends AppCompatActivity implements OnIte
     // Apply the adapter to the spinner
     spinner.setAdapter(adapter);
     spinner.setOnItemSelectedListener(this);
+    setupToolbar(this, R.id.toolbar2);
   }
 
   private void setupMaxbox(Bundle savedInstanceState) {

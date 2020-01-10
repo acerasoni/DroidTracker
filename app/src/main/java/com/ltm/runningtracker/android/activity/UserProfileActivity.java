@@ -136,7 +136,6 @@ public class UserProfileActivity extends AppCompatActivity {
   }
 
   private void initialiseViews() {
-    setupToolbar(this, R.id.toolbar5);
     userProfileActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     nameField = findViewById(R.id.nameField);
@@ -146,5 +145,6 @@ public class UserProfileActivity extends AppCompatActivity {
     joggingPaceField = findViewById(R.id.joggingPaceField);
     runningPaceField = findViewById(R.id.runningPaceField);
     sprintingPaceField = findViewById(R.id.sprintingPaceField);
+    setupToolbar(this, R.id.toolbar5);
   }
 }

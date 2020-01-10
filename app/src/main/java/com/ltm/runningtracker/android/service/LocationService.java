@@ -201,6 +201,11 @@ public class LocationService extends LifecycleService {
       } else {
         // Convert to foreground service
         startForeground(NOTIFICATION_ID, generateNotification("Run ongoing"));
+        /*
+         Register receiver programmatically instead of in manifest because we want granular
+         control over it's lifecycle (register-unregister in toggle run rather than
+         in service onCreate/onStart or onDestroy/onStop
+        */
         registerReceiver(actionShutdownReceiver, actionShutdownFilter);
         onRunStart();
         isUserRunning = true;

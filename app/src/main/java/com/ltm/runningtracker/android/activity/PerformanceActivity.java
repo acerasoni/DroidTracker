@@ -111,12 +111,12 @@ public class PerformanceActivity extends AppCompatActivity {
   }
 
   public void initialiseViews() {
-    setupToolbar(this, R.id.toolbar);
     SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(
         getSupportFragmentManager());
     ViewPager viewPager = findViewById(R.id.viewPager);
     viewPager.setAdapter(adapter);
     TabLayout tabLayout = findViewById(R.id.tabLayout);
     tabLayout.setupWithViewPager(viewPager);
+    setupToolbar(this, R.id.toolbar);
   }
 }

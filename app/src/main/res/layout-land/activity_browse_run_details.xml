@@ -10,7 +10,7 @@
   tools:context=".android.activity.BrowseRunDetailsActivity">
 
     <androidx.appcompat.widget.Toolbar
-      android:id="@+id/toolbar7"
+      android:id="@+id/toolbar2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/rectangle_base"
@@ -44,16 +44,15 @@
       android:textStyle="bold"
       app:layout_constraintBottom_toBottomOf="@+id/tv3"
       app:layout_constraintStart_toEndOf="@+id/tv3" />
-    <TextView
-      android:id="@+id/dateView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/date"
-      android:textSize="16sp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/tv" />
+  <TextView
+    android:id="@+id/dateView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="@string/date"
+    android:textSize="16sp"
+    app:layout_constraintStart_toStartOf="@+id/tv"
+    app:layout_constraintTop_toBottomOf="@+id/tv" />
     <TextView
       android:id="@+id/tv3"
       android:layout_width="wrap_content"
@@ -67,74 +66,70 @@
       android:typeface="normal"
       app:layout_constraintStart_toStartOf="@+id/tv5"
       app:layout_constraintTop_toBottomOf="@+id/tv5" />
-    <TextView
-      android:id="@+id/tv"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/date"
-      android:textColor="#000000"
-      android:textSize="22sp"
-      android:textStyle="bold"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/locationView" />
-    <TextView
-      android:id="@+id/tv5"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:layout_marginEnd="320dp"
-      android:text="@string/duration"
-      android:textAllCaps="false"
-      android:textColor="#000000"
-      android:textSize="16sp"
-      android:textStyle="bold"
-      android:typeface="normal"
-      app:layout_constraintEnd_toStartOf="@+id/temperatureImage"
-      app:layout_constraintStart_toEndOf="@+id/tv1"
-      app:layout_constraintTop_toBottomOf="@+id/toolbar7" />
-    <TextView
-      android:id="@+id/locationView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/location"
-      android:textSize="16sp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/tv1" />
-    <TextView
-      android:id="@+id/tv1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/location"
-      android:textAllCaps="false"
-      android:textColor="#000000"
-      android:textSize="22sp"
-      android:textStyle="bold"
-      android:typeface="normal"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/toolbar7" />
-    <Button
-      android:id="@+id/button2"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:layout_marginStart="32dp"
-      android:layout_marginEnd="32dp"
-      android:layout_weight="1"
-      android:backgroundTint="@color/secondaryButtonColor"
-      android:onClick="onDelete"
-      android:text="@string/delete_run"
-      android:textAllCaps="false"
-      android:textSize="20sp"
-      app:layout_constraintBottom_toTopOf="@+id/button"
-      app:layout_constraintEnd_toStartOf="@+id/temperatureImage"
-      app:layout_constraintHorizontal_bias="1.0"
-      app:layout_constraintStart_toEndOf="@+id/durationView" />
-    <TextView
+  <TextView
+    android:id="@+id/tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="32dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/date"
+    android:textColor="#000000"
+    android:textSize="22sp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/locationView" />
+  <TextView
+    android:id="@+id/tv5"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:text="@string/duration"
+    android:textAllCaps="false"
+    android:textColor="#000000"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:typeface="normal"
+    app:layout_constraintEnd_toStartOf="@+id/durationView"
+    app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+  <TextView
+    android:id="@+id/locationView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="@string/location"
+    android:textSize="16sp"
+    app:layout_constraintStart_toStartOf="@+id/tv1"
+    app:layout_constraintTop_toBottomOf="@+id/tv1" />
+  <TextView
+    android:id="@+id/tv1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="32dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/location"
+    android:textAllCaps="false"
+    android:textColor="#000000"
+    android:textSize="22sp"
+    android:textStyle="bold"
+    android:typeface="normal"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+  <Button
+    android:id="@+id/button2"
+    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    android:layout_marginEnd="32dp"
+    android:layout_weight="1"
+    android:backgroundTint="@color/secondaryButtonColor"
+    android:onClick="onDelete"
+    android:text="@string/delete_run"
+    android:textAllCaps="false"
+    android:textSize="20sp"
+    app:layout_constraintBottom_toTopOf="@+id/button"
+    app:layout_constraintEnd_toStartOf="@+id/temperatureImage"
+    app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+  <TextView
       android:id="@+id/tv4"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -178,7 +173,7 @@
     android:layout_height="102dp"
     android:layout_marginEnd="8dp"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar7"
+    app:layout_constraintTop_toBottomOf="@+id/toolbar2"
     app:srcCompat="@drawable/warm_icon" />
     <TextView
       android:id="@+id/temperatureView"
@@ -198,34 +193,34 @@
       android:layout_weight="1"
       app:layout_constraintBottom_toBottomOf="@+id/tv4"
       app:layout_constraintStart_toEndOf="@+id/tv4" />
-    <TextView
-      android:id="@+id/durationView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginBottom="2dp"
-      android:layout_weight="1"
-      android:text="00:00:00"
-      android:textSize="14sp"
-      android:textStyle="bold"
-      app:layout_constraintBottom_toBottomOf="@+id/tv5"
-      app:layout_constraintStart_toEndOf="@+id/tv5" />
-    <Button
-      android:id="@+id/button"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:layout_marginTop="4dp"
-      android:layout_weight="1"
-      android:backgroundTint="@color/secondaryButtonColor"
-      android:onClick="onSave"
-      android:text="@string/save_tag"
-      android:textAllCaps="false"
-      android:textSize="20sp"
-      app:layout_constraintBottom_toTopOf="@+id/myRectangleView2"
-      app:layout_constraintEnd_toEndOf="@+id/button2"
-      app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintStart_toStartOf="@+id/button2"
-      app:layout_constraintTop_toBottomOf="@+id/button2" />
+  <TextView
+    android:id="@+id/durationView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="32dp"
+    android:layout_marginBottom="2dp"
+    android:layout_weight="1"
+    android:text="00:00:00"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toBottomOf="@+id/tv5"
+    app:layout_constraintEnd_toStartOf="@+id/button2" />
+  <Button
+    android:id="@+id/button"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginTop="4dp"
+    android:layout_weight="1"
+    android:backgroundTint="@color/secondaryButtonColor"
+    android:onClick="onSave"
+    android:text="@string/save_tag"
+    android:textAllCaps="false"
+    android:textSize="20sp"
+    app:layout_constraintBottom_toTopOf="@+id/myRectangleView2"
+    app:layout_constraintEnd_toEndOf="@+id/button2"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="@+id/button2"
+    app:layout_constraintTop_toBottomOf="@+id/button2" />
     <View
       android:id="@+id/myRectangleView2"
       android:layout_width="match_parent"

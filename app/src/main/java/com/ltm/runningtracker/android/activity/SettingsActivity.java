@@ -151,7 +151,6 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   private void initialiseViews() {
-    setupToolbar(this, R.id.toolbar4);
     settingsActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
     userButton = findViewById(R.id.userButton);
@@ -171,6 +170,7 @@ public class SettingsActivity extends AppCompatActivity {
         put(4, hotButton);
       }
     };
+    setupToolbar(this, R.id.toolbar4);
   }
 
 }

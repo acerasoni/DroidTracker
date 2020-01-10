@@ -215,7 +215,7 @@ public class RunActivity extends AppCompatActivity implements
     runUpdateFilter.addAction(TIME_UPDATE_ACTION);
     runUpdateFilter.addAction(RUN_END_ACTION);
 
-    // Register activity to receivers
+    // Register activity to receivers. Done programmatically because receiver is local.
     LocalBroadcastManager.getInstance(this).registerReceiver(runUpdateReceiver, runUpdateFilter);
 
     mapView.onStart();
@@ -258,7 +258,6 @@ public class RunActivity extends AppCompatActivity implements
   }
 
   private void initialiseViews() {
-    setupToolbar(this, R.id.toolbar3);
     runActivityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
     countyView = findViewById(R.id.countyView);
     durationView = findViewById(R.id.timeView);
@@ -280,6 +279,7 @@ public class RunActivity extends AppCompatActivity implements
     });
 
     toggleRunButton.setText(FETCHING_LOCATION);
+    setupToolbar(this, R.id.toolbar3);
   }
 
   @SuppressWarnings({"MissingPermission"})
