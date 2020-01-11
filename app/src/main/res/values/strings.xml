@@ -88,10 +88,14 @@
   <string name="sprinting">Sprinting</string>
   <string name="type_formatted">Type:</string>
   <string name="date_formatted">Date:</string>
+  <string name="preferences">Preferences</string>
+  <string name="decrease_battery">decrease to save battery</string>
+  <string name="time_update">Location tracking rate (seconds)</string>
   <string name="location_formatted">Location:</string>
   <string name="pace_formatted">Pace:</string>
   <string name="runningimage">RunningImage</string>
   <string name="exercise">Exercise</string>
   <string name="resume">Resume</string>
   <string name="pause">Pause</string>
+  <string name="reset">Reset</string>
 </resources>

@@ -5,16 +5,16 @@ import android.content.Context;
 import android.os.Build.VERSION_CODES;
 import androidx.annotation.RequiresApi;
 import com.ltm.runningtracker.repository.RunRepository;
-import com.ltm.runningtracker.util.PropertyManager;
 import com.ltm.runningtracker.repository.LocationRepository;
 import com.ltm.runningtracker.repository.UserRepository;
 import com.ltm.runningtracker.repository.WeatherRepository;
+import com.ltm.runningtracker.util.UpdatePreferences;
 import com.mapbox.mapboxsdk.Mapbox;
 
 public class RunningTrackerApplication extends Application {
 
   private static Context context;
-  private static PropertyManager propertyManager;
+  private static UpdatePreferences updatePreferences;
 
   // Repositories
   private static LocationRepository locationRepository;
@@ -34,12 +34,11 @@ public class RunningTrackerApplication extends Application {
     return RunningTrackerApplication.context;
   }
 
-  public static PropertyManager getPropertyManager() {
-    if (propertyManager == null) {
-      propertyManager = new PropertyManager(
-          getAppContext().getResources().getString(R.string.app_properties));
+  public static UpdatePreferences getUpdatePreferences() {
+    if (updatePreferences == null) {
+      updatePreferences = new UpdatePreferences(context);
     }
-    return propertyManager;
+    return updatePreferences;
   }
 
   public static synchronized LocationRepository getLocationRepository() {

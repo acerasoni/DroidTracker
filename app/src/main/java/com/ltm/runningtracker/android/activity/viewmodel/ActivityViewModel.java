@@ -1,8 +1,8 @@
 package com.ltm.runningtracker.android.activity.viewmodel;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getUpdatePreferences;
 import static com.ltm.runningtracker.RunningTrackerApplication.getUserRepository;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 
@@ -131,6 +131,7 @@ public class ActivityViewModel extends ViewModel {
    * @param context for the asynchronous call to the database if the cache is empty
    * @return Run requested
    */
+  @RequiresApi(api = VERSION_CODES.O)
   @Presenter(usedBy = {BrowseRunDetailsActivity.class}, repositoriesAccessed = {
       RunRepository.class})
   public Run getRunById(int id, Context context) {
@@ -201,6 +202,7 @@ public class ActivityViewModel extends ViewModel {
     userRepository.deleteUser(context);
   }
 
+  @RequiresApi(api = VERSION_CODES.O)
   @Presenter(usedBy = {SettingsActivity.class}, repositoriesAccessed = {RunRepository.class})
   public void deleteRuns(Context context) {
     runRepository.deleteRuns(context);
@@ -217,10 +219,11 @@ public class ActivityViewModel extends ViewModel {
     runRepository.deleteRunsByType(uri, context);
   }
 
+  @RequiresApi(api = VERSION_CODES.O)
   @Presenter(usedBy = {MainScreenActivity.class}, repositoriesAccessed = {
       LocationRepository.class, UserRepository.class, WeatherRepository.class, RunRepository.class})
   public void initRepos() {
-    getPropertyManager();
+    getUpdatePreferences();
     getLocationRepository();
     getUserRepository();
     getWeatherRepository();

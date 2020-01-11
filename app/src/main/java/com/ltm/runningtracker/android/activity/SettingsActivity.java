@@ -1,16 +1,25 @@
 package com.ltm.runningtracker.android.activity;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getUpdatePreferences;
+import static com.ltm.runningtracker.android.activity.MainScreenActivity.TIME_CHANGED_RESULT_CODE;
 import static com.ltm.runningtracker.android.activity.MainScreenActivity.setupToolbar;
 import static com.ltm.runningtracker.android.contentprovider.DroidProviderContract.RUNS_URI;
+import static com.ltm.runningtracker.util.Constants.MIN_TIME_RESET;
+import static com.ltm.runningtracker.util.Constants.MIN_TIME_SAVED;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import com.ltm.runningtracker.R;
@@ -32,6 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
   private Map<Integer, Button> weatherClassifierToButton;
 
   // Views
+  private EditText timeUpdateView;
   private Button userButton;
   private Button runsButton;
   private Button freezingButton;
@@ -51,6 +61,24 @@ public class SettingsActivity extends AppCompatActivity {
     AsyncTask.execute(this::setupButtons);
   }
 
+  public void onSave(View v) {
+    Integer time = Integer.parseInt(timeUpdateView.getText().toString());
+    getUpdatePreferences().setMinTime(time);
+    Toast.makeText(this, MIN_TIME_SAVED, Toast.LENGTH_LONG).show();
+
+    setResult(TIME_CHANGED_RESULT_CODE);
+    finish();
+  }
+
+  public void onReset(View v) {
+    getUpdatePreferences().clear();
+    Toast.makeText(this, MIN_TIME_RESET, Toast.LENGTH_LONG).show();
+
+    setResult(TIME_CHANGED_RESULT_CODE);
+    finish();
+  }
+
+  @RequiresApi(api = VERSION_CODES.O)
   private void setupButtons() {
     // If user exists, setup run buttons
     if (settingsActivityViewModel.doesUserExist()) {
@@ -79,6 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   // Only enable weather-specific button if runs of that type exist
+  @RequiresApi(api = VERSION_CODES.O)
   private void enableRunButtonsIfAppropriate() {
     boolean[] doRunsExist = new boolean[]{false, false, false, false, false};
 
@@ -124,6 +153,7 @@ public class SettingsActivity extends AppCompatActivity {
     button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
   }
 
+  @RequiresApi(api = VERSION_CODES.O)
   private void enableRunsButton() {
     runsButton.setOnClickListener(v -> {
       runsButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
@@ -160,7 +190,9 @@ public class SettingsActivity extends AppCompatActivity {
     mildButton = findViewById(R.id.mildRuns);
     warmButton = findViewById(R.id.warmRuns);
     hotButton = findViewById(R.id.hotRuns);
+    timeUpdateView = findViewById(R.id.updateField);
 
+    timeUpdateView.setText(getUpdatePreferences().getMinTime().toString());
     weatherClassifierToButton = new HashMap<Integer, Button>() {
       {
         put(0, freezingButton);

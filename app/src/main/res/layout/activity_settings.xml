@@ -8,6 +8,21 @@
   android:backgroundTint="@color/secondaryButtonColor"
   android:orientation="vertical"
   tools:context=".android.activity.SettingsActivity">
+  <TextView
+    android:id="@+id/textView29"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/time_update"
+    android:textAlignment="center"
+    android:textColor="#000000"
+    android:textIsSelectable="false"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/myRectangleView" />
   <androidx.appcompat.widget.Toolbar
     android:id="@+id/toolbar4"
     android:layout_width="match_parent"
@@ -33,6 +48,16 @@
     android:id="@+id/myRectangleView11"
     android:layout_width="match_parent"
     android:layout_height="35dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/rectangle_narrow"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/button3" />
+  <View
+    android:id="@+id/myRectangleView"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
     android:background="@drawable/rectangle_narrow"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="1.0"
@@ -50,15 +75,40 @@
     app:layout_constraintBottom_toBottomOf="@+id/myRectangleView11"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="@+id/myRectangleView11" />
+  <TextView
+    android:id="@+id/textView"
+    android:layout_width="0dp"
+    android:layout_height="31dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/preferences"
+    android:textColor="#FFFFFF"
+    android:textSize="18sp"
+    app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/myRectangleView" />
+  <TextView
+    android:id="@+id/textView31"
+    android:layout_width="0dp"
+    android:layout_height="31dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="11dp"
+    android:text="@string/decrease_battery"
+    android:textColor="#FFFFFF"
+    android:textSize="14sp"
+    app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
+    app:layout_constraintStart_toEndOf="@+id/textView"
+    app:layout_constraintTop_toTopOf="@+id/myRectangleView"
+    app:layout_constraintVertical_bias="0.0" />
   <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
     android:fillViewport="true"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/myRectangleView11"
-    tools:layout_editor_absoluteX="-36dp">
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/myRectangleView11">
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -166,4 +216,44 @@
         android:textStyle="bold" />
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
+  <EditText
+    android:id="@+id/updateField"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="numberSigned"
+    android:text="Name"
+    android:textAlignment="center"
+    android:textSize="12sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/textView29" />
+  <Button
+    android:id="@+id/button3"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:backgroundTint="@color/secondaryButtonColor"
+    android:onClick="onSave"
+    android:text="@string/save"
+    app:layout_constraintEnd_toStartOf="@+id/button4"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/updateField" />
+  <Button
+    android:id="@+id/button4"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:backgroundTint="@color/secondaryButtonColor"
+    android:onClick="onReset"
+    android:text="@string/reset"
+    app:layout_constraintBottom_toTopOf="@+id/myRectangleView11"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/button3"
+    app:layout_constraintTop_toBottomOf="@+id/updateField"
+    app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

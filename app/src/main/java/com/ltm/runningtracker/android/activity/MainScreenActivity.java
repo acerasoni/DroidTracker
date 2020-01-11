@@ -19,11 +19,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -63,6 +65,7 @@ public class MainScreenActivity extends AppCompatActivity {
   public static final int USER_MODIFICATION_REQUEST = 2;
   public static final int SETTINGS_MODIFICATION_REQUEST = 3;
   public static final int RUN_ACTIVITY_REQUEST = 4;
+  public static final int TIME_CHANGED_RESULT_CODE = 5;
 
   // Views
   private TextView weatherTextField;
@@ -72,6 +75,7 @@ public class MainScreenActivity extends AppCompatActivity {
   private Button userProfileButton;
   private Button settingsButton;
 
+  private Intent locationIntent;
   private ServiceConnection serviceConnection;
   private Context context = this;
   private ActivityViewModel mainActivityViewModel;
@@ -79,11 +83,17 @@ public class MainScreenActivity extends AppCompatActivity {
   private LocationServiceBinder locationServiceBinder;
   private boolean mBound;
   private boolean isLocationAndWeatherAvailable;
+  private boolean requiresLocationRestart;
+  private boolean requiresUserDeleted;
 
+  @RequiresApi(api = VERSION_CODES.O)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    locationIntent = new Intent(this, LocationService.class);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main_screen);
+    requiresLocationRestart = false;
+    requiresUserDeleted = false;
 
     initialiseViews();
     requestPermission();
@@ -114,9 +124,9 @@ public class MainScreenActivity extends AppCompatActivity {
         break;
       case SETTINGS_MODIFICATION_REQUEST:
         if (resultCode == Activity.RESULT_OK) {
-          if (!locationServiceBinder.userDeleted()) {
-            Toast.makeText(this, USER_DELETED, Toast.LENGTH_LONG).show();
-          }
+          requiresUserDeleted = true;
+        } else if (resultCode == TIME_CHANGED_RESULT_CODE) {
+          requiresLocationRestart = true;
         }
         break;
       case RUN_ACTIVITY_REQUEST:
@@ -128,27 +138,25 @@ public class MainScreenActivity extends AppCompatActivity {
         throw new IllegalStateException(
             UNEXPECTED_VALUE + requestCode);
     }
-
   }
 
   /**
-   * Recompute UI state following onCreate event and when returning from an Activity
+   * Recompute UI state following onCreate event and when returning from an Activity.
    */
   @Override
   public void onStart() {
+    bindService(locationIntent, serviceConnection, 0);
     setupButtons();
     setupPerformance();
     super.onStart();
   }
 
-  /**
-   * Will unbind from the service when the Activity is stopped.
-   */
   @Override
   public void onStop() {
     super.onStop();
   }
 
+  @RequiresApi(api = VERSION_CODES.O)
   @Override
   public void onRequestPermissionsResult(int requestCode,
       @NotNull String[] permissions, @NotNull int[] grantResults) {
@@ -159,6 +167,7 @@ public class MainScreenActivity extends AppCompatActivity {
     }
   }
 
+  @RequiresApi(api = VERSION_CODES.O)
   private void requestPermission() {
     if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED) {
@@ -273,6 +282,7 @@ public class MainScreenActivity extends AppCompatActivity {
     }
   }
 
+  @RequiresApi(api = VERSION_CODES.O)
   private void setup() {
     // Initialise repositories
     mainActivityViewModel.initRepos();
@@ -283,6 +293,16 @@ public class MainScreenActivity extends AppCompatActivity {
       public void onServiceConnected(ComponentName name, IBinder service) {
         mBound = true;
         locationServiceBinder = (LocationServiceBinder) service;
+
+        if (requiresLocationRestart) {
+          locationServiceBinder.restartLocationTracking();
+          requiresLocationRestart = false;
+        } else if (requiresUserDeleted) {
+          if (!locationServiceBinder.userDeleted()) {
+            Toast.makeText(context, USER_DELETED, Toast.LENGTH_LONG).show();
+          }
+          requiresUserDeleted = false;
+        }
       }
 
       @Override
@@ -304,7 +324,6 @@ public class MainScreenActivity extends AppCompatActivity {
     We keep the activity bound to the service even when it is stopped to avoid the service dying.
     RunActivity also uses the same service, so no waste of resources occurs.
     */
-    Intent locationIntent = new Intent(this, LocationService.class);
     startService(locationIntent);
     // No need for BIND_AUTO_CREATE, as we started the service explicitly already
     bindService(locationIntent, serviceConnection, 0);

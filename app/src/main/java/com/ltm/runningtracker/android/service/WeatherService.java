@@ -1,7 +1,7 @@
 package com.ltm.runningtracker.android.service;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
+import static com.ltm.runningtracker.RunningTrackerApplication.getUpdatePreferences;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 import static com.ltm.runningtracker.repository.WeatherRepository.buildWeatherClient;
 import static com.ltm.runningtracker.repository.WeatherRepository.buildWeatherRequest;
@@ -75,7 +75,7 @@ public class WeatherService extends Service {
     // Begin execution of worker thread
     scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     scheduledExecutorService
-        .scheduleAtFixedRate(requestWeatherTask, 0, getPropertyManager().getMinTime(),
+        .scheduleAtFixedRate(requestWeatherTask, 0, getUpdatePreferences().getMinTime(),
             TimeUnit.SECONDS);
   }
 

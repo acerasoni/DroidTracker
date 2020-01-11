@@ -47,11 +47,16 @@ public class Constants {
   public static final String WEIGHT = "weight";
   public static final String HEIGHT = "height";
   public static final String DISTANCE = "distance";
+  public static final String TIME = "time";
+
+  public static final String UPDATE_PREF = "UpdatePreferences";
 
   public static final String CHANNEL_ID = "channelId";
   public static final String USER_ID = "userId";
   public static final String RUN_ID = "runId";
 
+  public static final String MIN_TIME_SAVED = "Location update time saved";
+  public static final String MIN_TIME_RESET = "Location update reset";
   public static final String ALL_FIELDS_INVALID = "Values for all input fields are invalid - try again";
   public static final String WEIGHT_HEIGHT_INVALID_ERROR = "Values for weight or height are invalid - try again";
   public static final String NAME_INVALID_ERROR = "Value for name is invalid - try again";

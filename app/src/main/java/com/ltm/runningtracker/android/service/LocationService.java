@@ -1,8 +1,8 @@
 package com.ltm.runningtracker.android.service;
 
 import static com.ltm.runningtracker.RunningTrackerApplication.getLocationRepository;
-import static com.ltm.runningtracker.RunningTrackerApplication.getPropertyManager;
 import static com.ltm.runningtracker.RunningTrackerApplication.getRunRepository;
+import static com.ltm.runningtracker.RunningTrackerApplication.getUpdatePreferences;
 import static com.ltm.runningtracker.RunningTrackerApplication.getWeatherRepository;
 import static com.ltm.runningtracker.util.Constants.CHANNEL_ID;
 import static com.ltm.runningtracker.util.Constants.DISTANCE;
@@ -18,7 +18,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -96,14 +95,11 @@ public class LocationService extends LifecycleService {
   private ScheduledExecutorService timeScheduledExecutorService;
   private ScheduledFuture<?> scheduledFuture;
 
-  private ContentValues contentValues;
-
   @Override
   public void onCreate() {
     super.onCreate();
     isUserRunning = false;
     runPaused = false;
-    contentValues = new ContentValues();
     actionShutdownFilter = new IntentFilter(Intent.ACTION_SHUTDOWN);
     actionShutdownReceiver = new ActionShutdownReceiver();
 
@@ -242,6 +238,11 @@ public class LocationService extends LifecycleService {
       return runPaused;
     }
 
+    public void restartLocationTracking() {
+      stopLocationThread();
+      startLocationThread();
+    }
+
     public int getDistance() {
       return distance.intValue();
     }
@@ -341,10 +342,10 @@ public class LocationService extends LifecycleService {
     try {
       /*
        The following requestLocationUpdates call will spin up a background thread which
-       we can listen to by implementing the LocationEngineCallback interface
+       we can listen to by implementing the LocationEngineCallback interface.
        */
       LocationEngineRequest locationEngineRequest = new LocationEngineRequest.Builder(
-          getPropertyManager().getMinTime()).build();
+          getUpdatePreferences().getMinTimeMillis()).build();
       /*
       Similar to weather service, we pass the location repository as listener and allow it
       to update itself when callback occurs
@@ -354,6 +355,10 @@ public class LocationService extends LifecycleService {
     } catch (SecurityException e) {
       Log.e("Security exception: ", e.toString());
     }
+  }
+
+  private void stopLocationThread() {
+    getLocationRepository().getLocationEngine().removeLocationUpdates(getLocationRepository());
   }
 
   private void enableLocationObserver() {
