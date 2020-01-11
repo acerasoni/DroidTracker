@@ -89,7 +89,7 @@
   <string name="type_formatted">Type:</string>
   <string name="date_formatted">Date:</string>
   <string name="preferences">Preferences</string>
-  <string name="decrease_battery">decrease to save battery</string>
+  <string name="decrease_battery">increase to save battery</string>
   <string name="time_update">Location tracking rate (seconds)</string>
   <string name="location_formatted">Location:</string>
   <string name="pace_formatted">Pace:</string>

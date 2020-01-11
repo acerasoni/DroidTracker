@@ -32,18 +32,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     </androidx.appcompat.widget.Toolbar>
-    <TextView
-      android:id="@+id/distanceView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginBottom="2dp"
-      android:layout_weight="1"
-      android:text="100 metres"
-      android:textSize="10sp"
-      android:textStyle="bold"
-      app:layout_constraintBottom_toBottomOf="@+id/tv3"
-      app:layout_constraintStart_toEndOf="@+id/tv3" />
+  <TextView
+    android:id="@+id/distanceView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginBottom="2dp"
+    android:layout_weight="1"
+    android:text="100 metres"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toBottomOf="@+id/tv3"
+    app:layout_constraintStart_toEndOf="@+id/tv3" />
   <TextView
     android:id="@+id/dateView"
     android:layout_width="wrap_content"

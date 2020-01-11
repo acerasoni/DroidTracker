@@ -202,11 +202,10 @@ public class RunActivity extends AppCompatActivity implements
   @Override
   protected void onStart() {
     /*
-    Bind to location service. Guaranteed to be running from MainScreenActivity,
-    hence we are going to use the flag 0 rather than BIND_AUTO_CREATE
+    Bind to location service.
     */
     Intent intent = new Intent(this, LocationService.class);
-    bindService(intent, connection, 0);
+    bindService(intent, connection, BIND_AUTO_CREATE);
 
     // Initialise broadcast receivers
     runUpdateReceiver = new RunUpdateReceiver();

@@ -56,7 +56,7 @@ public class Constants {
   public static final String RUN_ID = "runId";
 
   public static final String MIN_TIME_SAVED = "Location update time saved";
-  public static final String MIN_TIME_RESET = "Location update reset";
+  public static final String MIN_TIME_RESET = "Location update time reset";
   public static final String ALL_FIELDS_INVALID = "Values for all input fields are invalid - try again";
   public static final String WEIGHT_HEIGHT_INVALID_ERROR = "Values for weight or height are invalid - try again";
   public static final String NAME_INVALID_ERROR = "Value for name is invalid - try again";

@@ -99,17 +99,26 @@ public class MainScreenActivity extends AppCompatActivity {
     requestPermission();
   }
 
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    outState.putBoolean("deviceRotated", true);
+    super.onSaveInstanceState(outState);
+  }
+
   /*
-  The Activity needs to stay bound to the service so that the service doesn't misrepresent
-  the transition between MainScreenActivity and RunActivity as the user destroying all activities
-  (in which case destroying the service is necessary)
+  Necessary to check if onCreate is upon rotation so that we can start the location service again
+  Note: the services are killed when no activity is bound and no run is ongoing for resource efficiency
    */
   @Override
-  public void onDestroy() {
-    if (mBound) {
-      unbindService(serviceConnection);
-      mBound = false;
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    if (savedInstanceState.getBoolean("deviceRotated")) {
+      startService(locationIntent);
+      bindService(locationIntent, serviceConnection, 0);
     }
+  }
+
+  @Override
+  public void onDestroy() {
     super.onDestroy();
   }
 
@@ -153,6 +162,10 @@ public class MainScreenActivity extends AppCompatActivity {
 
   @Override
   public void onStop() {
+    if (mBound) {
+      unbindService(serviceConnection);
+      mBound = false;
+    }
     super.onStop();
   }
 
