@@ -45,16 +45,6 @@
       tools:layout_editor_absoluteY="1dp" />
   </androidx.appcompat.widget.Toolbar>
   <View
-    android:id="@+id/myRectangleView11"
-    android:layout_width="match_parent"
-    android:layout_height="35dp"
-    android:layout_marginTop="8dp"
-    android:background="@drawable/rectangle_narrow"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/button3" />
-  <View
     android:id="@+id/myRectangleView"
     android:layout_width="match_parent"
     android:layout_height="35dp"
@@ -63,18 +53,6 @@
     app:layout_constraintHorizontal_bias="1.0"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/toolbar4" />
-  <TextView
-    android:id="@+id/textView20"
-    android:layout_width="0dp"
-    android:layout_height="31dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:text="@string/userCache"
-    android:textColor="#FFFFFF"
-    android:textSize="18sp"
-    app:layout_constraintBottom_toBottomOf="@+id/myRectangleView11"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/myRectangleView11" />
   <TextView
     android:id="@+id/textView"
     android:layout_width="0dp"
@@ -103,21 +81,48 @@
   <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_marginTop="16dp"
+    android:layout_marginTop="8dp"
     android:fillViewport="true"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/myRectangleView11">
+    app:layout_constraintTop_toBottomOf="@+id/button4">
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical">
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+          android:id="@+id/myRectangleView11"
+          android:layout_width="match_parent"
+          android:layout_height="35dp"
+          android:background="@drawable/rectangle_narrow"
+          app:layout_constraintBottom_toTopOf="@+id/textView20"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+          android:id="@+id/textView20"
+          android:layout_width="0dp"
+          android:layout_height="31dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="8dp"
+          android:text="@string/userCache"
+          android:textColor="#FFFFFF"
+          android:textSize="18sp"
+          app:layout_constraintBottom_toBottomOf="@+id/myRectangleView11"
+          app:layout_constraintStart_toStartOf="@+id/myRectangleView11"
+          app:layout_constraintTop_toTopOf="@+id/myRectangleView11" />
+      </androidx.constraintlayout.widget.ConstraintLayout>
       <Button
         android:id="@+id/userButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/secondaryButtonColor"
@@ -247,13 +252,10 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
-    android:layout_marginBottom="8dp"
     android:backgroundTint="@color/secondaryButtonColor"
     android:onClick="onReset"
     android:text="@string/reset"
-    app:layout_constraintBottom_toTopOf="@+id/myRectangleView11"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@+id/button3"
-    app:layout_constraintTop_toBottomOf="@+id/updateField"
-    app:layout_constraintVertical_bias="0.0" />
+    app:layout_constraintTop_toBottomOf="@+id/updateField" />
 </androidx.constraintlayout.widget.ConstraintLayout>

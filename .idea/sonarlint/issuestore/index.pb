@@ -15,8 +15,6 @@ w
 Gapp/src/main/java/com/ltm/runningtracker/RunningTrackerApplication.java,f\4\f422bc895195bff3b8ff87b41bbb64516b920c40
 z
 Japp/src/main/java/com/ltm/runningtracker/android/activity/RunActivity.java,3\b\3b3b7137fad39167f509e94409e18c21d6d69d06
-r
-Bapp/src/main/java/com/ltm/runningtracker/util/PropertyManager.java,2\2\2226a1445e9a7af3ec364f8144bd560229401f77
 v
 Fapp/src/main/java/com/ltm/runningtracker/repository/RunRepository.java,4\a\4a16df7b857147f956d7eed319d7ebe98fa62a2b
 r
@@ -89,3 +87,5 @@ x
 Happ/src/main/java/com/ltm/runningtracker/util/annotations/Presenter.java,a\8\a89d3939ce90e651f5502ebcc04fd01e564bda01
 m
 =app/src/main/java/com/ltm/runningtracker/util/Serializer.java,7\5\75943e669a94f49f5b850db22255506e904a8568
+t
+Dapp/src/main/java/com/ltm/runningtracker/util/UpdatePreferences.java,6\c\6cd35cb678278413ae6c86c9b2f9914f79133bdc
