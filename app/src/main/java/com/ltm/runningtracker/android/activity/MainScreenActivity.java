@@ -113,6 +113,8 @@ public class MainScreenActivity extends AppCompatActivity {
   public void onRestoreInstanceState(Bundle savedInstanceState) {
     if (savedInstanceState.getBoolean("deviceRotated")) {
       startService(locationIntent);
+
+      // Necessary when rotating device
       bindService(locationIntent, serviceConnection, 0);
     }
   }
@@ -154,7 +156,9 @@ public class MainScreenActivity extends AppCompatActivity {
    */
   @Override
   public void onStart() {
+    // Necessary when returning from another activity
     bindService(locationIntent, serviceConnection, 0);
+
     setupButtons();
     setupPerformance();
     super.onStart();

@@ -205,7 +205,8 @@ public class RunActivity extends AppCompatActivity implements
     Bind to location service.
     */
     Intent intent = new Intent(this, LocationService.class);
-    bindService(intent, connection, BIND_AUTO_CREATE);
+    startService(intent);
+    bindService(intent, connection, 0);
 
     // Initialise broadcast receivers
     runUpdateReceiver = new RunUpdateReceiver();
