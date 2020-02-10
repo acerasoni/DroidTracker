@@ -3,4 +3,4 @@ DroidTracker is a running tracker application developed for the Android operatin
 
 This project showcases the ability to utilize all fundamental Android components, in particular foreground services, and to interface with multiple external API to provide novel and useful features to the user.
 
-![Image of DroidTracker](https://ibb.co/px0T8yk)
+![Image of DroidTracker](https://i.ibb.co/2ynrQNp/Drooid-Trackr.png)
